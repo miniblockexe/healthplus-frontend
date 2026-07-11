@@ -1,0 +1,232 @@
+<div class="min-h-screen bg-[var(--hp-bg)]">
+
+  <!-- Header -->
+  <header style="background-color: var(--hp-nav-bg); border-bottom: 1px solid var(--hp-nav-border);">
+    <div class="px-4 lg:px-6 py-4 flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <span class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
+              style="background: rgba(255,255,255,0.1);">
+          <i class="fas fa-user text-xs" style="color: var(--hp-nav-accent);"></i>
+        </span>
+        <div>
+          <h1 class="text-sm font-semibold text-white">Hồ sơ cá nhân</h1>
+          <p class="text-xs" style="color: rgba(255,255,255,0.55);">Quản lý thông tin tài khoản</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+<div class="p-4 lg:p-6 max-w-2xl mx-auto">
+
+  <!-- Avatar Card (không dùng gradient banner) -->
+  <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-6 mb-6">
+    <div class="flex items-center gap-4">
+      <div class="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-medium shrink-0 text-white"
+        [class.bg-sky-600]="authService.currentUser()?.role === 'admin'"
+        [class.bg-blue-600]="authService.currentUser()?.role === 'doctor'"
+        [class.bg-teal-600]="authService.currentUser()?.role === 'user'">
+        {{ authService.currentUser()?.fullname?.charAt(0)?.toUpperCase() }}
+      </div>
+      <div>
+        <h2 class="text-lg font-medium text-[var(--hp-text)]">{{ authService.currentUser()?.fullname }}</h2>
+        <p class="text-[var(--hp-text2)] text-sm">{{ authService.currentUser()?.email }}</p>
+        <span class="inline-flex items-center gap-1.5 text-xs text-[var(--hp-text3)] mt-1.5">
+          <span class="w-1.5 h-1.5 rounded-full"
+            [class.bg-sky-400]="authService.currentUser()?.role === 'admin'"
+            [class.bg-blue-400]="authService.currentUser()?.role === 'doctor'"
+            [class.bg-teal-400]="authService.currentUser()?.role === 'user'"></span>
+          <span class="capitalize">{{ authService.currentUser()?.role }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  @if (successMessage()) {
+    <div class="animate-fade-in bg-emerald-50 border border-emerald-200 text-emerald-700
+                rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm">
+      {{ successMessage() }}
+    </div>
+  }
+  @if (errorMessage()) {
+    <div class="animate-fade-in bg-red-50 border border-red-200 text-red-600
+                rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- Tabs -->
+  <div class="flex gap-2 mb-6 border-b border-[var(--hp-border)]">
+    <button (click)="activeTab.set('info')"
+      class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors"
+      [ngClass]="activeTab() === 'info' ? 'border-[var(--hp-purple)] text-[var(--hp-purple2)]' : 'border-transparent text-[var(--hp-text3)]'">
+      Thông tin cá nhân
+    </button>
+    <button (click)="activeTab.set('password')"
+      class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors"
+      [ngClass]="activeTab() === 'password' ? 'border-[var(--hp-purple)] text-[var(--hp-purple2)]' : 'border-transparent text-[var(--hp-text3)]'">
+      Đổi mật khẩu
+    </button>
+  </div>
+
+  <!-- Info Tab -->
+  @if (activeTab() === 'info') {
+    <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-6">
+      @if (isLoading()) {
+        <div class="space-y-4">
+          <div class="hp-skeleton h-10 rounded-[var(--hp-radius-sm)]"></div>
+          <div class="hp-skeleton h-10 rounded-[var(--hp-radius-sm)]"></div>
+          <div class="hp-skeleton h-10 rounded-[var(--hp-radius-sm)]"></div>
+        </div>
+      } @else {
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+            <div class="md:col-span-2">
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
+                Họ và tên <span class="text-red-600">*</span>
+              </label>
+              <input type="text" formControlName="fullname"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
+            </div>
+
+            <div>
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Số điện thoại</label>
+              <input type="tel" formControlName="phone" placeholder="0901234567"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       placeholder:text-[var(--hp-text3)] focus:outline-none
+                       focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
+            </div>
+
+            <div>
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Giới tính</label>
+              <select formControlName="gender"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20">
+                <option value="">Chọn giới tính</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+                <option value="other">Khác</option>
+              </select>
+            </div>
+
+            <div class="md:col-span-2">
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Ngày sinh</label>
+              <input type="date" formControlName="dateOfBirth"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
+            </div>
+
+          </div>
+
+          <button type="submit" [disabled]="isSaving() || profileForm.invalid"
+            class="w-full bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95
+                   text-white font-medium py-2.5 rounded-[var(--hp-radius-sm)] text-sm
+                   disabled:opacity-50 disabled:cursor-not-allowed">
+            @if (isSaving()) { Đang lưu... } @else { Lưu thông tin }
+          </button>
+        </form>
+      }
+    </div>
+  }
+
+  <!-- Password Tab -->
+  @if (activeTab() === 'password') {
+    <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-6">
+
+      <!-- Banner: Google user chưa có mật khẩu -->
+      @if (isGoogleUser() && !hasPassword()) {
+        <div class="flex items-start gap-3 bg-blue-50 border border-blue-200
+                    rounded-[var(--hp-radius-sm)] px-4 py-3 mb-5">
+          <i class="fab fa-google text-blue-500 mt-0.5 shrink-0"></i>
+          <div>
+            <p class="text-sm font-medium text-blue-700">Tài khoản đăng nhập bằng Google</p>
+            <p class="text-xs text-blue-600 mt-0.5">
+              Bạn có thể đặt mật khẩu để bảo vệ tài khoản phòng trường hợp email bị người khác sử dụng để đăng ký.
+            </p>
+          </div>
+        </div>
+      }
+
+      <!-- Banner: Google user đã có mật khẩu -->
+      @if (isGoogleUser() && hasPassword()) {
+        <div class="flex items-start gap-3 bg-emerald-50 border border-emerald-200
+                    rounded-[var(--hp-radius-sm)] px-4 py-3 mb-5">
+          <i class="fas fa-shield-halved text-emerald-500 mt-0.5 shrink-0"></i>
+          <div>
+            <p class="text-sm font-medium text-emerald-700">Tài khoản đã được bảo vệ bằng mật khẩu</p>
+            <p class="text-xs text-emerald-600 mt-0.5">Nhập mật khẩu hiện tại để đặt mật khẩu mới.</p>
+          </div>
+        </div>
+      }
+
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <div class="space-y-4 mb-6">
+
+          <!-- Ẩn "Mật khẩu hiện tại" nếu là Google user chưa đặt mật khẩu lần nào -->
+          @if (!isGoogleUser() || hasPassword()) {
+            <div>
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Mật khẩu hiện tại</label>
+              <input type="password" formControlName="currentPassword" placeholder="••••••••"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       placeholder:text-[var(--hp-text3)] focus:outline-none
+                       focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
+            </div>
+          }
+
+          <div>
+            <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
+              {{ isGoogleUser() && !hasPassword() ? 'Mật khẩu muốn đặt' : 'Mật khẩu mới' }}
+            </label>
+            <input type="password" formControlName="newPassword" placeholder="••••••••"
+              class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                     rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                     placeholder:text-[var(--hp-text3)] focus:outline-none
+                     focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
+          </div>
+
+          <div>
+            <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Xác nhận mật khẩu</label>
+            <input type="password" formControlName="confirmPassword" placeholder="••••••••"
+              class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                     rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                     placeholder:text-[var(--hp-text3)] focus:outline-none
+                     focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
+          </div>
+
+        </div>
+
+        <button type="submit" [disabled]="isChangingPassword() || passwordForm.invalid"
+          class="w-full bg-red-600/90 hover:bg-red-600 active:scale-95
+                 text-white font-medium py-2.5 rounded-[var(--hp-radius-sm)] text-sm
+                 disabled:opacity-50 disabled:cursor-not-allowed">
+          @if (isChangingPassword()) {
+            Đang lưu...
+          } @else if (isGoogleUser() && !hasPassword()) {
+            Đặt mật khẩu
+          } @else {
+            Đổi mật khẩu
+          }
+        </button>
+      </form>
+    </div>
+  }
+
+  <!-- Nút đăng xuất: chỉ hiện trên mobile (sidebar đã có rồi) -->
+  <div class="sm:hidden mt-6 pb-2">
+    <button (click)="authService.logout()"
+      class="w-full flex items-center justify-center gap-2 py-2.5 rounded-[var(--hp-radius-sm)] text-sm font-medium
+             text-red-500 border border-red-200 bg-red-50 hover:bg-red-100 active:scale-95 transition-all">
+      <i class="fas fa-right-from-bracket"></i>
+      Đăng xuất
+    </button>
+  </div>
+
+</div><!-- /inner content -->
+</div><!-- /min-h-screen wrapper -->

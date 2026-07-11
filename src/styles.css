@@ -1,1 +1,123 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design tokens — Hospital Calm Theme ───────────── */
+:root {
+  /* Background: xám trắng nhẹ, không chói mắt — y như phòng khám hiện đại */
+  --hp-bg:       #f4f6f9;   /* xám lạnh rất nhạt, không xanh */
+  --hp-surface:  #ffffff;
+  --hp-surface2: #eef2f7;   /* inputs/secondary — xám nhẹ hơn */
+  --hp-border:   rgba(99, 131, 172, 0.14);
+  --hp-border2:  rgba(99, 131, 172, 0.28);
+  --hp-shadow:   0 1px 3px rgba(15, 23, 42, 0.05), 0 4px 12px rgba(30, 64, 120, 0.07);
+
+  /* ── Sidebar/Navbar: xanh navy y tế — đậm, tin cậy, không lóe ── */
+  --hp-nav-bg:        #1a3a5c;   /* navy đậm — professional medical */
+  --hp-nav-bg2:       #0f2740;   /* phần header sidebar — đậm hơn một chút */
+  --hp-nav-border:    rgba(255,255,255,0.09);
+  --hp-nav-text:      rgba(255,255,255,0.72);
+  --hp-nav-text-act:  #ffffff;
+  --hp-nav-hover:     rgba(255,255,255,0.08);
+  --hp-nav-active:    rgba(255,255,255,0.14);
+  --hp-nav-accent:    #38bdf8;   /* sky-400 — highlight trên nền tối */
+
+  /* Accent màu y tế — xanh dương trung tính, không chói */
+  --hp-primary:   #1d6fa4;   /* blue-700 dạng y tế */
+  --hp-primary2:  #2589c7;   /* lighter for hover */
+  --hp-teal:      #0e7490;   /* cyan-700 */
+  --hp-green:     #15803d;   /* green-700 */
+  --hp-red:       #b91c1c;   /* red-700 */
+  --hp-amber:     #b45309;   /* amber-700 */
+
+  /* Gradient chỉ dùng cho logo/badge — bỏ trên card */
+  --hp-gradient:  linear-gradient(150deg, #1d6fa4 0%, #0e7490 100%);
+
+  /* Text */
+  --hp-text:  #1e293b;     /* slate-800 */
+  --hp-text2: #4b6385;     /* blue-grey */
+  --hp-text3: #94a3b8;     /* slate-400 */
+
+  --hp-radius:    12px;
+  --hp-radius-sm:  8px;
+
+  /* Aliases giữ tương thích với code cũ */
+  --hp-purple:  var(--hp-primary);
+  --hp-purple2: var(--hp-primary2);
+}
+
+/* ─── Base ───────────────────────────────────────────── */
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--hp-bg);
+  color: var(--hp-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: var(--hp-bg); }
+::-webkit-scrollbar-thumb  { background: #c8d6e8; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #a0b4cc; }
+
+/* ─── Card hover lift ────────────────────────────────── */
+@media (hover: hover) {
+  .hp-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(30, 64, 120, 0.10);
+  }
+}
+.hp-lift:active { transform: scale(0.97); }
+.hp-lift {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* ─── Surface card shadow ────────────────────────────── */
+.bg-\[var\(--hp-surface\)\] {
+  box-shadow: var(--hp-shadow);
+}
+
+/* ─── Skeleton shimmer ───────────────────────────────── */
+.hp-skeleton {
+  background: linear-gradient(90deg, #e8ecf2 25%, #f3f5f8 50%, #e8ecf2 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+/* ─── Reduced motion ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hp-lift, .hp-skeleton, * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ─── ApexCharts override ────────────────────────────── */
+.apexcharts-canvas          { background: transparent !important; }
+.apexcharts-tooltip         {
+  background: var(--hp-surface) !important;
+  border-color: var(--hp-border2) !important;
+  color: var(--hp-text) !important;
+  box-shadow: 0 4px 12px rgba(30, 64, 120, 0.10) !important;
+}
+.apexcharts-text,
+.apexcharts-datalabel       { fill: var(--hp-text2) !important; }
+.apexcharts-gridline        { stroke: rgba(99, 131, 172, 0.10) !important; }
+
+/* ─── Interactive transitions ────────────────────────── */
+a, button, input, select, textarea {
+  transition: color 0.15s ease, background-color 0.15s ease,
+              border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+/* ─── Focus ring ─────────────────────────────────────── */
+input:focus, textarea:focus, select:focus {
+  box-shadow: 0 0 0 3px rgba(29, 111, 164, 0.15);
+}

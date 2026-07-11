@@ -1,0 +1,265 @@
+<div class="min-h-screen bg-[var(--hp-bg)]">
+
+  <!-- Header navy đồng bộ toàn app -->
+  <header style="background-color: var(--hp-nav-bg); border-bottom: 1px solid var(--hp-nav-border);">
+    <div class="px-4 lg:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
+              style="background: rgba(255,255,255,0.1);">
+          <i class="fas fa-house-medical text-sm" style="color: var(--hp-nav-accent);"></i>
+        </span>
+        <div>
+          <h1 class="text-sm font-semibold text-white">
+            Chào, {{ authService.currentUser()?.fullname }} 👋
+          </h1>
+          <p class="text-xs" style="color: rgba(255,255,255,0.55);">Theo dõi sức khỏe của bạn mỗi ngày</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <span class="text-xs" style="color: rgba(255,255,255,0.45);">{{ today | date:'dd/MM/yyyy' }}</span>
+        <button (click)="exportPdf()" [disabled]="isExportingPdf() || vitalSigns().length === 0"
+                title="{{ vitalSigns().length === 0 ? 'Chua co du lieu de xuat PDF' : 'Xuat bao cao suc khoe' }}"
+                class="flex items-center gap-2 rounded-[var(--hp-radius-sm)] px-3 py-1.5 text-xs
+                       transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15);"
+                onmouseenter="if(!this.disabled){ this.style.background='rgba(255,255,255,0.18)'; }"
+                onmouseleave="this.style.background='rgba(255,255,255,0.1)'">
+          <i class="fas fa-file-pdf" style="color: #fca5a5;"></i>
+          @if (isExportingPdf()) { Đang xuất... } @else { Xuất PDF }
+        </button>
+      </div>
+    </div>
+  </header>
+
+<div class="p-4 lg:p-6">
+  <!-- Stat cards: skeleton khi loading -->
+  @if (isLoading()) {
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="hp-skeleton h-20 rounded-[var(--hp-radius)]"></div>
+      }
+    </div>
+  } @else if (latestVital) {
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+      @if (latestVital.bmi) {
+        <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2
+                    border-t-violet-500 rounded-[var(--hp-radius)] p-4">
+          <div class="flex items-start justify-between mb-1">
+            <p class="text-xs text-[var(--hp-text2)]">BMI</p>
+            <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-violet-50 flex items-center justify-center shrink-0">
+              <i class="fas fa-ruler-vertical text-violet-500 text-[11px]"></i>
+            </div>
+          </div>
+          <p class="text-2xl font-medium text-[var(--hp-text)]">{{ latestVital.bmi }}</p>
+          <p class="text-xs mt-1" [class]="getBmiStatus(latestVital.bmi).color">
+            {{ getBmiStatus(latestVital.bmi).label }}
+          </p>
+        </div>
+      }
+      @if (latestVital.weightKg) {
+        <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2
+                    border-t-cyan-500 rounded-[var(--hp-radius)] p-4">
+          <div class="flex items-start justify-between mb-1">
+            <p class="text-xs text-[var(--hp-text2)]">Cân nặng</p>
+            <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-cyan-50 flex items-center justify-center shrink-0">
+              <i class="fas fa-weight-scale text-cyan-500 text-[11px]"></i>
+            </div>
+          </div>
+          <p class="text-2xl font-medium text-[var(--hp-text)]">{{ latestVital.weightKg }}</p>
+          <p class="text-xs text-[var(--hp-text3)] mt-1">kg</p>
+        </div>
+      }
+      @if (latestVital.systolicBp) {
+        <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2
+                    border-t-red-500 rounded-[var(--hp-radius)] p-4">
+          <div class="flex items-start justify-between mb-1">
+            <p class="text-xs text-[var(--hp-text2)]">Huyết áp</p>
+            <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-red-50 flex items-center justify-center shrink-0">
+              <i class="fas fa-droplet text-red-500 text-[11px]"></i>
+            </div>
+          </div>
+          <p class="text-2xl font-medium text-[var(--hp-text)]">
+            {{ latestVital.systolicBp }}/{{ latestVital.diastolicBp }}
+          </p>
+          <p class="text-xs text-[var(--hp-text3)] mt-1">mmHg</p>
+        </div>
+      }
+      @if (latestVital.heartRate) {
+        <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2
+                    border-t-orange-500 rounded-[var(--hp-radius)] p-4">
+          <div class="flex items-start justify-between mb-1">
+            <p class="text-xs text-[var(--hp-text2)]">Nhịp tim</p>
+            <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-orange-50 flex items-center justify-center shrink-0">
+              <i class="fas fa-heart-pulse text-orange-500 text-[11px]"></i>
+            </div>
+          </div>
+          <p class="text-2xl font-medium text-[var(--hp-text)]">{{ latestVital.heartRate }}</p>
+          <p class="text-xs text-[var(--hp-text3)] mt-1">bpm</p>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Chart cards (2 cột desktop, 1 cột mobile) -->
+  @if (isLoading()) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="hp-skeleton h-72 rounded-[var(--hp-radius)]"></div>
+      <div class="hp-skeleton h-72 rounded-[var(--hp-radius)]"></div>
+    </div>
+  } @else if (vitalSigns().length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2
+                  border-t-sky-500 rounded-[var(--hp-radius)] p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-sky-50 flex items-center justify-center shrink-0">
+            <i class="fas fa-chart-line text-sky-500 text-[11px]"></i>
+          </div>
+          <p class="text-xs font-medium text-[var(--hp-text2)] uppercase tracking-wide">
+            BMI &amp; Cân nặng theo thời gian
+          </p>
+        </div>
+        <div class="[&_.apexcharts-text]:fill-[var(--hp-text2)]">
+          <apx-chart
+            [series]="bmiChartOptions.series"
+            [chart]="bmiChartOptions.chart"
+            [xaxis]="bmiChartOptions.xaxis"
+            [stroke]="bmiChartOptions.stroke"
+            [colors]="bmiChartOptions.colors"
+            [dataLabels]="bmiChartOptions.dataLabels"
+            [legend]="bmiChartOptions.legend"
+            [tooltip]="bmiChartOptions.tooltip">
+          </apx-chart>
+        </div>
+      </div>
+
+      <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2
+                  border-t-teal-500 rounded-[var(--hp-radius)] p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-teal-50 flex items-center justify-center shrink-0">
+            <i class="fas fa-wave-square text-teal-500 text-[11px]"></i>
+          </div>
+          <p class="text-xs font-medium text-[var(--hp-text2)] uppercase tracking-wide">
+            Huyết áp &amp; Nhịp tim
+          </p>
+        </div>
+        <div class="[&_.apexcharts-text]:fill-[var(--hp-text2)]">
+          <apx-chart
+            [series]="bpChartOptions.series"
+            [chart]="bpChartOptions.chart"
+            [xaxis]="bpChartOptions.xaxis"
+            [stroke]="bpChartOptions.stroke"
+            [fill]="bpChartOptions.fill"
+            [colors]="bpChartOptions.colors"
+            [dataLabels]="bpChartOptions.dataLabels"
+            [legend]="bpChartOptions.legend"
+            [tooltip]="bpChartOptions.tooltip">
+          </apx-chart>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="flex flex-col items-center justify-center py-16 text-[var(--hp-text3)]
+                bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] mb-6">
+      <i class="fas fa-chart-line text-3xl mb-3"></i>
+      <p class="text-sm font-medium text-[var(--hp-text2)]">Chưa có dữ liệu biểu đồ</p>
+      <p class="text-xs mt-1">Thêm chỉ số sinh tồn để xem biểu đồ</p>
+      <a routerLink="/health-record"
+         class="mt-4 bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95
+                text-white rounded-[var(--hp-radius-sm)] px-4 py-2 text-sm font-medium">
+        Thêm chỉ số ngay
+      </a>
+    </div>
+  }
+
+  <!-- Quick menu: hp-lift + animate-fade-in -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <a routerLink="/health-record"
+       class="hp-lift bg-[var(--hp-surface)] border border-[var(--hp-border)]
+              rounded-[var(--hp-radius)] p-4 flex flex-col gap-3
+              hover:border-[var(--hp-border2)]">
+      <div class="w-9 h-9 rounded-[var(--hp-radius-sm)] bg-sky-50
+                  flex items-center justify-center">
+        <i class="fas fa-heart-pulse text-sky-500"></i>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-[var(--hp-text)]">Chỉ số sức khỏe</p>
+        <p class="text-xs text-[var(--hp-text3)] mt-0.5">Theo dõi sinh tồn</p>
+      </div>
+    </a>
+
+    <a routerLink="/medical-history"
+       class="hp-lift bg-[var(--hp-surface)] border border-[var(--hp-border)]
+              rounded-[var(--hp-radius)] p-4 flex flex-col gap-3
+              hover:border-[var(--hp-border2)]">
+      <div class="w-9 h-9 rounded-[var(--hp-radius-sm)] bg-teal-50
+                  flex items-center justify-center">
+        <i class="fas fa-clock-rotate-left text-teal-600"></i>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-[var(--hp-text)]">Lịch sử khám</p>
+        <p class="text-xs text-[var(--hp-text3)] mt-0.5">Toa thuốc, chẩn đoán</p>
+      </div>
+    </a>
+
+    <a routerLink="/vaccine"
+       class="hp-lift bg-[var(--hp-surface)] border border-[var(--hp-border)]
+              rounded-[var(--hp-radius)] p-4 flex flex-col gap-3
+              hover:border-[var(--hp-border2)]">
+      <div class="w-9 h-9 rounded-[var(--hp-radius-sm)] bg-emerald-50
+                  flex items-center justify-center">
+        <i class="fas fa-syringe text-emerald-700"></i>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-[var(--hp-text)]">Vaccine</p>
+        <p class="text-xs text-[var(--hp-text3)] mt-0.5">Lịch tiêm chủng</p>
+      </div>
+    </a>
+
+    <a routerLink="/ai-health"
+       class="hp-lift bg-[var(--hp-surface)] border border-[var(--hp-border)]
+              rounded-[var(--hp-radius)] p-4 flex flex-col gap-3
+              hover:border-[var(--hp-border2)]">
+      <div class="w-9 h-9 rounded-[var(--hp-radius-sm)] bg-purple-50
+                  flex items-center justify-center">
+        <i class="fas fa-robot text-purple-600"></i>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-[var(--hp-text)]">AI Sức khỏe</p>
+        <p class="text-xs text-[var(--hp-text3)] mt-0.5">Trợ lý thông minh</p>
+      </div>
+    </a>
+
+    @if (authService.currentUser()?.role === 'doctor' || authService.currentUser()?.role === 'admin') {
+      <a routerLink="/doctor"
+         class="hp-lift bg-[var(--hp-surface)] border border-[var(--hp-border)]
+                rounded-[var(--hp-radius)] p-4 flex flex-col gap-3
+                hover:border-[var(--hp-border2)]">
+        <div class="w-9 h-9 rounded-[var(--hp-radius-sm)] bg-blue-50
+                    flex items-center justify-center">
+          <i class="fas fa-user-doctor text-blue-700"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-[var(--hp-text)]">Bác sĩ</p>
+          <p class="text-xs text-[var(--hp-text3)] mt-0.5">Quản lý bệnh nhân</p>
+        </div>
+      </a>
+    }
+
+    @if (authService.currentUser()?.role === 'admin') {
+      <a routerLink="/admin"
+         class="hp-lift bg-[var(--hp-surface)] border border-[var(--hp-border)]
+                rounded-[var(--hp-radius)] p-4 flex flex-col gap-3
+                hover:border-[var(--hp-border2)]">
+        <div class="w-9 h-9 rounded-[var(--hp-radius-sm)] bg-orange-50
+                    flex items-center justify-center">
+          <i class="fas fa-shield-halved text-orange-600"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-[var(--hp-text)]">Admin</p>
+          <p class="text-xs text-[var(--hp-text3)] mt-0.5">Quản lý hệ thống</p>
+        </div>
+      </a>
+    }
+  </div>
+</div><!-- /inner content -->
+</div><!-- /min-h-screen wrapper -->

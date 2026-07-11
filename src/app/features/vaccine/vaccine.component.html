@@ -1,0 +1,234 @@
+<div class="min-h-screen bg-[var(--hp-bg)]">
+  <!-- Header -->
+  <header style="background-color: var(--hp-nav-bg); border-bottom: 1px solid var(--hp-nav-border);">
+    <div class="px-4 lg:px-6 py-4 flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <span class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
+              style="background: rgba(255,255,255,0.1);">
+          <i class="fas fa-syringe text-xs" style="color: var(--hp-nav-accent);"></i>
+        </span>
+        <div>
+          <h1 class="text-sm font-semibold text-white">Vaccine Tracker</h1>
+          <p class="text-xs" style="color: rgba(255,255,255,0.55);">Lịch tiêm chủng cá nhân</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="px-4 lg:px-6 py-6">
+    <!-- Offline Banner -->
+    @if (!offlineService.isOnline()) {
+      <div class="bg-amber-50 border border-amber-200 text-amber-700
+                  rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm flex items-center gap-2">
+        <i class="fas fa-wifi-slash"></i>
+        <span>Đang ở chế độ Offline — Dữ liệu hiển thị từ cache</span>
+      </div>
+    }
+    @if (offlineMessage()) {
+      <div class="bg-amber-50 border border-amber-200 text-amber-700
+                  rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm">
+        {{ offlineMessage() }}
+      </div>
+    }
+
+    <!-- Success -->
+    @if (successMessage()) {
+      <div class="animate-fade-in bg-emerald-50 border border-emerald-200 text-emerald-700
+                  rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm">
+        {{ successMessage() }}
+      </div>
+    }
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-3 gap-3 mb-6">
+      <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2 border-t-emerald-500
+                  rounded-[var(--hp-radius)] p-4">
+        <div class="flex items-start justify-between mb-1">
+          <p class="text-xs text-[var(--hp-text2)]">Đã tiêm</p>
+          <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-emerald-50 flex items-center justify-center shrink-0">
+            <i class="fas fa-circle-check text-emerald-500 text-[11px]"></i>
+          </div>
+        </div>
+        <p class="text-2xl font-medium text-[var(--hp-text)]">{{ doneCount }}</p>
+      </div>
+      <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2 border-t-amber-500
+                  rounded-[var(--hp-radius)] p-4">
+        <div class="flex items-start justify-between mb-1">
+          <p class="text-xs text-[var(--hp-text2)]">Chờ tiêm</p>
+          <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-amber-50 flex items-center justify-center shrink-0">
+            <i class="fas fa-clock text-amber-500 text-[11px]"></i>
+          </div>
+        </div>
+        <p class="text-2xl font-medium text-[var(--hp-text)]">{{ pendingCount }}</p>
+      </div>
+      <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2 border-t-red-500
+                  rounded-[var(--hp-radius)] p-4">
+        <div class="flex items-start justify-between mb-1">
+          <p class="text-xs text-[var(--hp-text2)]">Trễ lịch</p>
+          <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-red-50 flex items-center justify-center shrink-0">
+            <i class="fas fa-triangle-exclamation text-red-500 text-[11px]"></i>
+          </div>
+        </div>
+        <p class="text-2xl font-medium text-[var(--hp-text)]">{{ overdueCount }}</p>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-base font-medium text-[var(--hp-text)]">
+        Phác đồ tiêm chủng
+        <span class="text-sm font-normal text-[var(--hp-text3)] ml-1">({{ vaccines().length }} mũi)</span>
+      </h2>
+      <button (click)="showForm.set(!showForm())"
+        class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95
+               text-white px-4 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium
+               flex items-center gap-2">
+        <i class="fas" [class.fa-plus]="!showForm()" [class.fa-xmark]="showForm()"></i>
+        {{ showForm() ? "Đóng" : "Thêm mũi tiêm" }}
+      </button>
+    </div>
+
+    <!-- Form -->
+    @if (showForm()) {
+      <div class="animate-slide-down bg-[var(--hp-surface)] rounded-[var(--hp-radius)]
+                  border border-[var(--hp-border)] p-6 mb-6">
+        <h3 class="text-sm font-medium text-[var(--hp-text)] mb-4">Ghi nhận mũi tiêm</h3>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
+                Vaccine <span class="text-red-600">*</span>
+              </label>
+              <select formControlName="vaccineId"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20">
+                <option value="">-- Chọn vaccine --</option>
+                @for (v of catalog(); track v.id) {
+                  <option [value]="v.id">{{ v.vaccineName }}</option>
+                }
+              </select>
+              @if (catalog().length === 0) {
+                <p class="text-xs text-[var(--hp-text3)] mt-1.5">
+                  Chưa có vaccine trong danh mục. Thêm qua API /vaccines/catalog
+                </p>
+              }
+            </div>
+
+            <div>
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
+                Mũi số <span class="text-red-600">*</span>
+              </label>
+              <input type="number" formControlName="doseNumber" min="1"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20" />
+            </div>
+
+            <div>
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Ngày tiêm</label>
+              <input type="date" formControlName="vaccinatedDate"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20" />
+            </div>
+
+            <div>
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Ngày hẹn tiếp theo</label>
+              <input type="date" formControlName="nextDueDate"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20" />
+            </div>
+
+            <div>
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Nơi tiêm</label>
+              <input type="text" formControlName="location" placeholder="Trung tâm y tế quận 1..."
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       placeholder:text-[var(--hp-text3)] focus:outline-none
+                       focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20" />
+            </div>
+
+            <div>
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Số lô vaccine</label>
+              <input type="text" formControlName="batchNumber"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20" />
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="isSubmitting() || form.invalid"
+            class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95
+                   text-white px-6 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium
+                   disabled:opacity-50 disabled:cursor-not-allowed">
+            {{ isSubmitting() ? "Đang lưu..." : "Lưu mũi tiêm" }}
+          </button>
+        </form>
+      </div>
+    }
+
+    <!-- Loading skeleton -->
+    @if (isLoading()) {
+      <div class="space-y-3">
+        @for (i of [1,2,3]; track i) {
+          <div class="hp-skeleton h-20 rounded-[var(--hp-radius)]"></div>
+        }
+      </div>
+    }
+
+    <!-- Vaccine List -->
+    @if (!isLoading()) {
+      @if (vaccines().length === 0) {
+        <div class="text-center py-16 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]">
+          <i class="fas fa-syringe text-4xl text-[var(--hp-text3)] mb-4"></i>
+          <p class="text-[var(--hp-text2)] text-sm">Chưa có mũi tiêm nào. Thêm mũi tiêm đầu tiên!</p>
+        </div>
+      } @else {
+        <div class="space-y-3">
+          @for (vaccine of vaccines(); track vaccine.id) {
+            <div class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)] p-5">
+              <div class="flex-1">
+                <div class="flex flex-wrap items-center gap-2 mb-2">
+                  <h3 class="text-sm font-medium text-[var(--hp-text)]">
+                    {{ vaccine.vaccine ? vaccine.vaccine.vaccineName : "Vaccine #" + vaccine.vaccineId }}
+                  </h3>
+                  <span class="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-full border"
+                    [ngClass]="{
+                      'bg-emerald-50 text-emerald-700 border-emerald-200': vaccine.status === 'done',
+                      'bg-amber-50 text-amber-700 border-amber-200': vaccine.status === 'pending',
+                      'bg-red-50 text-red-700 border-red-200': vaccine.status === 'overdue'
+                    }">
+                    <span class="w-1.5 h-1.5 rounded-full"
+                      [ngClass]="{
+                        'bg-emerald-400': vaccine.status === 'done',
+                        'bg-amber-400': vaccine.status === 'pending',
+                        'bg-red-400': vaccine.status === 'overdue'
+                      }"></span>
+                    {{ (vaccine.status | vaccineStatus).label }}
+                  </span>
+                  <span class="text-xs bg-sky-100 text-sky-600 px-2 py-1 rounded-full">
+                    Mũi {{ vaccine.doseNumber }}
+                  </span>
+                </div>
+
+                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[var(--hp-text3)]">
+                  @if (vaccine.vaccinatedDate) {
+                    <span>Đã tiêm: {{ vaccine.vaccinatedDate | date: "dd/MM/yyyy" }}</span>
+                  }
+                  @if (vaccine.nextDueDate) {
+                    <span>Hẹn tiếp: {{ vaccine.nextDueDate | date: "dd/MM/yyyy" }}</span>
+                  }
+                  @if (vaccine.location) {
+                    <span>{{ vaccine.location }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </main>
+</div>

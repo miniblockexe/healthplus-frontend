@@ -1,0 +1,158 @@
+<div class="min-h-screen bg-[var(--hp-bg)]">
+
+  <!-- Header -->
+  <header style="background-color: var(--hp-nav-bg); border-bottom: 1px solid var(--hp-nav-border);">
+    <div class="px-4 lg:px-6 py-4 flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <span class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
+              style="background: rgba(255,255,255,0.1);">
+          <i class="fas fa-user-doctor text-xs" style="color: var(--hp-nav-accent);"></i>
+        </span>
+        <div>
+          <h1 class="text-sm font-semibold text-white">Doctor Portal</h1>
+          <p class="text-xs" style="color: rgba(255,255,255,0.55);">Quản lý danh sách bệnh nhân</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+<div class="p-4 lg:p-6">
+
+  <!-- Stats -->
+  <div class="grid grid-cols-3 gap-3 mb-6">
+    <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2 border-t-blue-500
+                rounded-[var(--hp-radius)] p-4">
+      <div class="flex items-start justify-between mb-1">
+        <p class="text-xs text-[var(--hp-text2)]">Tổng bệnh nhân</p>
+        <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-blue-50 flex items-center justify-center shrink-0">
+          <i class="fas fa-users text-blue-500 text-[11px]"></i>
+        </div>
+      </div>
+      <p class="text-2xl font-medium text-[var(--hp-text)]">{{ patients().length }}</p>
+    </div>
+    <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2 border-t-emerald-500
+                rounded-[var(--hp-radius)] p-4">
+      <div class="flex items-start justify-between mb-1">
+        <p class="text-xs text-[var(--hp-text2)]">Hẹn hôm nay</p>
+        <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-emerald-50 flex items-center justify-center shrink-0">
+          <i class="fas fa-calendar-check text-emerald-500 text-[11px]"></i>
+        </div>
+      </div>
+      <p class="text-2xl font-medium text-[var(--hp-text)]">0</p>
+    </div>
+    <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] border-t-2 border-t-violet-500
+                rounded-[var(--hp-radius)] p-4">
+      <div class="flex items-start justify-between mb-1">
+        <p class="text-xs text-[var(--hp-text2)]">Chờ khám</p>
+        <div class="w-7 h-7 rounded-[var(--hp-radius-sm)] bg-violet-50 flex items-center justify-center shrink-0">
+          <i class="fas fa-hourglass-half text-violet-500 text-[11px]"></i>
+        </div>
+      </div>
+      <p class="text-2xl font-medium text-[var(--hp-text)]">0</p>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-4 mb-4">
+    <div class="relative">
+      <i class="fas fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[var(--hp-text3)] text-sm"></i>
+      <input type="text"
+        placeholder="Tìm bệnh nhân theo tên hoặc email..."
+        (input)="onSearch($event)"
+        class="w-full pl-9 pr-4 py-2 bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+               rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)]
+               placeholder:text-[var(--hp-text3)] focus:outline-none
+               focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
+    </div>
+  </div>
+
+  <!-- Patient List -->
+  @if (isLoading()) {
+    <div class="space-y-3">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="hp-skeleton h-16 rounded-[var(--hp-radius)]"></div>
+      }
+    </div>
+  } @else if (filteredPatients.length === 0) {
+    <div class="text-center py-16 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]">
+      <i class="fas fa-users text-4xl text-[var(--hp-text3)] mb-4"></i>
+      <p class="text-[var(--hp-text2)] text-sm">Không tìm thấy bệnh nhân nào</p>
+    </div>
+  } @else {
+
+    <!-- Desktop: table -->
+    <div class="hidden sm:block bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-[var(--hp-surface2)] border-b border-[var(--hp-border)]">
+          <tr>
+            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)]">Bệnh nhân</th>
+            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)]">Email</th>
+            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)]">Giới tính</th>
+            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)]">SĐT</th>
+            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)]">Trạng thái</th>
+            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)]">Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (patient of filteredPatients; track patient.id) {
+            <tr class="border-b border-[var(--hp-border)] hover:bg-[var(--hp-surface2)] transition-colors">
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-sm font-medium shrink-0">
+                    {{ patient.fullname.charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="min-w-0">
+                    <p class="font-medium text-[var(--hp-text)] truncate">{{ patient.fullname }}</p>
+                    <p class="text-xs text-[var(--hp-text3)]">#{{ patient.id }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-[var(--hp-text2)]">{{ patient.email }}</td>
+              <td class="px-4 py-3 text-[var(--hp-text2)]">
+                {{ patient.gender === 'male' ? 'Nam' : patient.gender === 'female' ? 'Nữ' : '-' }}
+              </td>
+              <td class="px-4 py-3 text-[var(--hp-text2)]">{{ patient.phone || '-' }}</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border"
+                  [ngClass]="patient.isActive
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    : 'bg-red-50 text-red-700 border-red-200'">
+                  <span class="w-1.5 h-1.5 rounded-full" [ngClass]="patient.isActive ? 'bg-emerald-400' : 'bg-red-400'"></span>
+                  {{ patient.isActive ? 'Hoạt động' : 'Bị khóa' }}
+                </span>
+              </td>
+              <td class="px-4 py-3">
+                <a [routerLink]="['/doctor/patient', patient.id]"
+                  class="text-[var(--hp-purple2)] hover:text-sky-500 transition-colors text-sm">
+                  Xem hồ sơ
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile: card list -->
+    <div class="sm:hidden space-y-3">
+      @for (patient of filteredPatients; track patient.id) {
+        <a [routerLink]="['/doctor/patient', patient.id]"
+          class="hp-lift bg-[var(--hp-surface)] border border-[var(--hp-border)]
+                 rounded-[var(--hp-radius)] p-4 block">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-medium shrink-0">
+              {{ patient.fullname.charAt(0).toUpperCase() }}
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-[var(--hp-text)] truncate">{{ patient.fullname }}</p>
+              <p class="text-xs text-[var(--hp-text3)] truncate">{{ patient.email }}</p>
+            </div>
+            <span class="w-1.5 h-1.5 rounded-full shrink-0" [ngClass]="patient.isActive ? 'bg-emerald-400' : 'bg-red-400'"></span>
+          </div>
+        </a>
+      }
+    </div>
+  }
+
+</div><!-- /inner content -->
+</div><!-- /min-h-screen wrapper -->

@@ -1,0 +1,103 @@
+<div class="min-h-screen bg-[var(--hp-bg)] flex items-center justify-center px-4 py-8">
+  <div class="w-full max-w-sm bg-[var(--hp-surface)] border border-[var(--hp-border)]
+              rounded-[var(--hp-radius)] p-6 animate-fade-in">
+
+    <!-- Logo + Title (không có banner gradient) -->
+    <div class="flex flex-col items-center mb-6">
+      <div class="w-12 h-12 rounded-full bg-[image:var(--hp-gradient)] shadow-lg shadow-sky-500/25
+                  flex items-center justify-center mb-3">
+        <i class="fas fa-heart-pulse text-xl text-white"></i>
+      </div>
+      <h1 class="text-lg font-medium text-[var(--hp-text)]">Đăng ký</h1>
+      <p class="text-xs text-[var(--hp-text3)] mt-1">Health+ — Tạo tài khoản mới</p>
+    </div>
+
+    <!-- Error alert -->
+    @if (errorMessage()) {
+      <div class="animate-fade-in bg-red-50 border border-red-200 text-red-600
+                  rounded-[var(--hp-radius-sm)] px-4 py-3 text-sm mb-4">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Fullname -->
+      <div>
+        <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Họ và tên</label>
+        <input formControlName="fullname" type="text" placeholder="Nguyễn Văn A"
+               class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                      rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                      placeholder:text-[var(--hp-text3)] focus:outline-none
+                      focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20">
+        @if (form.get('fullname')?.invalid && form.get('fullname')?.touched) {
+          <p class="text-red-600 text-xs mt-1.5">Họ tên tối thiểu 2 ký tự</p>
+        }
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Email</label>
+        <input formControlName="email" type="email" placeholder="you@example.com"
+               class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                      rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                      placeholder:text-[var(--hp-text3)] focus:outline-none
+                      focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20">
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <p class="text-red-600 text-xs mt-1.5">Email không đúng định dạng</p>
+        }
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Mật khẩu</label>
+        <input formControlName="password" type="password" placeholder="••••••••"
+               class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                      rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                      placeholder:text-[var(--hp-text3)] focus:outline-none
+                      focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20">
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <p class="text-red-600 text-xs mt-1.5">Mật khẩu tối thiểu 6 ký tự</p>
+        }
+      </div>
+
+      <!-- Gender + Phone -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Giới tính</label>
+          <select formControlName="gender"
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                         rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                         focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20">
+            <option value="">Chọn</option>
+            <option value="male">Nam</option>
+            <option value="female">Nữ</option>
+            <option value="other">Khác</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Số điện thoại</label>
+          <input formControlName="phone" type="tel" placeholder="0901234567"
+                 class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
+                        rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
+                        placeholder:text-[var(--hp-text3)] focus:outline-none
+                        focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20">
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="isLoading()"
+              class="w-full bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95
+                     text-white rounded-[var(--hp-radius-sm)] py-2.5 text-sm font-medium
+                     disabled:opacity-50 disabled:cursor-not-allowed">
+        @if (isLoading()) { Đang xử lý... } @else { Đăng ký }
+      </button>
+    </form>
+
+    <!-- Switch link -->
+    <p class="text-center text-xs text-[var(--hp-text3)] mt-4">
+      Đã có tài khoản?
+      <a routerLink="/auth/login" class="text-[var(--hp-purple2)] hover:text-sky-500">
+        Đăng nhập
+      </a>
+    </p>
+  </div>
+</div>

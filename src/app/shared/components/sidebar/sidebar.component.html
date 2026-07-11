@@ -1,0 +1,211 @@
+<div class="flex h-screen bg-[var(--hp-bg)]">
+
+  <!-- Sidebar -->
+  <aside class="hidden sm:flex flex-col transition-all duration-300 relative shrink-0"
+         style="background-color: var(--hp-nav-bg);"
+         [class.w-[220px]]="!isCollapsed()"
+         [class.w-[56px]]="isCollapsed()">
+
+    <!-- Header: logo + user — nền đậm hơn để phân tầng rõ ràng -->
+    <div style="background-color: var(--hp-nav-bg2); border-bottom: 1px solid var(--hp-nav-border);"
+         class="shrink-0">
+
+      <!-- Logo row -->
+      <div class="flex items-center justify-between px-3 py-4"
+           style="border-bottom: 1px solid var(--hp-nav-border);">
+        @if (!isCollapsed()) {
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
+                  style="background: var(--hp-gradient);">
+              <i class="fas fa-heart-pulse text-xs text-white"></i>
+            </span>
+            <span class="text-sm font-semibold text-white tracking-wide">Health<span style="color: var(--hp-nav-accent);">+</span></span>
+          </div>
+        }
+        <button (click)="toggle()"
+          class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0 transition-colors"
+          style="color: var(--hp-nav-text);"
+          onmouseenter="this.style.background='rgba(255,255,255,0.1)'; this.style.color='#fff'"
+          onmouseleave="this.style.background='transparent'; this.style.color='rgba(255,255,255,0.72)'">
+          <i class="fas text-xs" [class.fa-bars]="isCollapsed()" [class.fa-xmark]="!isCollapsed()"></i>
+        </button>
+      </div>
+
+      <!-- User info -->
+      @if (!isCollapsed()) {
+        <div class="px-3 py-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 text-white"
+                 style="ring: 2px solid rgba(255,255,255,0.3);"
+                 [style.background]="authService.currentUser()?.role === 'admin' ? '#1d6fa4'
+                                   : authService.currentUser()?.role === 'doctor' ? '#1d6fa4'
+                                   : 'var(--hp-teal)'">
+              {{ authService.currentUser()?.fullname?.charAt(0)?.toUpperCase() }}
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-white truncate">
+                {{ authService.currentUser()?.fullname }}
+              </p>
+              <span class="inline-flex items-center gap-1 text-xs" style="color: var(--hp-nav-text);">
+                <span class="w-1.5 h-1.5 rounded-full shrink-0"
+                      style="background: var(--hp-nav-accent);"></span>
+                {{ authService.currentUser()?.role }}
+              </span>
+            </div>
+            <!-- Bell -->
+            <button (click)="toggleNotifications()" class="relative shrink-0 transition-colors"
+                    style="color: var(--hp-nav-text);"
+                    onmouseenter="this.style.color='#fff'"
+                    onmouseleave="this.style.color='rgba(255,255,255,0.72)'">
+              <i class="fas fa-bell text-sm"></i>
+              @if (notificationService.unreadCount() > 0) {
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full
+                             w-3.5 h-3.5 flex items-center justify-center">
+                  {{ notificationService.unreadCount() > 9 ? '9+' : notificationService.unreadCount() }}
+                </span>
+              }
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Notification Dropdown -->
+    @if (showNotifications() && !isCollapsed()) {
+      <div class="animate-slide-down absolute top-[108px] left-3 right-3 z-50
+                  bg-[var(--hp-surface)] border border-[var(--hp-border2)]
+                  rounded-[var(--hp-radius)] shadow-2xl shadow-black/40
+                  max-h-72 overflow-y-auto">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--hp-border)]">
+          <span class="text-sm font-medium text-[var(--hp-text)]">Thông báo</span>
+          @if (notificationService.unreadCount() > 0) {
+            <button (click)="notificationService.markAllAsRead()"
+              class="text-xs text-[var(--hp-primary2)] hover:text-[var(--hp-primary)]">
+              Đọc tất cả
+            </button>
+          }
+        </div>
+        @if (notificationService.notifications().length === 0) {
+          <div class="flex flex-col items-center justify-center py-8 text-[var(--hp-text3)] text-sm">
+            <i class="fas fa-bell-slash text-2xl mb-2"></i>
+            Không có thông báo
+          </div>
+        } @else {
+          @for (n of notificationService.notifications(); track n.id) {
+            <div (click)="onNotificationClick(n)"
+              class="px-4 py-3 border-b border-[var(--hp-border)] cursor-pointer hover:bg-[var(--hp-surface2)] transition-colors"
+              [ngClass]="!n.isRead ? 'bg-blue-50' : ''">
+              <div class="flex items-start gap-2">
+                <div class="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"
+                  [class.bg-blue-500]="!n.isRead"
+                  [class.bg-gray-400]="n.isRead"></div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-[var(--hp-text)]">{{ n.title }}</p>
+                  <p class="text-xs text-[var(--hp-text2)] mt-0.5">{{ n.message }}</p>
+                  <p class="text-xs text-[var(--hp-text3)] mt-1">{{ n.createdAt | date:'dd/MM HH:mm' }}</p>
+                </div>
+                <button (click)="$event.stopPropagation(); notificationService.delete(n.id)"
+                  class="text-[var(--hp-text3)] hover:text-red-500 transition-colors text-xs">
+                  <i class="fas fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    }
+
+    <!-- Nav menu -->
+    <nav class="flex-1 min-h-0 overflow-y-auto px-2 py-3 space-y-0.5">
+      @for (item of menuItems(); track item.path) {
+        <a [routerLink]="item.path"
+           routerLinkActive
+           #rla="routerLinkActive"
+           [routerLinkActiveOptions]="{ exact: item.path === '/dashboard' }"
+           [style.background]="rla.isActive ? 'var(--hp-nav-active)' : 'transparent'"
+           [style.color]="rla.isActive ? 'white' : 'var(--hp-nav-text)'"
+           class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-[var(--hp-radius-sm)]
+                  transition-colors relative overflow-hidden"
+           [class.border-l-2]="rla.isActive && !isCollapsed()"
+           [style.borderLeftColor]="rla.isActive ? 'var(--hp-nav-accent)' : 'transparent'"
+           [title]="isCollapsed() ? item.label : ''"
+           onmouseenter="if(!this.dataset.active) { this.style.background='rgba(255,255,255,0.07)'; this.style.color='#fff'; }"
+           onmouseleave="if(!this.dataset.active) { this.style.background='transparent'; this.style.color='rgba(255,255,255,0.72)'; }">
+          <i class="fas w-4 text-center shrink-0 text-sm" [class]="item.icon"
+             [style.color]="rla.isActive ? 'var(--hp-nav-accent)' : 'inherit'"></i>
+          @if (!isCollapsed()) {
+            <span class="text-sm">{{ item.label }}</span>
+          }
+        </a>
+      }
+    </nav>
+
+    <!-- Push notification utilities -->
+    @if (!isCollapsed()) {
+      <div class="px-2 pb-1 pt-2 space-y-0.5"
+           style="border-top: 1px solid var(--hp-nav-border);">
+        <button (click)="subscribePush()"
+          class="flex items-center gap-3 px-3 py-2 rounded-[var(--hp-radius-sm)] text-xs
+                 transition-colors w-full text-left"
+          style="color: var(--hp-nav-text);"
+          onmouseenter="this.style.background='rgba(255,255,255,0.07)'; this.style.color='#fff'"
+          onmouseleave="this.style.background='transparent'; this.style.color='rgba(255,255,255,0.72)'">
+          <i class="fas fa-bell w-4 text-center shrink-0"></i>
+          <span>Bật thông báo</span>
+        </button>
+        <button (click)="testPush()"
+          class="flex items-center gap-3 px-3 py-2 rounded-[var(--hp-radius-sm)] text-xs
+                 transition-colors w-full text-left"
+          style="color: var(--hp-nav-text);"
+          onmouseenter="this.style.background='rgba(255,255,255,0.07)'; this.style.color='#fff'"
+          onmouseleave="this.style.background='transparent'; this.style.color='rgba(255,255,255,0.72)'">
+          <i class="fas fa-paper-plane w-4 text-center shrink-0"></i>
+          <span>Test Push</span>
+        </button>
+      </div>
+    }
+
+    <!-- Logout -->
+    <div class="px-2 py-2 shrink-0" style="border-top: 1px solid var(--hp-nav-border);">
+      <button (click)="logout()"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-[var(--hp-radius-sm)] text-sm
+               transition-colors w-full text-left"
+        style="color: var(--hp-nav-text);"
+        onmouseenter="this.style.background='rgba(220,38,38,0.15)'; this.style.color='#fca5a5'"
+        onmouseleave="this.style.background='transparent'; this.style.color='rgba(255,255,255,0.72)'">
+        <i class="fas fa-right-from-bracket w-4 text-center shrink-0"></i>
+        @if (!isCollapsed()) {
+          <span>Đăng xuất</span>
+        }
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 min-h-0 overflow-y-auto pb-16 sm:pb-0">
+    <ng-content></ng-content>
+  </main>
+
+</div>
+
+<!-- Bottom nav: mobile only -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex sm:hidden"
+     style="background-color: var(--hp-nav-bg2); border-top: 1px solid var(--hp-nav-border);">
+  @for (item of menuItems(); track item.path) {
+    <a [routerLink]="item.path"
+       routerLinkActive
+       #rla="routerLinkActive"
+       [routerLinkActiveOptions]="{ exact: item.path === '/dashboard' }"
+       class="flex-1 flex flex-col items-center justify-center py-2 gap-1 relative transition-colors"
+       [style.color]="rla.isActive ? 'var(--hp-nav-accent)' : 'rgba(255,255,255,0.5)'">
+      <!-- active dot -->
+      <span class="absolute top-1 w-5 h-0.5 rounded-full transition-opacity"
+            style="background: var(--hp-nav-accent);"
+            [class.opacity-0]="!rla.isActive"
+            [class.opacity-100]="rla.isActive"></span>
+      <i class="fas text-base" [class]="item.icon"></i>
+      <span class="text-[10px] text-center leading-tight">{{ item.label }}</span>
+    </a>
+  }
+</nav>
