@@ -1,48 +1,65 @@
 <div class="min-h-screen bg-[var(--hp-bg)]">
-
   <!-- Header -->
-  <header style="background-color: var(--hp-nav-bg); border-bottom: 1px solid var(--hp-nav-border);">
+  <header
+    style="
+      background-color: var(--hp-nav-bg);
+      border-bottom: 1px solid var(--hp-nav-border);
+    "
+  >
     <div class="px-4 lg:px-6 py-4 flex items-center gap-3">
       <div class="flex items-center gap-2">
-        <span class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
-              style="background: rgba(255,255,255,0.1);">
-          <i class="fas fa-clock-rotate-left text-xs" style="color: var(--hp-nav-accent);"></i>
+        <span
+          class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
+          style="background: rgba(255, 255, 255, 0.1)"
+        >
+          <i
+            class="fas fa-clock-rotate-left text-xs"
+            style="color: var(--hp-nav-accent)"
+          ></i>
         </span>
         <div>
           <h1 class="text-sm font-semibold text-white">Lịch sử khám bệnh</h1>
-          <p class="text-xs" style="color: rgba(255,255,255,0.55);">Toa thuốc và chẩn đoán</p>
+          <p class="text-xs" style="color: rgba(255, 255, 255, 0.55)">
+            Toa thuốc và chẩn đoán
+          </p>
         </div>
       </div>
     </div>
   </header>
 
   <main class="px-4 lg:px-6 py-6">
-
     <!-- Offline Banner -->
     @if (!offlineService.isOnline()) {
-      <div class="bg-amber-50 border border-amber-200 text-amber-700
-                  rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm flex items-center gap-2">
+      <div
+        class="bg-amber-50 border border-amber-200 text-amber-700 rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm flex items-center gap-2"
+      >
         <i class="fas fa-wifi-slash"></i>
-        <span>Đang ở chế độ Offline — Dữ liệu hiển thị từ cache, sẽ đồng bộ khi có mạng</span>
+        <span
+          >Đang ở chế độ Offline — Dữ liệu hiển thị từ cache, sẽ đồng bộ khi có
+          mạng</span
+        >
       </div>
     }
     @if (offlineMessage()) {
-      <div class="bg-amber-50 border border-amber-200 text-amber-700
-                  rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm">
+      <div
+        class="bg-amber-50 border border-amber-200 text-amber-700 rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm"
+      >
         {{ offlineMessage() }}
       </div>
     }
 
     <!-- Success/Error -->
     @if (successMessage()) {
-      <div class="animate-fade-in bg-emerald-50 border border-emerald-200 text-emerald-700
-                  rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm">
+      <div
+        class="animate-fade-in bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm"
+      >
         {{ successMessage() }}
       </div>
     }
     @if (errorMessage()) {
-      <div class="animate-fade-in bg-red-50 border border-red-200 text-red-600
-                  rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm">
+      <div
+        class="animate-fade-in bg-red-50 border border-red-200 text-red-600 rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm"
+      >
         {{ errorMessage() }}
       </div>
     }
@@ -51,36 +68,53 @@
     <div class="flex flex-col md:flex-row gap-3 mb-3">
       <!-- Search box -->
       <div class="relative flex-1">
-        <i class="fas fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[var(--hp-text3)] text-sm"></i>
-        <input type="text" [(ngModel)]="searchText" (ngModelChange)="onSearchChange()"
+        <i
+          class="fas fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[var(--hp-text3)] text-sm"
+        ></i>
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (ngModelChange)="onSearchChange()"
           placeholder="Tìm theo bệnh viện, bác sĩ, chẩn đoán..."
-          class="w-full pl-9 pr-9 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)]
-                 rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)]
-                 placeholder:text-[var(--hp-text3)] focus:outline-none
-                 focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20" />
+          class="w-full pl-9 pr-9 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
+        />
         @if (searchText) {
-          <button (click)="clearFilters()"
-            class="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--hp-text3)] hover:text-[var(--hp-text)]">
+          <button
+            (click)="clearFilters()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--hp-text3)] hover:text-[var(--hp-text)]"
+          >
             <i class="fas fa-xmark text-xs"></i>
           </button>
         }
       </div>
       <!-- Date range -->
-      <input type="date" [(ngModel)]="filterFrom" (change)="onFilterChange()" title="Từ ngày"
-        class="px-3 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)]
-               rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)]
-               focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20" />
-      <i class="hidden md:block fas fa-arrow-right text-xs text-[var(--hp-text3)]"></i>
-      <input type="date" [(ngModel)]="filterTo" (change)="onFilterChange()" title="Đến ngày"
-        class="px-3 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)]
-               rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)]
-               focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20" />
+      <input
+        type="date"
+        [(ngModel)]="filterFrom"
+        (change)="onFilterChange()"
+        title="Từ ngày"
+        class="px-3 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
+      />
+      <i
+        class="hidden md:block fas fa-arrow-right text-xs text-[var(--hp-text3)]"
+      ></i>
+      <input
+        type="date"
+        [(ngModel)]="filterTo"
+        (change)="onFilterChange()"
+        title="Đến ngày"
+        class="px-3 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
+      />
       <!-- Add button -->
-      <button (click)="showForm.set(!showForm())"
-        class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95
-               text-white px-4 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium
-               whitespace-nowrap flex items-center justify-center gap-2">
-        <i class="fas" [class.fa-plus]="!showForm()" [class.fa-xmark]="showForm()"></i>
+      <button
+        (click)="showForm.set(!showForm())"
+        class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95 text-white px-4 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium whitespace-nowrap flex items-center justify-center gap-2"
+      >
+        <i
+          class="fas"
+          [class.fa-plus]="!showForm()"
+          [class.fa-xmark]="showForm()"
+        ></i>
         {{ showForm() ? "Đóng" : "Thêm lần khám" }}
       </button>
     </div>
@@ -90,7 +124,10 @@
       <p class="text-xs text-[var(--hp-text3)] mb-3">
         Hiển thị {{ visits().length }}/{{ totalItems() }} kết quả
         @if (searchText || filterFrom || filterTo) {
-          &nbsp;<button (click)="clearFilters()" class="text-[var(--hp-purple2)] hover:text-sky-500 hover:underline">
+          &nbsp;<button
+            (click)="clearFilters()"
+            class="text-[var(--hp-purple2)] hover:text-sky-500 hover:underline"
+          >
             Xóa bộ lọc
           </button>
         }
@@ -99,9 +136,12 @@
 
     <!-- Form -->
     @if (showForm()) {
-      <div class="animate-slide-down bg-[var(--hp-surface)] rounded-[var(--hp-radius)]
-                  border border-[var(--hp-border)] p-6 mb-6">
-        <h3 class="text-sm font-medium text-[var(--hp-text)] mb-4">Ghi nhận lần khám</h3>
+      <div
+        class="animate-slide-down bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)] p-6 mb-6"
+      >
+        <h3 class="text-sm font-medium text-[var(--hp-text)] mb-4">
+          Ghi nhận lần khám
+        </h3>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <!-- Chọn bệnh viện -->
@@ -109,20 +149,24 @@
               <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
                 Bệnh viện / Cơ sở y tế <span class="text-red-600">*</span>
               </label>
-              <select formControlName="hospitalId"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
-                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
-                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20">
+              <select
+                formControlName="hospitalId"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
+              >
                 <option value="">-- Chọn bệnh viện --</option>
                 @for (h of hospitals(); track h.id) {
                   <option [value]="h.id">
                     {{ h.name }}
-                    @if (h.specialty) { ({{ h.specialty }}) }
+                    @if (h.specialty) {
+                      ({{ h.specialty }})
+                    }
                   </option>
                 }
               </select>
               @if (hospitals().length === 0) {
-                <p class="text-xs text-[var(--hp-text3)] mt-1.5">Chưa có bệnh viện trong danh sách</p>
+                <p class="text-xs text-[var(--hp-text3)] mt-1.5">
+                  Chưa có bệnh viện trong danh sách
+                </p>
               }
             </div>
 
@@ -131,31 +175,38 @@
               <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
                 Ngày khám <span class="text-red-600">*</span>
               </label>
-              <input type="date" formControlName="visitDate"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
-                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
-                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20" />
+              <input
+                type="date"
+                formControlName="visitDate"
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
+              />
             </div>
 
             <!-- Ghi chú -->
             <div>
-              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Ghi chú cá nhân</label>
-              <textarea formControlName="note" rows="1" placeholder="Ghi chú thêm..."
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
-                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
-                       placeholder:text-[var(--hp-text3)] focus:outline-none resize-none
-                       focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"></textarea>
+              <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                >Ghi chú cá nhân</label
+              >
+              <textarea
+                formControlName="note"
+                rows="1"
+                placeholder="Ghi chú thêm..."
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)] focus:outline-none resize-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
+              ></textarea>
             </div>
           </div>
 
-          <div class="bg-blue-50 border border-blue-200 rounded-[var(--hp-radius-sm)] p-3 mb-4 text-sm text-blue-700">
+          <div
+            class="bg-blue-50 border border-blue-200 rounded-[var(--hp-radius-sm)] p-3 mb-4 text-sm text-blue-700"
+          >
             Chẩn đoán và điều trị sẽ được bác sĩ cập nhật sau khi khám
           </div>
 
-          <button type="submit" [disabled]="isSubmitting() || form.invalid"
-            class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95
-                   text-white px-6 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium
-                   disabled:opacity-50 disabled:cursor-not-allowed">
+          <button
+            type="submit"
+            [disabled]="isSubmitting() || form.invalid"
+            class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95 text-white px-6 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             {{ isSubmitting() ? "Đang lưu..." : "Lưu lần khám" }}
           </button>
         </form>
@@ -165,7 +216,7 @@
     <!-- Loading skeleton -->
     @if (isLoading()) {
       <div class="space-y-4">
-        @for (i of [1,2,3]; track i) {
+        @for (i of [1, 2, 3]; track i) {
           <div class="hp-skeleton h-32 rounded-[var(--hp-radius)]"></div>
         }
       </div>
@@ -174,17 +225,25 @@
     <!-- Visit List -->
     @if (!isLoading()) {
       @if (visits().length === 0) {
-        <div class="text-center py-16 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]">
-          <i class="fas fa-notes-medical text-4xl text-[var(--hp-text3)] mb-4"></i>
+        <div
+          class="text-center py-16 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]"
+        >
+          <i
+            class="fas fa-notes-medical text-4xl text-[var(--hp-text3)] mb-4"
+          ></i>
           <p class="text-[var(--hp-text2)] text-sm">Chưa có lần khám nào</p>
         </div>
       } @else {
         <div class="space-y-4">
           @for (visit of visits(); track visit.id) {
-            <div class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)] p-5">
+            <div
+              class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)] p-5"
+            >
               <div class="flex justify-between items-start mb-3">
                 <div>
-                  <h3 class="text-base font-medium text-[var(--hp-text)]">{{ visit.hospitalName }}</h3>
+                  <h3 class="text-base font-medium text-[var(--hp-text)]">
+                    {{ visit.hospitalName }}
+                  </h3>
                   <p class="text-sm text-[var(--hp-text3)] mt-1">
                     {{ visit.visitDate | date: "dd/MM/yyyy" }}
                     @if (visit.doctorName) {
@@ -192,7 +251,10 @@
                     }
                   </p>
                 </div>
-                <button (click)="deleteVisit(visit.id)" class="text-[var(--hp-text3)] hover:text-red-500 transition-colors">
+                <button
+                  (click)="deleteVisit(visit.id)"
+                  class="text-[var(--hp-text3)] hover:text-red-500 transition-colors"
+                >
                   <i class="fas fa-trash-can"></i>
                 </button>
               </div>
@@ -201,20 +263,30 @@
               @if (visit.diagnosis || visit.treatment) {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                   @if (visit.diagnosis) {
-                    <div class="bg-red-50 border border-red-100 rounded-[var(--hp-radius-sm)] p-3">
+                    <div
+                      class="bg-red-50 border border-red-100 rounded-[var(--hp-radius-sm)] p-3"
+                    >
                       <p class="text-xs text-red-600 mb-1">Chẩn đoán (BS)</p>
-                      <p class="text-sm text-[var(--hp-text2)]">{{ visit.diagnosis }}</p>
+                      <p class="text-sm text-[var(--hp-text2)]">
+                        {{ visit.diagnosis }}
+                      </p>
                     </div>
                   }
                   @if (visit.treatment) {
-                    <div class="bg-blue-50 border border-blue-200 rounded-[var(--hp-radius-sm)] p-3">
+                    <div
+                      class="bg-blue-50 border border-blue-200 rounded-[var(--hp-radius-sm)] p-3"
+                    >
                       <p class="text-xs text-blue-700 mb-1">Điều trị</p>
-                      <p class="text-sm text-[var(--hp-text2)]">{{ visit.treatment }}</p>
+                      <p class="text-sm text-[var(--hp-text2)]">
+                        {{ visit.treatment }}
+                      </p>
                     </div>
                   }
                 </div>
               } @else {
-                <div class="bg-[var(--hp-surface2)] rounded-[var(--hp-radius-sm)] p-3 mb-3 text-sm text-[var(--hp-text3)] italic">
+                <div
+                  class="bg-[var(--hp-surface2)] rounded-[var(--hp-radius-sm)] p-3 mb-3 text-sm text-[var(--hp-text3)] italic"
+                >
                   Chưa có chẩn đoán từ bác sĩ
                 </div>
               }
@@ -230,18 +302,30 @@
                 @if (visit.attachments && visit.attachments.length > 0) {
                   <div class="flex flex-wrap gap-2 mb-2">
                     @for (file of visit.attachments; track file.id) {
-                      <a [href]="'http://localhost:3000' + file.fileUrl" target="_blank"
-                        class="text-xs bg-[var(--hp-surface2)] hover:bg-[var(--hp-border2)] text-[var(--hp-text2)]
-                               px-3 py-1 rounded-full transition-colors">
+                      <!--<a [href]="'http://localhost:3000' + file.fileUrl" target="_blank"-->
+                      <a
+                        [href]="
+                          'https://healthplus-api.onrender.com' + file.fileUrl
+                        "
+                        target="_blank"
+                        class="text-xs bg-[var(--hp-surface2)] hover:bg-[var(--hp-border2)] text-[var(--hp-text2)] px-3 py-1 rounded-full transition-colors"
+                      >
                         <i class="fas fa-file mr-1"></i>{{ file.fileName }}
                       </a>
                     }
                   </div>
                 }
-                <label class="cursor-pointer text-sm text-[var(--hp-purple2)] hover:text-sky-500">
-                  <i class="fas fa-upload mr-1"></i>Upload toa thuốc / xét nghiệm
-                  <input type="file" class="hidden" accept="image/*,.pdf,.doc,.docx"
-                    (change)="onFileSelected($event, visit.id)" />
+                <label
+                  class="cursor-pointer text-sm text-[var(--hp-purple2)] hover:text-sky-500"
+                >
+                  <i class="fas fa-upload mr-1"></i>Upload toa thuốc / xét
+                  nghiệm
+                  <input
+                    type="file"
+                    class="hidden"
+                    accept="image/*,.pdf,.doc,.docx"
+                    (change)="onFileSelected($event, visit.id)"
+                  />
                 </label>
               </div>
             </div>
@@ -254,29 +338,35 @@
     @if (totalPages() > 1) {
       <div class="flex items-center justify-center gap-1 mt-6">
         <!-- Prev -->
-        <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1"
-          class="px-3 py-2 rounded-[var(--hp-radius-sm)] border border-[var(--hp-border2)] text-sm
-                 text-[var(--hp-text2)] hover:bg-[var(--hp-surface2)] transition-colors
-                 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent">
+        <button
+          (click)="goToPage(currentPage() - 1)"
+          [disabled]="currentPage() === 1"
+          class="px-3 py-2 rounded-[var(--hp-radius-sm)] border border-[var(--hp-border2)] text-sm text-[var(--hp-text2)] hover:bg-[var(--hp-surface2)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+        >
           <i class="fas fa-chevron-left text-xs"></i>
         </button>
 
         <!-- Page numbers -->
         @for (p of pageNumbers(); track p) {
-          <button (click)="goToPage(p)"
+          <button
+            (click)="goToPage(p)"
             class="w-9 h-9 rounded-[var(--hp-radius-sm)] text-sm border transition-colors"
-            [ngClass]="p === currentPage()
-              ? 'bg-[var(--hp-purple)] text-white border-[var(--hp-purple)]'
-              : 'border-[var(--hp-border2)] text-[var(--hp-text2)] hover:bg-[var(--hp-surface2)]'">
+            [ngClass]="
+              p === currentPage()
+                ? 'bg-[var(--hp-purple)] text-white border-[var(--hp-purple)]'
+                : 'border-[var(--hp-border2)] text-[var(--hp-text2)] hover:bg-[var(--hp-surface2)]'
+            "
+          >
             {{ p }}
           </button>
         }
 
         <!-- Next -->
-        <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
-          class="px-3 py-2 rounded-[var(--hp-radius-sm)] border border-[var(--hp-border2)] text-sm
-                 text-[var(--hp-text2)] hover:bg-[var(--hp-surface2)] transition-colors
-                 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent">
+        <button
+          (click)="goToPage(currentPage() + 1)"
+          [disabled]="currentPage() === totalPages()"
+          class="px-3 py-2 rounded-[var(--hp-radius-sm)] border border-[var(--hp-border2)] text-sm text-[var(--hp-text2)] hover:bg-[var(--hp-surface2)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+        >
           <i class="fas fa-chevron-right text-xs"></i>
         </button>
       </div>
