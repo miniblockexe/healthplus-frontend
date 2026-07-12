@@ -2,7 +2,7 @@
   "name": "Health+",
   "short_name": "Health+",
   "theme_color": "#1E7EA1",
-  "background_color": "#1E7EA1",
+  "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
