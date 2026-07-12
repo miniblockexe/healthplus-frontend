@@ -61,6 +61,9 @@ export class PushNotificationService {
   listenToMessages() {
     this.swPush.messages.subscribe((message: any) => {
       console.log('Push message received:', message);
+      const title = message.notification?.title || 'Health+';
+      const body = message.notification?.body || 'Bạn có thông báo mới';
+      alert(`🔔 ${title}\n${body}`);
     });
   }
 }
