@@ -1,4 +1,9 @@
-import { Component, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  signal,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -6,6 +11,14 @@ import { ApiResponse } from '../../core/models/api-response.model';
 import { User } from '../../core/models/user.model';
 import { VaccineCatalog } from '../../core/models/vaccine.model';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+
+interface Hospital {
+  id: number;
+  name: string;
+  address?: string;
+  specialty?: string;
+  isActive: boolean;
+}
 
 @Component({
   selector: 'app-admin',
@@ -17,12 +30,23 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 export class AdminComponent implements OnInit {
   private apiUrl = environment.apiUrl;
 
-  activeTab = signal<'users' | 'vaccines'>('users');
+  activeTab = signal<'users' | 'vaccines' | 'hospitals'>('users');
+
+  // Users
   users = signal<User[]>([]);
-  vaccines = signal<VaccineCatalog[]>([]);
   isLoading = signal(false);
+
+  // Vaccines
+  vaccines = signal<VaccineCatalog[]>([]);
   showVaccineForm = signal(false);
   editingVaccine = signal<VaccineCatalog | null>(null);
+
+  // Hospitals
+  hospitals = signal<Hospital[]>([]);
+  showHospitalForm = signal(false);
+  editingHospital = signal<Hospital | null>(null);
+
+  // Messages
   successMessage = signal('');
   errorMessage = signal('');
 
@@ -34,6 +58,12 @@ export class AdminComponent implements OnInit {
     manufacturer: [''],
   });
 
+  hospitalForm = this.fb.group({
+    name: ['', Validators.required],
+    address: [''],
+    specialty: [''],
+  });
+
   constructor(
     private http: HttpClient,
     private fb: FormBuilder,
@@ -42,6 +72,7 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
     this.loadUsers();
     this.loadVaccines();
+    this.loadHospitals();
   }
 
   // ─── USERS ─────────────────────────────────────────────
@@ -59,11 +90,13 @@ export class AdminComponent implements OnInit {
 
   toggleUserStatus(userId: number) {
     this.http
-      .patch<ApiResponse<User>>(`${this.apiUrl}/users/${userId}/toggle-status`, {})
+      .patch<
+        ApiResponse<User>
+      >(`${this.apiUrl}/users/${userId}/toggle-status`, {})
       .subscribe({
         next: (res) => {
-          this.users.update(list =>
-            list.map(u => u.id === userId ? res.data : u)
+          this.users.update((list) =>
+            list.map((u) => (u.id === userId ? res.data : u)),
           );
           this.showSuccess('Cập nhật trạng thái thành công!');
         },
@@ -75,8 +108,8 @@ export class AdminComponent implements OnInit {
       .patch<ApiResponse<User>>(`${this.apiUrl}/users/${userId}/role`, { role })
       .subscribe({
         next: (res) => {
-          this.users.update(list =>
-            list.map(u => u.id === userId ? res.data : u)
+          this.users.update((list) =>
+            list.map((u) => (u.id === userId ? res.data : u)),
           );
           this.showSuccess('Đổi role thành công!');
         },
@@ -86,18 +119,20 @@ export class AdminComponent implements OnInit {
   // ─── VACCINES ──────────────────────────────────────────
 
   loadVaccines() {
-    this.http.get<ApiResponse<VaccineCatalog[]>>(`${this.apiUrl}/vaccines/catalog`).subscribe({
-      next: (res) => this.vaccines.set(res.data),
-    });
+    this.http
+      .get<ApiResponse<VaccineCatalog[]>>(`${this.apiUrl}/vaccines/catalog`)
+      .subscribe({
+        next: (res) => this.vaccines.set(res.data),
+      });
   }
 
-  openAddForm() {
+  openAddVaccineForm() {
     this.editingVaccine.set(null);
     this.vaccineForm.reset({ totalDoses: 1, targetGroup: 'all' });
     this.showVaccineForm.set(true);
   }
 
-  openEditForm(vaccine: VaccineCatalog) {
+  openEditVaccineForm(vaccine: VaccineCatalog) {
     this.editingVaccine.set(vaccine);
     this.vaccineForm.patchValue({
       vaccineName: vaccine.vaccineName,
@@ -115,25 +150,27 @@ export class AdminComponent implements OnInit {
     const editing = this.editingVaccine();
 
     if (editing) {
-      // Sửa vaccine
       this.http
-        .patch<ApiResponse<VaccineCatalog>>(`${this.apiUrl}/vaccines/catalog/${editing.id}`, body)
+        .patch<
+          ApiResponse<VaccineCatalog>
+        >(`${this.apiUrl}/vaccines/catalog/${editing.id}`, body)
         .subscribe({
           next: (res) => {
-            this.vaccines.update(list =>
-              list.map(v => v.id === editing.id ? res.data : v)
+            this.vaccines.update((list) =>
+              list.map((v) => (v.id === editing.id ? res.data : v)),
             );
             this.showVaccineForm.set(false);
             this.showSuccess('Cập nhật vaccine thành công!');
           },
         });
     } else {
-      // Thêm vaccine mới
       this.http
-        .post<ApiResponse<VaccineCatalog>>(`${this.apiUrl}/vaccines/catalog`, body)
+        .post<
+          ApiResponse<VaccineCatalog>
+        >(`${this.apiUrl}/vaccines/catalog`, body)
         .subscribe({
           next: (res) => {
-            this.vaccines.update(list => [...list, res.data]);
+            this.vaccines.update((list) => [...list, res.data]);
             this.showVaccineForm.set(false);
             this.showSuccess('Thêm vaccine thành công!');
           },
@@ -147,17 +184,95 @@ export class AdminComponent implements OnInit {
       .delete<ApiResponse<any>>(`${this.apiUrl}/vaccines/catalog/${id}`)
       .subscribe({
         next: () => {
-          this.vaccines.update(list => list.filter(v => v.id !== id));
+          this.vaccines.update((list) => list.filter((v) => v.id !== id));
           this.showSuccess('Xóa vaccine thành công!');
         },
       });
   }
 
-  closeForm() {
+  closeVaccineForm() {
     this.showVaccineForm.set(false);
     this.editingVaccine.set(null);
     this.vaccineForm.reset({ totalDoses: 1, targetGroup: 'all' });
   }
+
+  // ─── HOSPITALS ─────────────────────────────────────────
+
+  loadHospitals() {
+    this.http
+      .get<ApiResponse<Hospital[]>>(`${this.apiUrl}/hospitals`)
+      .subscribe({
+        next: (res) => this.hospitals.set(res.data),
+      });
+  }
+
+  openAddHospitalForm() {
+    this.editingHospital.set(null);
+    this.hospitalForm.reset();
+    this.showHospitalForm.set(true);
+  }
+
+  openEditHospitalForm(hospital: Hospital) {
+    this.editingHospital.set(hospital);
+    this.hospitalForm.patchValue({
+      name: hospital.name,
+      address: hospital.address || '',
+      specialty: hospital.specialty || '',
+    });
+    this.showHospitalForm.set(true);
+  }
+
+  saveHospital() {
+    if (this.hospitalForm.invalid) return;
+    const body = this.hospitalForm.value;
+    const editing = this.editingHospital();
+
+    if (editing) {
+      this.http
+        .patch<
+          ApiResponse<Hospital>
+        >(`${this.apiUrl}/hospitals/${editing.id}`, body)
+        .subscribe({
+          next: (res) => {
+            this.hospitals.update((list) =>
+              list.map((h) => (h.id === editing.id ? res.data : h)),
+            );
+            this.showHospitalForm.set(false);
+            this.showSuccess('Cập nhật bệnh viện thành công!');
+          },
+        });
+    } else {
+      this.http
+        .post<ApiResponse<Hospital>>(`${this.apiUrl}/hospitals`, body)
+        .subscribe({
+          next: (res) => {
+            this.hospitals.update((list) => [...list, res.data]);
+            this.showHospitalForm.set(false);
+            this.showSuccess('Thêm bệnh viện thành công!');
+          },
+        });
+    }
+  }
+
+  deleteHospital(id: number) {
+    if (!confirm('Xóa bệnh viện này?')) return;
+    this.http
+      .delete<ApiResponse<any>>(`${this.apiUrl}/hospitals/${id}`)
+      .subscribe({
+        next: () => {
+          this.hospitals.update((list) => list.filter((h) => h.id !== id));
+          this.showSuccess('Xóa bệnh viện thành công!');
+        },
+      });
+  }
+
+  closeHospitalForm() {
+    this.showHospitalForm.set(false);
+    this.editingHospital.set(null);
+    this.hospitalForm.reset();
+  }
+
+  // ─── UTILS ─────────────────────────────────────────────
 
   private showSuccess(msg: string) {
     this.successMessage.set(msg);

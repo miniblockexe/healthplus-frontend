@@ -1,105 +1,387 @@
 <div class="min-h-screen bg-[var(--hp-bg)]">
-
   <!-- Header + Tabs -->
-  <header style="background-color: var(--hp-nav-bg); border-bottom: 1px solid var(--hp-nav-border);">
+  <header
+    style="
+      background-color: var(--hp-nav-bg);
+      border-bottom: 1px solid var(--hp-nav-border);
+    "
+  >
     <div class="px-4 lg:px-6 py-4 flex items-center gap-3">
-      <span class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
-            style="background: rgba(255,255,255,0.1);">
-        <i class="fas fa-shield-halved text-xs" style="color: var(--hp-nav-accent);"></i>
+      <span
+        class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
+        style="background: rgba(255, 255, 255, 0.1)"
+      >
+        <i
+          class="fas fa-shield-halved text-xs"
+          style="color: var(--hp-nav-accent)"
+        ></i>
       </span>
       <div>
         <h1 class="text-sm font-semibold text-white">Admin Panel</h1>
-        <p class="text-xs" style="color: rgba(255,255,255,0.55);">Quản lý hệ thống Health+</p>
+        <p class="text-xs" style="color: rgba(255, 255, 255, 0.55)">
+          Quản lý hệ thống Health+
+        </p>
       </div>
     </div>
-    <!-- Tabs trong header -->
-    <div class="px-4 lg:px-6 flex gap-1" style="border-top: 1px solid rgba(255,255,255,0.08);">
-      <button (click)="activeTab.set('users')"
+    <!-- Tabs -->
+    <div
+      class="px-4 lg:px-6 flex gap-1"
+      style="border-top: 1px solid rgba(255, 255, 255, 0.08)"
+    >
+      <button
+        (click)="activeTab.set('users')"
         class="px-5 py-2.5 text-sm font-medium border-b-2 transition-colors"
-        [style.borderBottomColor]="activeTab() === 'users' ? 'var(--hp-nav-accent)' : 'transparent'"
-        [style.color]="activeTab() === 'users' ? '#fff' : 'rgba(255,255,255,0.6)'">
-      Users ({{ users().length }})
-    </button>
-    <button (click)="activeTab.set('vaccines')"
-      class="px-5 py-2.5 text-sm font-medium border-b-2 transition-colors"
-      [style.borderBottomColor]="activeTab() === 'vaccines' ? 'var(--hp-nav-accent)' : 'transparent'"
-      [style.color]="activeTab() === 'vaccines' ? '#fff' : 'rgba(255,255,255,0.6)'">
-      Vaccines ({{ vaccines().length }})
-    </button>
-    </div><!-- /tabs -->
+        [style.borderBottomColor]="
+          activeTab() === 'users' ? 'var(--hp-nav-accent)' : 'transparent'
+        "
+        [style.color]="
+          activeTab() === 'users' ? '#fff' : 'rgba(255,255,255,0.6)'
+        "
+      >
+        <i class="fas fa-users mr-1.5"></i>Users ({{ users().length }})
+      </button>
+      <button
+        (click)="activeTab.set('vaccines')"
+        class="px-5 py-2.5 text-sm font-medium border-b-2 transition-colors"
+        [style.borderBottomColor]="
+          activeTab() === 'vaccines' ? 'var(--hp-nav-accent)' : 'transparent'
+        "
+        [style.color]="
+          activeTab() === 'vaccines' ? '#fff' : 'rgba(255,255,255,0.6)'
+        "
+      >
+        <i class="fas fa-syringe mr-1.5"></i>Vaccines ({{ vaccines().length }})
+      </button>
+      <button
+        (click)="activeTab.set('hospitals')"
+        class="px-5 py-2.5 text-sm font-medium border-b-2 transition-colors"
+        [style.borderBottomColor]="
+          activeTab() === 'hospitals' ? 'var(--hp-nav-accent)' : 'transparent'
+        "
+        [style.color]="
+          activeTab() === 'hospitals' ? '#fff' : 'rgba(255,255,255,0.6)'
+        "
+      >
+        <i class="fas fa-hospital mr-1.5"></i>Bệnh viện ({{
+          hospitals().length
+        }})
+      </button>
+    </div>
   </header>
 
   <!-- Messages -->
   @if (successMessage()) {
-    <div class="animate-fade-in bg-emerald-50 border border-emerald-200 text-emerald-700
-                rounded-[var(--hp-radius-sm)] px-4 py-3 m-4 text-sm">
-      {{ successMessage() }}
+    <div
+      class="animate-fade-in bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-[var(--hp-radius-sm)] px-4 py-3 m-4 text-sm"
+    >
+      <i class="fas fa-circle-check mr-2"></i>{{ successMessage() }}
     </div>
   }
 
-<div class="p-4 lg:p-6">
-  <!-- USERS TAB -->
-  @if (activeTab() === "users") {
-    @if (isLoading()) {
-      <div class="space-y-3">
-        @for (i of [1,2,3,4]; track i) {
-          <div class="hp-skeleton h-14 rounded-[var(--hp-radius)]"></div>
-        }
+  <div class="p-4 lg:p-6">
+    <!-- ══ USERS TAB ══ -->
+    @if (activeTab() === "users") {
+      @if (isLoading()) {
+        <div class="space-y-3">
+          @for (i of [1, 2, 3, 4]; track i) {
+            <div class="hp-skeleton h-14 rounded-[var(--hp-radius)]"></div>
+          }
+        </div>
+      } @else {
+        <div
+          class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] overflow-hidden overflow-x-auto"
+        >
+          <table class="w-full text-sm">
+            <thead
+              class="bg-[var(--hp-surface2)] border-b border-[var(--hp-border)]"
+            >
+              <tr>
+                <th
+                  class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+                >
+                  User
+                </th>
+                <th
+                  class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+                >
+                  Email
+                </th>
+                <th
+                  class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+                >
+                  Role
+                </th>
+                <th
+                  class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+                >
+                  Trạng thái
+                </th>
+                <th
+                  class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+                >
+                  Hành động
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (user of users(); track user.id) {
+                <tr
+                  class="border-b border-[var(--hp-border)] hover:bg-[var(--hp-surface2)] transition-colors"
+                >
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2.5">
+                      <div
+                        class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-medium shrink-0"
+                        [class.bg-teal-600]="user.role === 'user'"
+                        [class.bg-blue-600]="user.role === 'doctor'"
+                        [class.bg-sky-600]="user.role === 'admin'"
+                      >
+                        {{ user.fullname.charAt(0).toUpperCase() }}
+                      </div>
+                      <span
+                        class="font-medium text-[var(--hp-text)] whitespace-nowrap"
+                        >{{ user.fullname }}</span
+                      >
+                    </div>
+                  </td>
+                  <td
+                    class="px-4 py-3 text-[var(--hp-text2)] whitespace-nowrap"
+                  >
+                    {{ user.email }}
+                  </td>
+                  <td class="px-4 py-3">
+                    <select
+                      [value]="user.role"
+                      (change)="changeRole(user.id, $any($event.target).value)"
+                      class="text-xs bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-2 py-1.5 text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
+                    >
+                      <option value="user">User</option>
+                      <option value="doctor">Doctor</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span
+                      class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border whitespace-nowrap"
+                      [ngClass]="
+                        user.isActive
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-red-50 text-red-700 border-red-200'
+                      "
+                    >
+                      <span
+                        class="w-1.5 h-1.5 rounded-full"
+                        [ngClass]="
+                          user.isActive ? 'bg-emerald-400' : 'bg-red-400'
+                        "
+                      ></span>
+                      {{ user.isActive ? "Hoạt động" : "Bị khóa" }}
+                    </span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <button
+                      (click)="toggleUserStatus(user.id)"
+                      class="text-xs px-3 py-1.5 rounded-[var(--hp-radius-sm)] border transition-colors whitespace-nowrap flex items-center gap-1.5"
+                      [ngClass]="
+                        user.isActive
+                          ? 'border-red-200 text-red-600 hover:bg-red-50'
+                          : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
+                      "
+                    >
+                      <i
+                        class="fas"
+                        [class.fa-lock]="user.isActive"
+                        [class.fa-unlock]="!user.isActive"
+                      ></i>
+                      {{ user.isActive ? "Khóa" : "Mở khóa" }}
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    }
+
+    <!-- ══ VACCINES TAB ══ -->
+    @if (activeTab() === "vaccines") {
+      <div class="flex justify-between items-center mb-4">
+        <p class="text-sm text-[var(--hp-text2)]">Quản lý danh mục vaccine</p>
+        <button
+          (click)="openAddVaccineForm()"
+          class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95 text-white px-4 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium flex items-center gap-2"
+        >
+          <i class="fas fa-plus"></i>Thêm vaccine
+        </button>
       </div>
-    } @else {
-      <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] overflow-hidden overflow-x-auto">
+
+      @if (showVaccineForm()) {
+        <div
+          class="animate-slide-down bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)] p-5 mb-4"
+        >
+          <h3 class="text-sm font-medium text-[var(--hp-text)] mb-4">
+            {{ editingVaccine() ? "Sửa vaccine" : "Thêm vaccine mới" }}
+          </h3>
+          <form [formGroup]="vaccineForm" (ngSubmit)="saveVaccine()">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Tên vaccine *</label
+                >
+                <input
+                  type="text"
+                  formControlName="vaccineName"
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Bệnh phòng ngừa</label
+                >
+                <input
+                  type="text"
+                  formControlName="diseasePrevented"
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Tổng số mũi</label
+                >
+                <input
+                  type="number"
+                  formControlName="totalDoses"
+                  min="1"
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Đối tượng</label
+                >
+                <select
+                  formControlName="targetGroup"
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
+                >
+                  <option value="all">Tất cả</option>
+                  <option value="child">Trẻ em</option>
+                  <option value="adult">Người lớn</option>
+                  <option value="elderly">Người cao tuổi</option>
+                </select>
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Nhà sản xuất</label
+                >
+                <input
+                  type="text"
+                  formControlName="manufacturer"
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
+                />
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <button
+                type="submit"
+                [disabled]="vaccineForm.invalid"
+                class="bg-[var(--hp-purple)] hover:bg-sky-600 text-white px-6 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium disabled:opacity-50"
+              >
+                {{ editingVaccine() ? "Cập nhật" : "Lưu vaccine" }}
+              </button>
+              <button
+                type="button"
+                (click)="closeVaccineForm()"
+                class="border border-[var(--hp-border2)] text-[var(--hp-text2)] hover:bg-[var(--hp-surface2)] px-4 py-2 rounded-[var(--hp-radius-sm)] text-sm transition-colors"
+              >
+                Hủy
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+
+      <div
+        class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] overflow-hidden overflow-x-auto"
+      >
         <table class="w-full text-sm">
-          <thead class="bg-[var(--hp-surface2)] border-b border-[var(--hp-border)]">
+          <thead
+            class="bg-[var(--hp-surface2)] border-b border-[var(--hp-border)]"
+          >
             <tr>
-              <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">User</th>
-              <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">Email</th>
-              <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">Role</th>
-              <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">Trạng thái</th>
-              <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">Hành động</th>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Tên vaccine
+              </th>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Bệnh phòng ngừa
+              </th>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Số mũi
+              </th>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Đối tượng
+              </th>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Nhà SX
+              </th>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Hành động
+              </th>
             </tr>
           </thead>
           <tbody>
-            @for (user of users(); track user.id) {
-              <tr class="border-b border-[var(--hp-border)] hover:bg-[var(--hp-surface2)] transition-colors">
-                <td class="px-4 py-3">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-medium shrink-0"
-                      [class.bg-teal-600]="user.role === 'user'"
-                      [class.bg-blue-600]="user.role === 'doctor'"
-                      [class.bg-sky-600]="user.role === 'admin'">
-                      {{ user.fullname.charAt(0).toUpperCase() }}
-                    </div>
-                    <span class="font-medium text-[var(--hp-text)] whitespace-nowrap">{{ user.fullname }}</span>
-                  </div>
+            @for (v of vaccines(); track v.id) {
+              <tr
+                class="border-b border-[var(--hp-border)] hover:bg-[var(--hp-surface2)] transition-colors"
+              >
+                <td
+                  class="px-4 py-3 font-medium text-[var(--hp-text)] whitespace-nowrap"
+                >
+                  {{ v.vaccineName }}
                 </td>
-                <td class="px-4 py-3 text-[var(--hp-text2)] whitespace-nowrap">{{ user.email }}</td>
-                <td class="px-4 py-3">
-                  <select [value]="user.role" (change)="changeRole(user.id, $any($event.target).value)"
-                    class="text-xs bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)]
-                           px-2 py-1.5 text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]">
-                    <option value="user">User</option>
-                    <option value="doctor">Doctor</option>
-                    <option value="admin">Admin</option>
-                  </select>
+                <td class="px-4 py-3 text-[var(--hp-text2)] whitespace-nowrap">
+                  {{ v.diseasePrevented || "-" }}
                 </td>
-                <td class="px-4 py-3">
-                  <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border whitespace-nowrap"
-                    [ngClass]="user.isActive
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                      : 'bg-red-50 text-red-700 border-red-200'">
-                    <span class="w-1.5 h-1.5 rounded-full" [ngClass]="user.isActive ? 'bg-emerald-400' : 'bg-red-400'"></span>
-                    {{ user.isActive ? "Hoạt động" : "Bị khóa" }}
+                <td class="px-4 py-3 text-center">
+                  <span
+                    class="bg-sky-100 text-sky-600 px-2 py-1 rounded-full text-xs whitespace-nowrap"
+                  >
+                    {{ v.totalDoses }} mũi
                   </span>
                 </td>
+                <td class="px-4 py-3 text-[var(--hp-text2)] whitespace-nowrap">
+                  {{ v.targetGroup || "all" }}
+                </td>
+                <td class="px-4 py-3 text-[var(--hp-text2)] whitespace-nowrap">
+                  {{ v.manufacturer || "-" }}
+                </td>
                 <td class="px-4 py-3">
-                  <button (click)="toggleUserStatus(user.id)"
-                    class="text-xs px-3 py-1.5 rounded-[var(--hp-radius-sm)] border transition-colors whitespace-nowrap flex items-center gap-1.5"
-                    [ngClass]="user.isActive
-                      ? 'border-red-200 text-red-600 hover:bg-red-50'
-                      : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'">
-                    <i class="fas" [class.fa-lock]="user.isActive" [class.fa-unlock]="!user.isActive"></i>
-                    {{ user.isActive ? "Khóa" : "Mở khóa" }}
-                  </button>
+                  <div class="flex gap-2">
+                    <button
+                      (click)="openEditVaccineForm(v)"
+                      class="text-xs px-3 py-1.5 border border-blue-200 text-blue-700 hover:bg-blue-50 rounded-[var(--hp-radius-sm)] transition-colors whitespace-nowrap"
+                    >
+                      <i class="fas fa-pen mr-1"></i>Sửa
+                    </button>
+                    <button
+                      (click)="deleteVaccine(v.id)"
+                      class="text-xs px-3 py-1.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-[var(--hp-radius-sm)] transition-colors whitespace-nowrap"
+                    >
+                      <i class="fas fa-trash-can mr-1"></i>Xóa
+                    </button>
+                  </div>
                 </td>
               </tr>
             }
@@ -107,129 +389,178 @@
         </table>
       </div>
     }
-  }
 
-  <!-- VACCINES TAB -->
-  @if (activeTab() === "vaccines") {
-    <div class="flex justify-between items-center mb-4">
-      <p class="text-sm text-[var(--hp-text2)]">Quản lý danh mục vaccine</p>
-      <button (click)="openAddForm()"
-        class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95
-               text-white px-4 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium flex items-center gap-2">
-        <i class="fas fa-plus"></i>Thêm vaccine
-      </button>
-    </div>
+    <!-- ══ HOSPITALS TAB ══ -->
+    @if (activeTab() === "hospitals") {
+      <div class="flex justify-between items-center mb-4">
+        <p class="text-sm text-[var(--hp-text2)]">
+          Quản lý danh sách bệnh viện
+        </p>
+        <button
+          (click)="openAddHospitalForm()"
+          class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95 text-white px-4 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium flex items-center gap-2"
+        >
+          <i class="fas fa-plus"></i>Thêm bệnh viện
+        </button>
+      </div>
 
-    <!-- Vaccine Form -->
-    @if (showVaccineForm()) {
-      <div class="animate-slide-down bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)] p-5 mb-4">
-        <h3 class="text-sm font-medium text-[var(--hp-text)] mb-4">
-          {{ editingVaccine() ? "Sửa vaccine" : "Thêm vaccine mới" }}
-        </h3>
-        <form [formGroup]="vaccineForm" (ngSubmit)="saveVaccine()">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Tên vaccine *</label>
-              <input type="text" formControlName="vaccineName"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
-                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
-                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
+      @if (showHospitalForm()) {
+        <div
+          class="animate-slide-down bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)] p-5 mb-4"
+        >
+          <h3 class="text-sm font-medium text-[var(--hp-text)] mb-4">
+            {{ editingHospital() ? "Sửa bệnh viện" : "Thêm bệnh viện mới" }}
+          </h3>
+          <form [formGroup]="hospitalForm" (ngSubmit)="saveHospital()">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div class="md:col-span-2">
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Tên bệnh viện *</label
+                >
+                <input
+                  type="text"
+                  formControlName="name"
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Chuyên khoa</label
+                >
+                <input
+                  type="text"
+                  formControlName="specialty"
+                  placeholder="VD: Đa khoa, Nhi khoa..."
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Địa chỉ</label
+                >
+                <input
+                  type="text"
+                  formControlName="address"
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
+                />
+              </div>
             </div>
-            <div>
-              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Bệnh phòng ngừa</label>
-              <input type="text" formControlName="diseasePrevented"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
-                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
-                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
+            <div class="flex gap-3">
+              <button
+                type="submit"
+                [disabled]="hospitalForm.invalid"
+                class="bg-[var(--hp-purple)] hover:bg-sky-600 text-white px-6 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium disabled:opacity-50"
+              >
+                {{ editingHospital() ? "Cập nhật" : "Lưu bệnh viện" }}
+              </button>
+              <button
+                type="button"
+                (click)="closeHospitalForm()"
+                class="border border-[var(--hp-border2)] text-[var(--hp-text2)] hover:bg-[var(--hp-surface2)] px-4 py-2 rounded-[var(--hp-radius-sm)] text-sm transition-colors"
+              >
+                Hủy
+              </button>
             </div>
-            <div>
-              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Tổng số mũi</label>
-              <input type="number" formControlName="totalDoses" min="1"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
-                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
-                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
-            </div>
-            <div>
-              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Đối tượng</label>
-              <select formControlName="targetGroup"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
-                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
-                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20">
-                <option value="all">Tất cả</option>
-                <option value="child">Trẻ em</option>
-                <option value="adult">Người lớn</option>
-                <option value="elderly">Người cao tuổi</option>
-              </select>
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-xs text-[var(--hp-text2)] mb-1.5">Nhà sản xuất</label>
-              <input type="text" formControlName="manufacturer"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)]
-                       rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)]
-                       focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"/>
-            </div>
-          </div>
-          <div class="flex gap-3">
-            <button type="submit" [disabled]="vaccineForm.invalid"
-              class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95
-                     text-white px-6 py-2 rounded-[var(--hp-radius-sm)] text-sm font-medium
-                     disabled:opacity-50 disabled:cursor-not-allowed">
-              {{ editingVaccine() ? "Cập nhật" : "Lưu vaccine" }}
-            </button>
-            <button type="button" (click)="closeForm()"
-              class="border border-[var(--hp-border2)] text-[var(--hp-text2)] hover:bg-[var(--hp-surface2)]
-                     px-4 py-2 rounded-[var(--hp-radius-sm)] text-sm transition-colors">
-              Hủy
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
+      }
+
+      <div
+        class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] overflow-hidden overflow-x-auto"
+      >
+        <table class="w-full text-sm">
+          <thead
+            class="bg-[var(--hp-surface2)] border-b border-[var(--hp-border)]"
+          >
+            <tr>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Tên bệnh viện
+              </th>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Chuyên khoa
+              </th>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Địa chỉ
+              </th>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Trạng thái
+              </th>
+              <th
+                class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap"
+              >
+                Hành động
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (h of hospitals(); track h.id) {
+              <tr
+                class="border-b border-[var(--hp-border)] hover:bg-[var(--hp-surface2)] transition-colors"
+              >
+                <td class="px-4 py-3 font-medium text-[var(--hp-text)]">
+                  {{ h.name }}
+                </td>
+                <td class="px-4 py-3">
+                  @if (h.specialty) {
+                    <span
+                      class="bg-purple-50 text-purple-700 border border-purple-200 px-2 py-1 rounded-full text-xs whitespace-nowrap"
+                    >
+                      {{ h.specialty }}
+                    </span>
+                  } @else {
+                    <span class="text-[var(--hp-text2)]">-</span>
+                  }
+                </td>
+                <td
+                  class="px-4 py-3 text-[var(--hp-text2)] text-xs max-w-xs truncate"
+                >
+                  {{ h.address || "-" }}
+                </td>
+                <td class="px-4 py-3">
+                  <span
+                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border whitespace-nowrap"
+                    [ngClass]="
+                      h.isActive
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-red-50 text-red-700 border-red-200'
+                    "
+                  >
+                    <span
+                      class="w-1.5 h-1.5 rounded-full"
+                      [ngClass]="h.isActive ? 'bg-emerald-400' : 'bg-red-400'"
+                    ></span>
+                    {{ h.isActive ? "Hoạt động" : "Đã xóa" }}
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex gap-2">
+                    <button
+                      (click)="openEditHospitalForm(h)"
+                      class="text-xs px-3 py-1.5 border border-blue-200 text-blue-700 hover:bg-blue-50 rounded-[var(--hp-radius-sm)] transition-colors whitespace-nowrap"
+                    >
+                      <i class="fas fa-pen mr-1"></i>Sửa
+                    </button>
+                    <button
+                      (click)="deleteHospital(h.id)"
+                      class="text-xs px-3 py-1.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-[var(--hp-radius-sm)] transition-colors whitespace-nowrap"
+                    >
+                      <i class="fas fa-trash-can mr-1"></i>Xóa
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     }
-
-    <!-- Vaccine Table -->
-    <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] overflow-hidden overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead class="bg-[var(--hp-surface2)] border-b border-[var(--hp-border)]">
-          <tr>
-            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">Tên vaccine</th>
-            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">Bệnh phòng ngừa</th>
-            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">Số mũi</th>
-            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">Đối tượng</th>
-            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">Nhà SX</th>
-            <th class="text-left px-4 py-3 font-medium text-[var(--hp-text2)] whitespace-nowrap">Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (v of vaccines(); track v.id) {
-            <tr class="border-b border-[var(--hp-border)] hover:bg-[var(--hp-surface2)] transition-colors">
-              <td class="px-4 py-3 font-medium text-[var(--hp-text)] whitespace-nowrap">{{ v.vaccineName }}</td>
-              <td class="px-4 py-3 text-[var(--hp-text2)] whitespace-nowrap">{{ v.diseasePrevented || "-" }}</td>
-              <td class="px-4 py-3 text-center">
-                <span class="bg-sky-100 text-sky-600 px-2 py-1 rounded-full text-xs whitespace-nowrap">
-                  {{ v.totalDoses }} mũi
-                </span>
-              </td>
-              <td class="px-4 py-3 text-[var(--hp-text2)] whitespace-nowrap">{{ v.targetGroup || "all" }}</td>
-              <td class="px-4 py-3 text-[var(--hp-text2)] whitespace-nowrap">{{ v.manufacturer || "-" }}</td>
-              <td class="px-4 py-3">
-                <div class="flex gap-2">
-                  <button (click)="openEditForm(v)"
-                    class="text-xs px-3 py-1.5 border border-blue-200 text-blue-700 hover:bg-blue-50
-                           rounded-[var(--hp-radius-sm)] transition-colors whitespace-nowrap">
-                    <i class="fas fa-pen mr-1"></i>Sửa
-                  </button>
-                  <button (click)="deleteVaccine(v.id)"
-                    class="text-xs px-3 py-1.5 border border-red-200 text-red-600 hover:bg-red-50
-                           rounded-[var(--hp-radius-sm)] transition-colors whitespace-nowrap">
-                    <i class="fas fa-trash-can mr-1"></i>Xóa
-                  </button>
-                </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  }
-</div><!-- /inner content -->
-</div><!-- /min-h-screen wrapper -->
+  </div>
+</div>
