@@ -1,25 +1,45 @@
 <div class="min-h-screen bg-[var(--hp-bg)] flex flex-col">
-
   <!-- Header: đồng màu navy với sidebar -->
-  <header style="background-color: var(--hp-nav-bg); border-bottom: 1px solid var(--hp-nav-border);">
+  <header
+    style="
+      background-color: var(--hp-nav-bg);
+      border-bottom: 1px solid var(--hp-nav-border);
+    "
+  >
     <div class="px-4 lg:px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <span class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
-              style="background: rgba(255,255,255,0.1);">
-          <i class="fas fa-robot text-xs" style="color: var(--hp-nav-accent);"></i>
+        <span
+          class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
+          style="background: rgba(255, 255, 255, 0.1)"
+        >
+          <i
+            class="fas fa-robot text-xs"
+            style="color: var(--hp-nav-accent)"
+          ></i>
         </span>
         <div>
           <h1 class="text-sm font-semibold text-white">AI Sức Khỏe</h1>
-          <p class="text-xs" style="color: rgba(255,255,255,0.55);">Trợ lý thông minh — phân tích dựa trên dữ liệu thực của bạn</p>
+          <p class="text-xs" style="color: rgba(255, 255, 255, 0.55)">
+            Trợ lý thông minh — phân tích dựa trên dữ liệu thực của bạn
+          </p>
         </div>
       </div>
       @if (isLoadingData()) {
-        <div class="flex items-center gap-2 text-xs" style="color: rgba(255,255,255,0.6);">
-          <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background: var(--hp-nav-accent);"></span>
+        <div
+          class="flex items-center gap-2 text-xs"
+          style="color: rgba(255, 255, 255, 0.6)"
+        >
+          <span
+            class="w-1.5 h-1.5 rounded-full animate-pulse"
+            style="background: var(--hp-nav-accent)"
+          ></span>
           Đang tải dữ liệu...
         </div>
       } @else {
-        <div class="text-xs text-right" style="color: rgba(255,255,255,0.55);">
+        <div
+          class="text-xs text-right"
+          style="color: rgba(255, 255, 255, 0.55)"
+        >
           <div>{{ vitalSigns().length }} chỉ số</div>
           <div>{{ medicalVisits().length }} lần khám</div>
         </div>
@@ -27,64 +47,101 @@
     </div>
 
     <!-- Tabs -->
-    <div class="px-4 lg:px-6 flex gap-1" style="border-top: 1px solid rgba(255,255,255,0.08);">
-      <button (click)="activeTab.set('chat')"
+    <div
+      class="px-4 lg:px-6 flex gap-1"
+      style="border-top: 1px solid rgba(255, 255, 255, 0.08)"
+    >
+      <button
+        (click)="activeTab.set('chat')"
         class="px-5 py-2.5 text-sm font-medium border-b-2 transition-colors"
-        [style.borderBottomColor]="activeTab() === 'chat' ? 'var(--hp-nav-accent)' : 'transparent'"
-        [style.color]="activeTab() === 'chat' ? '#fff' : 'rgba(255,255,255,0.6)'">
+        [style.borderBottomColor]="
+          activeTab() === 'chat' ? 'var(--hp-nav-accent)' : 'transparent'
+        "
+        [style.color]="
+          activeTab() === 'chat' ? '#fff' : 'rgba(255,255,255,0.6)'
+        "
+      >
         Tư vấn
       </button>
-      <button (click)="activeTab.set('analyze')"
+      <button
+        (click)="activeTab.set('analyze')"
         class="px-5 py-2.5 text-sm font-medium border-b-2 transition-colors"
-        [style.borderBottomColor]="activeTab() === 'analyze' ? 'var(--hp-nav-accent)' : 'transparent'"
-        [style.color]="activeTab() === 'analyze' ? '#fff' : 'rgba(255,255,255,0.6)'">
+        [style.borderBottomColor]="
+          activeTab() === 'analyze' ? 'var(--hp-nav-accent)' : 'transparent'
+        "
+        [style.color]="
+          activeTab() === 'analyze' ? '#fff' : 'rgba(255,255,255,0.6)'
+        "
+      >
         Phân tích
       </button>
-      <button (click)="activeTab.set('qa')"
+      <button
+        (click)="activeTab.set('qa')"
         class="px-5 py-2.5 text-sm font-medium border-b-2 transition-colors"
-        [style.borderBottomColor]="activeTab() === 'qa' ? 'var(--hp-nav-accent)' : 'transparent'"
-        [style.color]="activeTab() === 'qa' ? '#fff' : 'rgba(255,255,255,0.6)'">
+        [style.borderBottomColor]="
+          activeTab() === 'qa' ? 'var(--hp-nav-accent)' : 'transparent'
+        "
+        [style.color]="activeTab() === 'qa' ? '#fff' : 'rgba(255,255,255,0.6)'"
+      >
         Hỏi đáp
       </button>
     </div>
   </header>
 
   <!-- ══════════════ TAB 1: CHAT ══════════════ -->
-  @if (activeTab() === 'chat') {
-    <div class="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4 min-h-0">
-
+  @if (activeTab() === "chat") {
+    <div
+      class="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4 min-h-0"
+    >
       <!-- Clear button -->
       <div class="flex justify-end mb-2">
-        <button (click)="clearChat()"
-          class="text-xs text-[var(--hp-text3)] hover:text-red-500 flex items-center gap-1.5 transition-colors">
+        <button
+          (click)="clearChat()"
+          class="text-xs text-[var(--hp-text3)] hover:text-red-500 flex items-center gap-1.5 transition-colors"
+        >
           <i class="fas fa-trash-can"></i> Làm mới cuộc trò chuyện
         </button>
       </div>
 
       <!-- Messages -->
-      <div class="flex-1 overflow-y-auto space-y-4 mb-4" style="max-height: calc(100vh - 280px)">
+      <div
+        class="flex-1 overflow-y-auto space-y-4 mb-4"
+        style="max-height: calc(100vh - 280px)"
+      >
         @for (msg of chatMessages(); track $index) {
           <div class="flex" [class.justify-end]="msg.role === 'user'">
             <!-- AI avatar -->
-            @if (msg.role === 'assistant') {
-              <div class="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center mr-2 shrink-0 mt-1">
+            @if (msg.role === "assistant") {
+              <div
+                class="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center mr-2 shrink-0 mt-1"
+              >
                 <i class="fas fa-robot text-sky-500 text-sm"></i>
               </div>
             }
 
             <div class="max-w-[78%]">
-              <div class="rounded-[var(--hp-radius)] px-4 py-3 text-sm leading-relaxed"
-                [ngClass]="msg.role === 'user'
-                  ? 'bg-[var(--hp-purple)] text-white rounded-tr-sm'
-                  : 'bg-[var(--hp-surface2)] text-[var(--hp-text)] border border-[var(--hp-border)] rounded-tl-sm'"
-                [innerHTML]="formatContent(msg.content)">
-              </div>
-              <p class="text-xs text-[var(--hp-text3)] mt-1" [class.text-right]="msg.role === 'user'">{{ msg.time }}</p>
+              <div
+                class="rounded-[var(--hp-radius)] px-4 py-3 text-sm leading-relaxed"
+                [ngClass]="
+                  msg.role === 'user'
+                    ? 'bg-[var(--hp-purple)] text-white rounded-tr-sm'
+                    : 'bg-[var(--hp-surface2)] text-[var(--hp-text)] border border-[var(--hp-border)] rounded-tl-sm'
+                "
+                [innerHTML]="formatContent(msg.content)"
+              ></div>
+              <p
+                class="text-xs text-[var(--hp-text3)] mt-1"
+                [class.text-right]="msg.role === 'user'"
+              >
+                {{ msg.time }}
+              </p>
             </div>
 
             <!-- User avatar -->
-            @if (msg.role === 'user') {
-              <div class="w-8 h-8 rounded-full bg-[var(--hp-purple)] flex items-center justify-center ml-2 shrink-0 mt-1">
+            @if (msg.role === "user") {
+              <div
+                class="w-8 h-8 rounded-full bg-[var(--hp-purple)] flex items-center justify-center ml-2 shrink-0 mt-1"
+              >
                 <i class="fas fa-user text-white text-sm"></i>
               </div>
             }
@@ -94,14 +151,27 @@
         <!-- Typing indicator -->
         @if (isChatLoading()) {
           <div class="flex items-end gap-2">
-            <div class="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
+            <div
+              class="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center shrink-0"
+            >
               <i class="fas fa-robot text-sky-500 text-sm"></i>
             </div>
-            <div class="bg-[var(--hp-surface2)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] rounded-tl-sm px-4 py-3">
+            <div
+              class="bg-[var(--hp-surface2)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] rounded-tl-sm px-4 py-3"
+            >
               <span class="flex gap-1">
-                <span class="w-2 h-2 bg-sky-400 rounded-full animate-bounce" style="animation-delay:0ms"></span>
-                <span class="w-2 h-2 bg-sky-400 rounded-full animate-bounce" style="animation-delay:150ms"></span>
-                <span class="w-2 h-2 bg-sky-400 rounded-full animate-bounce" style="animation-delay:300ms"></span>
+                <span
+                  class="w-2 h-2 bg-sky-400 rounded-full animate-bounce"
+                  style="animation-delay: 0ms"
+                ></span>
+                <span
+                  class="w-2 h-2 bg-sky-400 rounded-full animate-bounce"
+                  style="animation-delay: 150ms"
+                ></span>
+                <span
+                  class="w-2 h-2 bg-sky-400 rounded-full animate-bounce"
+                  style="animation-delay: 300ms"
+                ></span>
               </span>
             </div>
           </div>
@@ -109,20 +179,47 @@
         <div #chatBottom></div>
       </div>
 
+      <!-- Quick prompts — kéo ngang -->
+      <div
+        class="flex gap-2 mb-2 overflow-x-auto pb-1 scrollbar-hide"
+        style="scrollbar-width: none"
+      >
+        @for (
+          q of [
+            "Chỉ số BMI của tôi có ổn không?",
+            "Tôi nên ăn gì với chỉ số này?",
+            "Tôi có nguy cơ gì cần lưu ý?",
+            "Khi nào tôi nên đi tái khám?",
+          ];
+          track q
+        ) {
+          <button
+            (click)="chatInput = q; sendChat()"
+            [disabled]="isChatLoading()"
+            class="text-xs px-3 py-1.5 bg-[var(--hp-surface2)] text-[var(--hp-text2)] rounded-full border border-[var(--hp-border)] hover:border-[var(--hp-purple)] hover:text-[var(--hp-purple2)] disabled:opacity-50 transition-colors whitespace-nowrap shrink-0"
+          >
+            {{ q }}
+          </button>
+        }
+      </div>
+
       <!-- Input -->
-      <div class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border2)] p-3 flex gap-2 items-end">
+      <div
+        class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border2)] p-3 flex gap-2 items-end"
+      >
         <textarea
           [(ngModel)]="chatInput"
           (keydown)="onChatKeydown($event)"
           [disabled]="isChatLoading()"
-          placeholder="Nhập câu hỏi về sức khỏe... (Enter để gửi, Shift+Enter xuống dòng)"
+          placeholder="Nhập câu hỏi về sức khỏe..."
           rows="2"
-          class="flex-1 resize-none text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)]
-                 focus:outline-none bg-transparent"></textarea>
-        <button (click)="sendChat()"
+          class="flex-1 resize-none text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)] focus:outline-none bg-transparent"
+        ></textarea>
+        <button
+          (click)="sendChat()"
           [disabled]="isChatLoading() || !chatInput.trim()"
-          class="w-9 h-9 rounded-[var(--hp-radius)] bg-[var(--hp-purple)] hover:bg-sky-600 disabled:opacity-40
-                 text-white flex items-center justify-center transition-colors shrink-0">
+          class="w-9 h-9 rounded-[var(--hp-radius)] bg-[var(--hp-purple)] hover:bg-sky-600 disabled:opacity-40 text-white flex items-center justify-center transition-colors shrink-0"
+        >
           @if (isChatLoading()) {
             <i class="fas fa-spinner fa-spin text-sm"></i>
           } @else {
@@ -130,61 +227,65 @@
           }
         </button>
       </div>
-
-      <!-- Quick prompts -->
-      <div class="flex gap-2 mt-2 flex-wrap">
-        @for (q of ['Chỉ số BMI của tôi có ổn không?', 'Tôi nên ăn gì với chỉ số này?', 'Tôi có nguy cơ gì cần lưu ý?', 'Khi nào tôi nên đi tái khám?']; track q) {
-          <button (click)="chatInput = q; sendChat()"
-            [disabled]="isChatLoading()"
-            class="text-xs px-3 py-1.5 bg-[var(--hp-surface2)] text-[var(--hp-text2)] rounded-full
-                   border border-[var(--hp-border)] hover:border-[var(--hp-purple)] hover:text-[var(--hp-purple2)]
-                   disabled:opacity-50 transition-colors">
-            {{ q }}
-          </button>
-        }
-      </div>
     </div>
   }
 
   <!-- ══════════════ TAB 2: ANALYZE ══════════════ -->
-  @if (activeTab() === 'analyze') {
+  @if (activeTab() === "analyze") {
     <div class="max-w-4xl mx-auto w-full px-4 py-6">
-
       <!-- Trigger card -->
       @if (!analysisResult() && !isAnalyzing()) {
-        <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-8 text-center">
-          <div class="w-16 h-16 bg-sky-100 rounded-[var(--hp-radius)] flex items-center justify-center mx-auto mb-4">
+        <div
+          class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-8 text-center"
+        >
+          <div
+            class="w-16 h-16 bg-sky-100 rounded-[var(--hp-radius)] flex items-center justify-center mx-auto mb-4"
+          >
             <i class="fas fa-brain text-sky-500 text-2xl"></i>
           </div>
-          <h3 class="text-[var(--hp-text)] text-base font-medium mb-2">Phân tích sức khỏe tổng thể</h3>
+          <h3 class="text-[var(--hp-text)] text-base font-medium mb-2">
+            Phân tích sức khỏe tổng thể
+          </h3>
           <p class="text-[var(--hp-text2)] text-sm mb-6 max-w-sm mx-auto">
-            AI sẽ đọc toàn bộ chỉ số sinh tồn, lịch sử khám và lịch tiêm của bạn,
-            sau đó tổng hợp thành báo cáo sức khỏe chi tiết.
+            AI sẽ đọc toàn bộ chỉ số sinh tồn, lịch sử khám và lịch tiêm của
+            bạn, sau đó tổng hợp thành báo cáo sức khỏe chi tiết.
           </p>
 
           <!-- Data summary badges -->
           <div class="flex flex-wrap justify-center gap-3 mb-6">
-            <span class="bg-blue-50 text-blue-700 text-xs px-3 py-1.5 rounded-full font-medium">
+            <span
+              class="bg-blue-50 text-blue-700 text-xs px-3 py-1.5 rounded-full font-medium"
+            >
               {{ vitalSigns().length }} chỉ số sinh tồn
             </span>
-            <span class="bg-emerald-50 text-emerald-600 text-xs px-3 py-1.5 rounded-full font-medium">
+            <span
+              class="bg-emerald-50 text-emerald-600 text-xs px-3 py-1.5 rounded-full font-medium"
+            >
               {{ medicalVisits().length }} lần khám
             </span>
-            <span class="bg-amber-50 text-amber-600 text-xs px-3 py-1.5 rounded-full font-medium">
+            <span
+              class="bg-amber-50 text-amber-600 text-xs px-3 py-1.5 rounded-full font-medium"
+            >
               {{ vaccines().length }} vaccine
             </span>
           </div>
 
           @if (vitalSigns().length === 0 && medicalVisits().length === 0) {
-            <p class="text-amber-700 text-sm bg-amber-50 border border-amber-200 rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4">
-              Chưa có dữ liệu sức khỏe. Hãy thêm chỉ số sinh tồn hoặc lịch sử khám trước.
+            <p
+              class="text-amber-700 text-sm bg-amber-50 border border-amber-200 rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4"
+            >
+              Chưa có dữ liệu sức khỏe. Hãy thêm chỉ số sinh tồn hoặc lịch sử
+              khám trước.
             </p>
           }
 
-          <button (click)="analyzeHealth()"
-            [disabled]="vitalSigns().length === 0 && medicalVisits().length === 0"
-            class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95 disabled:opacity-40
-                   text-white px-8 py-2.5 rounded-[var(--hp-radius-sm)] font-medium text-sm">
+          <button
+            (click)="analyzeHealth()"
+            [disabled]="
+              vitalSigns().length === 0 && medicalVisits().length === 0
+            "
+            class="bg-[var(--hp-purple)] hover:bg-sky-600 active:scale-95 disabled:opacity-40 text-white px-8 py-2.5 rounded-[var(--hp-radius-sm)] font-medium text-sm"
+          >
             Bắt đầu phân tích
           </button>
         </div>
@@ -192,23 +293,42 @@
 
       <!-- Loading state -->
       @if (isAnalyzing()) {
-        <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-10 text-center">
-          <div class="w-16 h-16 bg-sky-100 rounded-[var(--hp-radius)] flex items-center justify-center mx-auto mb-4 animate-pulse">
+        <div
+          class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-10 text-center"
+        >
+          <div
+            class="w-16 h-16 bg-sky-100 rounded-[var(--hp-radius)] flex items-center justify-center mx-auto mb-4 animate-pulse"
+          >
             <i class="fas fa-brain text-sky-500 text-2xl"></i>
           </div>
-          <h3 class="text-[var(--hp-text)] font-medium mb-2 text-sm">Đang phân tích...</h3>
-          <p class="text-[var(--hp-text3)] text-sm">AI đang đọc và xử lý toàn bộ dữ liệu sức khỏe của bạn</p>
+          <h3 class="text-[var(--hp-text)] font-medium mb-2 text-sm">
+            Đang phân tích...
+          </h3>
+          <p class="text-[var(--hp-text3)] text-sm">
+            AI đang đọc và xử lý toàn bộ dữ liệu sức khỏe của bạn
+          </p>
           <div class="flex justify-center gap-1 mt-4">
-            <span class="w-2 h-2 bg-sky-400 rounded-full animate-bounce" style="animation-delay:0ms"></span>
-            <span class="w-2 h-2 bg-sky-400 rounded-full animate-bounce" style="animation-delay:150ms"></span>
-            <span class="w-2 h-2 bg-sky-400 rounded-full animate-bounce" style="animation-delay:300ms"></span>
+            <span
+              class="w-2 h-2 bg-sky-400 rounded-full animate-bounce"
+              style="animation-delay: 0ms"
+            ></span>
+            <span
+              class="w-2 h-2 bg-sky-400 rounded-full animate-bounce"
+              style="animation-delay: 150ms"
+            ></span>
+            <span
+              class="w-2 h-2 bg-sky-400 rounded-full animate-bounce"
+              style="animation-delay: 300ms"
+            ></span>
           </div>
         </div>
       }
 
       <!-- Error -->
       @if (analysisError()) {
-        <div class="bg-red-50 border border-red-200 text-red-600 rounded-[var(--hp-radius-sm)] px-4 py-3 text-sm mb-4">
+        <div
+          class="bg-red-50 border border-red-200 text-red-600 rounded-[var(--hp-radius-sm)] px-4 py-3 text-sm mb-4"
+        >
           {{ analysisError() }}
         </div>
       }
@@ -216,26 +336,34 @@
       <!-- Result -->
       @if (analysisResult()) {
         <div class="space-y-4">
-          <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-6">
+          <div
+            class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-6"
+          >
             <div class="flex items-center gap-2 mb-4">
-              <div class="w-8 h-8 bg-sky-100 rounded-[var(--hp-radius-sm)] flex items-center justify-center">
+              <div
+                class="w-8 h-8 bg-sky-100 rounded-[var(--hp-radius-sm)] flex items-center justify-center"
+              >
                 <i class="fas fa-robot text-sky-500 text-sm"></i>
               </div>
               <div>
-                <h3 class="text-[var(--hp-text)] font-medium text-sm">Báo cáo sức khỏe AI</h3>
+                <h3 class="text-[var(--hp-text)] font-medium text-sm">
+                  Báo cáo sức khỏe AI
+                </h3>
                 <p class="text-xs text-[var(--hp-text3)]">{{ now() }}</p>
               </div>
             </div>
 
-            <div class="prose prose-sm prose-invert max-w-none text-[var(--hp-text2)] leading-relaxed text-sm"
-              [innerHTML]="formatContent(analysisResult())">
-            </div>
+            <div
+              class="prose prose-sm prose-invert max-w-none text-[var(--hp-text2)] leading-relaxed text-sm"
+              [innerHTML]="formatContent(analysisResult())"
+            ></div>
           </div>
 
           <!-- Re-analyze button -->
-          <button (click)="analyzeHealth()"
-            class="w-full border border-sky-300 text-[var(--hp-purple2)] hover:bg-sky-50
-                   rounded-[var(--hp-radius-sm)] py-2.5 text-sm font-medium transition-colors">
+          <button
+            (click)="analyzeHealth()"
+            class="w-full border border-sky-300 text-[var(--hp-purple2)] hover:bg-sky-50 rounded-[var(--hp-radius-sm)] py-2.5 text-sm font-medium transition-colors"
+          >
             Phân tích lại
           </button>
         </div>
@@ -244,26 +372,30 @@
   }
 
   <!-- ══════════════ TAB 3: Q&A ══════════════ -->
-  @if (activeTab() === 'qa') {
+  @if (activeTab() === "qa") {
     <div class="max-w-4xl mx-auto w-full px-4 py-6 space-y-4">
-
       <!-- Quick question chips -->
       <div>
-        <p class="text-xs text-[var(--hp-text2)] mb-2 font-medium">Câu hỏi gợi ý:</p>
+        <p class="text-xs text-[var(--hp-text2)] mb-2 font-medium">
+          Câu hỏi gợi ý:
+        </p>
         <div class="flex flex-wrap gap-2">
-          @for (q of [
-            'Chỉ số của tôi có bình thường không?',
-            'Tôi có nguy cơ mắc bệnh gì không?',
-            'Lịch tái khám tiếp theo của tôi nên là khi nào?',
-            'BMI của tôi đang ở mức nào theo WHO?',
-            'Tôi nên thay đổi gì trong chế độ ăn uống?',
-            'Vaccine nào tôi cần tiêm gấp?'
-          ]; track q) {
-            <button (click)="quickAsk(q)"
+          @for (
+            q of [
+              "Chỉ số của tôi có bình thường không?",
+              "Tôi có nguy cơ mắc bệnh gì không?",
+              "Lịch tái khám tiếp theo của tôi nên là khi nào?",
+              "BMI của tôi đang ở mức nào theo WHO?",
+              "Tôi nên thay đổi gì trong chế độ ăn uống?",
+              "Vaccine nào tôi cần tiêm gấp?",
+            ];
+            track q
+          ) {
+            <button
+              (click)="quickAsk(q)"
               [disabled]="isQaLoading()"
-              class="text-xs px-3 py-1.5 bg-[var(--hp-surface)] border border-[var(--hp-border)] text-[var(--hp-text2)]
-                     rounded-full hover:border-[var(--hp-purple)] hover:text-[var(--hp-purple2)]
-                     disabled:opacity-50 transition-colors">
+              class="text-xs px-3 py-1.5 bg-[var(--hp-surface)] border border-[var(--hp-border)] text-[var(--hp-text2)] rounded-full hover:border-[var(--hp-purple)] hover:text-[var(--hp-purple2)] disabled:opacity-50 transition-colors"
+            >
               {{ q }}
             </button>
           }
@@ -271,19 +403,22 @@
       </div>
 
       <!-- Input box -->
-      <div class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border2)] p-3 flex gap-2 items-end">
+      <div
+        class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border2)] p-3 flex gap-2 items-end"
+      >
         <textarea
           [(ngModel)]="qaInput"
           (keydown)="onQaKeydown($event)"
           [disabled]="isQaLoading()"
           placeholder="Đặt câu hỏi sức khỏe bất kỳ... AI sẽ trả lời dựa trên dữ liệu thực của bạn"
           rows="3"
-          class="flex-1 resize-none text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)]
-                 focus:outline-none bg-transparent"></textarea>
-        <button (click)="askQuestion()"
+          class="flex-1 resize-none text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)] focus:outline-none bg-transparent"
+        ></textarea>
+        <button
+          (click)="askQuestion()"
           [disabled]="isQaLoading() || !qaInput.trim()"
-          class="w-9 h-9 rounded-[var(--hp-radius)] bg-[var(--hp-purple)] hover:bg-sky-600 disabled:opacity-40
-                 text-white flex items-center justify-center transition-colors shrink-0">
+          class="w-9 h-9 rounded-[var(--hp-radius)] bg-[var(--hp-purple)] hover:bg-sky-600 disabled:opacity-40 text-white flex items-center justify-center transition-colors shrink-0"
+        >
           @if (isQaLoading()) {
             <i class="fas fa-spinner fa-spin text-sm"></i>
           } @else {
@@ -294,19 +429,27 @@
 
       <!-- Error -->
       @if (qaError()) {
-        <div class="bg-red-50 border border-red-200 text-red-600 rounded-[var(--hp-radius-sm)] px-4 py-3 text-sm">
+        <div
+          class="bg-red-50 border border-red-200 text-red-600 rounded-[var(--hp-radius-sm)] px-4 py-3 text-sm"
+        >
           {{ qaError() }}
         </div>
       }
 
       <!-- Answer -->
       @if (isQaLoading()) {
-        <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-6">
+        <div
+          class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-6"
+        >
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-8 h-8 bg-sky-100 rounded-[var(--hp-radius-sm)] flex items-center justify-center animate-pulse">
+            <div
+              class="w-8 h-8 bg-sky-100 rounded-[var(--hp-radius-sm)] flex items-center justify-center animate-pulse"
+            >
               <i class="fas fa-robot text-sky-500 text-sm"></i>
             </div>
-            <span class="text-sm text-[var(--hp-text3)]">AI đang suy nghĩ...</span>
+            <span class="text-sm text-[var(--hp-text3)]"
+              >AI đang suy nghĩ...</span
+            >
           </div>
           <div class="space-y-2">
             <div class="hp-skeleton h-3 rounded w-full"></div>
@@ -317,16 +460,23 @@
       }
 
       @if (qaAnswer() && !isQaLoading()) {
-        <div class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-6">
+        <div
+          class="bg-[var(--hp-surface)] border border-[var(--hp-border)] rounded-[var(--hp-radius)] p-6"
+        >
           <div class="flex items-center gap-2 mb-4">
-            <div class="w-8 h-8 bg-sky-100 rounded-[var(--hp-radius-sm)] flex items-center justify-center">
+            <div
+              class="w-8 h-8 bg-sky-100 rounded-[var(--hp-radius-sm)] flex items-center justify-center"
+            >
               <i class="fas fa-robot text-sky-500 text-sm"></i>
             </div>
-            <h4 class="text-[var(--hp-text)] font-medium text-sm">Câu trả lời từ AI</h4>
+            <h4 class="text-[var(--hp-text)] font-medium text-sm">
+              Câu trả lời từ AI
+            </h4>
           </div>
-          <div class="text-sm text-[var(--hp-text2)] leading-relaxed"
-            [innerHTML]="formatContent(qaAnswer())">
-          </div>
+          <div
+            class="text-sm text-[var(--hp-text2)] leading-relaxed"
+            [innerHTML]="formatContent(qaAnswer())"
+          ></div>
           <div class="mt-4 pt-4 border-t border-[var(--hp-border)]">
             <p class="text-xs text-[var(--hp-text3)]">
               Câu trả lời được phân tích dựa trên dữ liệu sức khỏe thực của bạn.
@@ -337,5 +487,4 @@
       }
     </div>
   }
-
 </div>

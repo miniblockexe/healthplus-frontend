@@ -33,16 +33,38 @@ export class ProfileComponent implements OnInit {
   activeTab = signal<'info' | 'password'>('info');
 
   // True nếu user đăng nhập bằng Google
-  isGoogleUser = computed(() => this.authService.currentUser()?.authProvider === 'google');
+  isGoogleUser = computed(
+    () => this.authService.currentUser()?.authProvider === 'google',
+  );
 
   // True nếu Google user đã từng đặt mật khẩu (backend trả về hasPassword)
   hasPassword = signal(false);
+
+  // Dữ liệu cho 3 select ngày sinh
+  days = Array.from({ length: 31 }, (_, i) => i + 1);
+  months = [
+    { value: 1, label: 'Tháng 1' },
+    { value: 2, label: 'Tháng 2' },
+    { value: 3, label: 'Tháng 3' },
+    { value: 4, label: 'Tháng 4' },
+    { value: 5, label: 'Tháng 5' },
+    { value: 6, label: 'Tháng 6' },
+    { value: 7, label: 'Tháng 7' },
+    { value: 8, label: 'Tháng 8' },
+    { value: 9, label: 'Tháng 9' },
+    { value: 10, label: 'Tháng 10' },
+    { value: 11, label: 'Tháng 11' },
+    { value: 12, label: 'Tháng 12' },
+  ];
+  years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
 
   profileForm = this.fb.group({
     fullname: ['', [Validators.required, Validators.minLength(2)]],
     phone: [''],
     gender: [''],
-    dateOfBirth: [''],
+    dobDay: [''],
+    dobMonth: [''],
+    dobYear: [''],
   });
 
   passwordForm = this.fb.group({
@@ -66,13 +88,14 @@ export class ProfileComponent implements OnInit {
     this.http.get<ApiResponse<any>>(`${this.apiUrl}/users/me`).subscribe({
       next: (res) => {
         const user = res.data;
+        const dob = user.dateOfBirth ? new Date(user.dateOfBirth) : null;
         this.profileForm.patchValue({
           fullname: user.fullname,
           phone: user.phone || '',
           gender: user.gender || '',
-          dateOfBirth: user.dateOfBirth
-            ? new Date(user.dateOfBirth).toISOString().split('T')[0]
-            : '',
+          dobDay: dob ? String(dob.getDate()) : '',
+          dobMonth: dob ? String(dob.getMonth() + 1) : '',
+          dobYear: dob ? String(dob.getFullYear()) : '',
         });
         // Cập nhật signal hasPassword dựa trên backend response
         this.hasPassword.set(!!user.hasPassword);
@@ -108,7 +131,11 @@ export class ProfileComponent implements OnInit {
     const body: any = { fullname: val.fullname };
     if (val.phone) body.phone = val.phone;
     if (val.gender) body.gender = val.gender;
-    if (val.dateOfBirth) body.dateOfBirth = val.dateOfBirth;
+    if (val.dobDay && val.dobMonth && val.dobYear) {
+      const d = String(val.dobDay).padStart(2, '0');
+      const m = String(val.dobMonth).padStart(2, '0');
+      body.dateOfBirth = `${val.dobYear}-${m}-${d}`;
+    }
 
     this.http
       .patch<ApiResponse<User>>(`${this.apiUrl}/users/profile`, body)
@@ -151,7 +178,9 @@ export class ProfileComponent implements OnInit {
           this.passwordForm.reset();
           // Sau khi đặt mật khẩu thành công, cập nhật hasPassword
           if (isFirstTimeSet) this.hasPassword.set(true);
-          const msg = isFirstTimeSet ? 'Đặt mật khẩu thành công!' : 'Đổi mật khẩu thành công!';
+          const msg = isFirstTimeSet
+            ? 'Đặt mật khẩu thành công!'
+            : 'Đổi mật khẩu thành công!';
           this.showSuccess(msg);
           this.updatePasswordFormValidators();
         },
