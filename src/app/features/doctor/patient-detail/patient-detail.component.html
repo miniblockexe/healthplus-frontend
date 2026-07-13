@@ -374,31 +374,13 @@
                 <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
                   >Chuyên khoa</label
                 >
-                <select
+                <input
+                  type="text"
                   formControlName="specialty"
-                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-emerald-500"
-                >
-                  <option value="">-- Chọn chuyên khoa --</option>
-                  <option>Nội khoa</option>
-                  <option>Ngoại khoa</option>
-                  <option>Tim mạch</option>
-                  <option>Thần kinh</option>
-                  <option>Nhi khoa</option>
-                  <option>Sản phụ khoa</option>
-                  <option>Da liễu</option>
-                  <option>Mắt</option>
-                  <option>Tai mũi họng</option>
-                  <option>Răng hàm mặt</option>
-                  <option>Ung bướu</option>
-                  <option>Hô hấp</option>
-                  <option>Tiêu hóa</option>
-                  <option>Cơ xương khớp</option>
-                  <option>Nội tiết</option>
-                  <option>Thận - Tiết niệu</option>
-                  <option>Tâm thần</option>
-                  <option>Phục hồi chức năng</option>
-                  <option>Đa khoa</option>
-                </select>
+                  readonly
+                  placeholder="Chưa được gán chuyên khoa"
+                  class="w-full bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none cursor-default opacity-75"
+                />
               </div>
 
               <div>

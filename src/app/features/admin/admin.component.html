@@ -150,45 +150,49 @@
                     {{ user.email }}
                   </td>
                   <td class="px-4 py-3">
-                    <select
-                      [value]="user.role"
-                      (change)="changeRole(user.id, $any($event.target).value)"
-                      class="text-xs bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-2 py-1.5 text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
-                    >
-                      <option value="user">User</option>
-                      <option value="doctor">Doctor</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                    @if (user.role === "doctor") {
+                    <div class="flex flex-col gap-1.5">
                       <select
-                        [value]="user.specialty || ''"
+                        [value]="user.role"
                         (change)="
-                          changeSpecialty(user.id, $any($event.target).value)
+                          changeRole(user.id, $any($event.target).value)
                         "
-                        class="mt-1 text-xs bg-[var(--hp-surface2)] border border-blue-200 rounded-[var(--hp-radius-sm)] px-2 py-1.5 text-[var(--hp-text)] focus:outline-none focus:border-blue-400 w-full"
+                        class="text-xs bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-2 py-1.5 text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
                       >
-                        <option value="">-- Chuyên khoa --</option>
-                        <option>Nội khoa</option>
-                        <option>Ngoại khoa</option>
-                        <option>Tim mạch</option>
-                        <option>Thần kinh</option>
-                        <option>Nhi khoa</option>
-                        <option>Sản phụ khoa</option>
-                        <option>Da liễu</option>
-                        <option>Mắt</option>
-                        <option>Tai mũi họng</option>
-                        <option>Răng hàm mặt</option>
-                        <option>Ung bướu</option>
-                        <option>Hô hấp</option>
-                        <option>Tiêu hóa</option>
-                        <option>Cơ xương khớp</option>
-                        <option>Nội tiết</option>
-                        <option>Thận - Tiết niệu</option>
-                        <option>Tâm thần</option>
-                        <option>Phục hồi chức năng</option>
-                        <option>Đa khoa</option>
+                        <option value="user">User</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="admin">Admin</option>
                       </select>
-                    }
+                      @if (user.role === "doctor") {
+                        <select
+                          [value]="user.specialty || ''"
+                          (change)="
+                            changeSpecialty(user.id, $any($event.target).value)
+                          "
+                          class="text-xs bg-blue-50 border border-blue-200 rounded-[var(--hp-radius-sm)] px-2 py-1.5 text-blue-700 focus:outline-none focus:border-blue-400"
+                        >
+                          <option value="">-- Chuyên khoa --</option>
+                          <option>Nội khoa</option>
+                          <option>Ngoại khoa</option>
+                          <option>Tim mạch</option>
+                          <option>Thần kinh</option>
+                          <option>Nhi khoa</option>
+                          <option>Sản phụ khoa</option>
+                          <option>Da liễu</option>
+                          <option>Mắt</option>
+                          <option>Tai mũi họng</option>
+                          <option>Răng hàm mặt</option>
+                          <option>Ung bướu</option>
+                          <option>Hô hấp</option>
+                          <option>Tiêu hóa</option>
+                          <option>Cơ xương khớp</option>
+                          <option>Nội tiết</option>
+                          <option>Thận - Tiết niệu</option>
+                          <option>Tâm thần</option>
+                          <option>Phục hồi chức năng</option>
+                          <option>Đa khoa</option>
+                        </select>
+                      }
+                    </div>
                   </td>
                   <td class="px-4 py-3">
                     <span

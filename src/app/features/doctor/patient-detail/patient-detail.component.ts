@@ -58,6 +58,15 @@ export class PatientDetailComponent implements OnInit {
     this.http.get<any>(`${this.apiUrl}/hospitals`).subscribe({
       next: (res) => this.hospitals.set(res.data || res),
     });
+    // Tự điền chuyên khoa của bác sĩ đang đăng nhập
+    this.http.get<any>(`${this.apiUrl}/users/me`).subscribe({
+      next: (res) => {
+        const specialty = res.data?.specialty || res.specialty || '';
+        if (specialty) {
+          this.diagnosisForm.patchValue({ specialty });
+        }
+      },
+    });
   }
 
   loadPatientData() {
