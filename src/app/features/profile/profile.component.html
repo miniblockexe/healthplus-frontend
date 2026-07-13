@@ -61,6 +61,17 @@
               authService.currentUser()?.role
             }}</span>
           </span>
+          @if (
+            authService.currentUser()?.role === "doctor" &&
+            authService.currentUser()?.specialty
+          ) {
+            <span
+              class="inline-flex items-center gap-1.5 text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 rounded-full mt-1.5"
+            >
+              <i class="fas fa-stethoscope text-xs"></i>
+              {{ authService.currentUser()?.specialty }}
+            </span>
+          }
         </div>
       </div>
     </div>

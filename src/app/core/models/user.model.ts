@@ -9,13 +9,14 @@ export interface User {
   phone?: string;
   avatarUrl?: string;
   isActive: boolean;
+  specialty?: string;
   createdAt: string;
 }
 
 export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
-  user: User; 
+  user: User;
 }
 
 export interface LoginRequest {

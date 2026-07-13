@@ -159,6 +159,36 @@
                       <option value="doctor">Doctor</option>
                       <option value="admin">Admin</option>
                     </select>
+                    @if (user.role === "doctor") {
+                      <select
+                        [value]="user.specialty || ''"
+                        (change)="
+                          changeSpecialty(user.id, $any($event.target).value)
+                        "
+                        class="mt-1 text-xs bg-[var(--hp-surface2)] border border-blue-200 rounded-[var(--hp-radius-sm)] px-2 py-1.5 text-[var(--hp-text)] focus:outline-none focus:border-blue-400 w-full"
+                      >
+                        <option value="">-- Chuyên khoa --</option>
+                        <option>Nội khoa</option>
+                        <option>Ngoại khoa</option>
+                        <option>Tim mạch</option>
+                        <option>Thần kinh</option>
+                        <option>Nhi khoa</option>
+                        <option>Sản phụ khoa</option>
+                        <option>Da liễu</option>
+                        <option>Mắt</option>
+                        <option>Tai mũi họng</option>
+                        <option>Răng hàm mặt</option>
+                        <option>Ung bướu</option>
+                        <option>Hô hấp</option>
+                        <option>Tiêu hóa</option>
+                        <option>Cơ xương khớp</option>
+                        <option>Nội tiết</option>
+                        <option>Thận - Tiết niệu</option>
+                        <option>Tâm thần</option>
+                        <option>Phục hồi chức năng</option>
+                        <option>Đa khoa</option>
+                      </select>
+                    }
                   </td>
                   <td class="px-4 py-3">
                     <span

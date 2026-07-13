@@ -277,11 +277,9 @@
       @if (activeTab() === "vaccines") {
         @if (vaccines().length === 0) {
           <div
-            class="text-center py-12 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]"
+            class="flex flex-col items-center justify-center py-16 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]"
           >
-            <i
-              class="fas fa-syringe text-3xl text-[var(--hp-text3)] mb-3 block"
-            ></i>
+            <i class="fas fa-syringe text-4xl text-[var(--hp-text3)] mb-3"></i>
             <p class="text-[var(--hp-text2)] text-sm">
               Chưa có thông tin vaccine
             </p>
@@ -376,12 +374,31 @@
                 <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
                   >Chuyên khoa</label
                 >
-                <input
-                  type="text"
+                <select
                   formControlName="specialty"
-                  placeholder="Tim mạch, Nội khoa..."
-                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)] focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20"
-                />
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-emerald-500"
+                >
+                  <option value="">-- Chọn chuyên khoa --</option>
+                  <option>Nội khoa</option>
+                  <option>Ngoại khoa</option>
+                  <option>Tim mạch</option>
+                  <option>Thần kinh</option>
+                  <option>Nhi khoa</option>
+                  <option>Sản phụ khoa</option>
+                  <option>Da liễu</option>
+                  <option>Mắt</option>
+                  <option>Tai mũi họng</option>
+                  <option>Răng hàm mặt</option>
+                  <option>Ung bướu</option>
+                  <option>Hô hấp</option>
+                  <option>Tiêu hóa</option>
+                  <option>Cơ xương khớp</option>
+                  <option>Nội tiết</option>
+                  <option>Thận - Tiết niệu</option>
+                  <option>Tâm thần</option>
+                  <option>Phục hồi chức năng</option>
+                  <option>Đa khoa</option>
+                </select>
               </div>
 
               <div>

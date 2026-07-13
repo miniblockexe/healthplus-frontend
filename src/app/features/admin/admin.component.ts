@@ -116,6 +116,21 @@ export class AdminComponent implements OnInit {
       });
   }
 
+  changeSpecialty(userId: number, specialty: string) {
+    this.http
+      .patch<
+        ApiResponse<User>
+      >(`${this.apiUrl}/users/${userId}/specialty`, { specialty })
+      .subscribe({
+        next: (res) => {
+          this.users.update((list) =>
+            list.map((u) => (u.id === userId ? res.data : u)),
+          );
+          this.showSuccess('Cập nhật chuyên khoa thành công!');
+        },
+      });
+  }
+
   // ─── VACCINES ──────────────────────────────────────────
 
   loadVaccines() {
