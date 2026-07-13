@@ -1,4 +1,9 @@
-import { Component, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  signal,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -25,6 +30,7 @@ export class PatientDetailComponent implements OnInit {
   vitalSigns = signal<VitalSign[]>([]);
   medicalVisits = signal<MedicalVisit[]>([]);
   vaccines = signal<UserVaccine[]>([]);
+  hospitals = signal<{ id: number; name: string }[]>([]);
   isLoading = signal(false);
   isSubmitting = signal(false);
   activeTab = signal<'vitals' | 'visits' | 'vaccines' | 'diagnosis'>('vitals');
@@ -49,41 +55,44 @@ export class PatientDetailComponent implements OnInit {
   ngOnInit() {
     this.patientId = +this.route.snapshot.params['id'];
     this.loadPatientData();
+    this.http.get<any>(`${this.apiUrl}/hospitals`).subscribe({
+      next: (res) => this.hospitals.set(res.data || res),
+    });
   }
 
-loadPatientData() {
-  this.isLoading.set(true);
+  loadPatientData() {
+    this.isLoading.set(true);
 
-  this.http
-    .get<ApiResponse<User>>(`${this.apiUrl}/users/patients/${this.patientId}`)
-    .subscribe({
-      next: (res) => {
-        this.patient.set(res.data);
-        this.isLoading.set(false);
-      },
-      error: () => this.isLoading.set(false),
-    });
+    this.http
+      .get<ApiResponse<User>>(`${this.apiUrl}/users/patients/${this.patientId}`)
+      .subscribe({
+        next: (res) => {
+          this.patient.set(res.data);
+          this.isLoading.set(false);
+        },
+        error: () => this.isLoading.set(false),
+      });
 
-  this.http
-    .get<ApiResponse<VitalSign[]>>(
-      `${this.apiUrl}/health-records/vital-signs/patient/${this.patientId}`
-    )
-    .subscribe({ next: (res) => this.vitalSigns.set(res.data) });
+    this.http
+      .get<
+        ApiResponse<VitalSign[]>
+      >(`${this.apiUrl}/health-records/vital-signs/patient/${this.patientId}`)
+      .subscribe({ next: (res) => this.vitalSigns.set(res.data) });
 
-  this.http
-    .get<ApiResponse<MedicalVisit[]>>(
-      `${this.apiUrl}/medical-visits/patient/${this.patientId}`
-    )
-    .subscribe({
-      next: (res) => this.medicalVisits.set((res as any).data ?? res)
-    });
+    this.http
+      .get<
+        ApiResponse<MedicalVisit[]>
+      >(`${this.apiUrl}/medical-visits/patient/${this.patientId}`)
+      .subscribe({
+        next: (res) => this.medicalVisits.set((res as any).data ?? res),
+      });
 
-  this.http
-    .get<ApiResponse<UserVaccine[]>>(
-      `${this.apiUrl}/vaccines/patient/${this.patientId}`
-    )
-    .subscribe({ next: (res) => this.vaccines.set(res.data) });
-}
+    this.http
+      .get<
+        ApiResponse<UserVaccine[]>
+      >(`${this.apiUrl}/vaccines/patient/${this.patientId}`)
+      .subscribe({ next: (res) => this.vaccines.set(res.data) });
+  }
 
   submitDiagnosis() {
     if (this.diagnosisForm.invalid) return;
@@ -100,13 +109,12 @@ loadPatientData() {
     if (val.followUpDate) body.followUpDate = val.followUpDate;
 
     this.http
-      .post<ApiResponse<MedicalVisit>>(
-        `${this.apiUrl}/medical-visits/patient/${this.patientId}`,
-        body,
-      )
+      .post<
+        ApiResponse<MedicalVisit>
+      >(`${this.apiUrl}/medical-visits/patient/${this.patientId}`, body)
       .subscribe({
         next: (res) => {
-          this.medicalVisits.update(list => [res.data, ...list]);
+          this.medicalVisits.update((list) => [res.data, ...list]);
           this.diagnosisForm.patchValue({
             diagnosis: '',
             treatment: '',
