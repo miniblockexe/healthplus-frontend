@@ -92,6 +92,7 @@
   @if (activeTab() === "chat") {
     <div
       class="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4 min-h-0 pb-20 md:pb-4"
+      style="height: calc(100dvh - 160px)"
     >
       <!-- Clear button -->
       <div class="flex justify-end mb-2">
@@ -105,8 +106,8 @@
 
       <!-- Messages -->
       <div
-        class="flex-1 overflow-y-auto space-y-4 mb-4"
-        style="max-height: calc(100vh - 340px)"
+        class="flex-1 overflow-y-auto space-y-4 mb-4 overscroll-contain"
+        style="min-height: 0"
       >
         @for (msg of chatMessages(); track $index) {
           <div class="flex" [class.justify-end]="msg.role === 'user'">
