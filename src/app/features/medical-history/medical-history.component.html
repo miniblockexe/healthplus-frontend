@@ -88,23 +88,25 @@
         }
       </div>
       <!-- Date range -->
-      <input
-        type="date"
-        [(ngModel)]="filterFrom"
-        (change)="onFilterChange()"
-        title="Từ ngày"
-        class="px-3 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-      />
-      <i
-        class="hidden md:block fas fa-arrow-right text-xs text-[var(--hp-text3)]"
-      ></i>
-      <input
-        type="date"
-        [(ngModel)]="filterTo"
-        (change)="onFilterChange()"
-        title="Đến ngày"
-        class="px-3 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-      />
+      <div class="flex items-center gap-2">
+        <input
+          type="date"
+          [(ngModel)]="filterFrom"
+          (change)="onFilterChange()"
+          title="Từ ngày"
+          class="px-3 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
+        />
+        <i
+          class="fas fa-arrow-right text-xs text-[var(--hp-text3)] shrink-0"
+        ></i>
+        <input
+          type="date"
+          [(ngModel)]="filterTo"
+          (change)="onFilterChange()"
+          title="Đến ngày"
+          class="px-3 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
+        />
+      </div>
       <!-- Add button -->
       <button
         (click)="showForm.set(!showForm())"
