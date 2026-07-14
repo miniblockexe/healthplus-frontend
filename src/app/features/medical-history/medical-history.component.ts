@@ -42,6 +42,7 @@ export class MedicalHistoryComponent implements OnInit {
   successMessage = signal('');
   errorMessage = signal('');
   offlineMessage = signal('');
+  uploadingVisitId = signal<number | null>(null);
 
   // ─── Pagination ──────────────────────────────────────────────
   currentPage = signal(1);
@@ -270,23 +271,28 @@ export class MedicalHistoryComponent implements OnInit {
       this.errorMessage.set('Chua the upload khi ban ghi chua dong bo.');
       return;
     }
-    let compressed: Blob;
-    try {
-      compressed = await this.compressImage(file);
-    } catch (err: any) {
-      this.errorMessage.set(err?.message || 'Khong the xu ly file anh');
-      return;
+    this.errorMessage.set('');
+    this.uploadingVisitId.set(visitId);
+
+    let fileToUpload: File | Blob = file;
+    if (file.type.startsWith('image/')) {
+      try {
+        const compressed = await this.compressImage(file);
+        fileToUpload = new File(
+          [compressed],
+          file.name.replace(/\.[^/.]+$/, '.jpg'),
+          { type: 'image/jpeg' },
+        );
+      } catch (err: any) {
+        this.errorMessage.set(err?.message || 'Khong the xu ly file anh');
+        this.uploadingVisitId.set(null);
+        return;
+      }
     }
-    const compressedFile = new File(
-      [compressed],
-      file.name.replace(/\.[^/.]+$/, '.jpg'),
-      { type: 'image/jpeg' },
-    );
+
     const formData = new FormData();
-    formData.append(
-      'file',
-      file.type.startsWith('image/') ? compressedFile : file,
-    );
+    formData.append('file', fileToUpload);
+
     this.http
       .post<any>(
         `${this.apiUrl}/medical-visits/${visitId}/attachments`,
@@ -294,6 +300,7 @@ export class MedicalHistoryComponent implements OnInit {
       )
       .subscribe({
         next: (res) => {
+          this.uploadingVisitId.set(null);
           this.visits.update((list) =>
             list.map((v) =>
               v.id === visitId
@@ -304,7 +311,11 @@ export class MedicalHistoryComponent implements OnInit {
           this.successMessage.set('Upload file thanh cong!');
           setTimeout(() => this.successMessage.set(''), 3000);
         },
-        error: () => this.errorMessage.set('Upload that bai!'),
+        error: () => {
+          this.uploadingVisitId.set(null);
+          this.errorMessage.set('Upload that bai!');
+          setTimeout(() => this.errorMessage.set(''), 3000);
+        },
       });
   }
 

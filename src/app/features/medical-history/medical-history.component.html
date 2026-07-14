@@ -302,12 +302,10 @@
                 @if (visit.attachments && visit.attachments.length > 0) {
                   <div class="flex flex-wrap gap-2 mb-2">
                     @for (file of visit.attachments; track file.id) {
-                      <!--<a [href]="'http://localhost:3000' + file.fileUrl" target="_blank"-->
                       <a
-                        [href]="
-                          'https://healthplus-api.onrender.com' + file.fileUrl
-                        "
+                        [href]="file.fileUrl"
                         target="_blank"
+                        rel="noopener noreferrer"
                         class="text-xs bg-[var(--hp-surface2)] hover:bg-[var(--hp-border2)] text-[var(--hp-text2)] px-3 py-1 rounded-full transition-colors"
                       >
                         <i class="fas fa-file mr-1"></i>{{ file.fileName }}
@@ -317,13 +315,20 @@
                 }
                 <label
                   class="cursor-pointer text-sm text-[var(--hp-purple2)] hover:text-sky-500"
+                  [class.opacity-50]="uploadingVisitId() === visit.id"
+                  [class.pointer-events-none]="uploadingVisitId() === visit.id"
                 >
-                  <i class="fas fa-upload mr-1"></i>Upload toa thuốc / xét
-                  nghiệm
+                  @if (uploadingVisitId() === visit.id) {
+                    <i class="fas fa-spinner fa-spin mr-1"></i>Đang upload...
+                  } @else {
+                    <i class="fas fa-upload mr-1"></i>Upload toa thuốc / xét
+                    nghiệm
+                  }
                   <input
                     type="file"
                     class="hidden"
                     accept="image/*,.pdf,.doc,.docx"
+                    [disabled]="uploadingVisitId() === visit.id"
                     (change)="onFileSelected($event, visit.id)"
                   />
                 </label>
