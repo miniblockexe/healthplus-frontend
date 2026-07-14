@@ -100,7 +100,10 @@ export class PatientDetailComponent implements OnInit {
         ApiResponse<MedicalVisit[]>
       >(`${this.apiUrl}/medical-visits/patient/${this.patientId}`)
       .subscribe({
-        next: (res) => this.medicalVisits.set((res as any).data ?? res),
+        next: (res) => {
+          const data = (res as any).data ?? res;
+          this.medicalVisits.set(Array.isArray(data) ? data : []);
+        },
       });
 
     this.http
