@@ -306,9 +306,19 @@
                         [href]="file.fileUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="text-xs bg-[var(--hp-surface2)] hover:bg-[var(--hp-border2)] text-[var(--hp-text2)] px-3 py-1 rounded-full transition-colors"
+                        class="inline-flex items-center gap-1.5 text-xs bg-[var(--hp-surface2)] hover:bg-[var(--hp-border2)] text-[var(--hp-text2)] px-3 py-1.5 rounded-full transition-colors border border-[var(--hp-border)]"
+                        [title]="file.fileName"
                       >
-                        <i class="fas fa-file mr-1"></i>{{ file.fileName }}
+                        @if (file.fileType?.startsWith("image/")) {
+                          <i class="fas fa-image text-emerald-500"></i>
+                        } @else if (file.fileType === "application/pdf") {
+                          <i class="fas fa-file-pdf text-red-500"></i>
+                        } @else {
+                          <i class="fas fa-file-word text-blue-500"></i>
+                        }
+                        <span class="max-w-[160px] truncate">{{
+                          file.fileName
+                        }}</span>
                       </a>
                     }
                   </div>
