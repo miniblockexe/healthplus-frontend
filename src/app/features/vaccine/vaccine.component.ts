@@ -26,6 +26,7 @@ export class VaccineComponent implements OnInit {
 
   vaccines = signal<UserVaccine[]>([]);
   catalog = signal<VaccineCatalog[]>([]);
+  hospitals = signal<{ id: number; name: string }[]>([]);
   isLoading = signal(false);
   isSubmitting = signal(false);
   showForm = signal(false);
@@ -51,6 +52,13 @@ export class VaccineComponent implements OnInit {
   ngOnInit() {
     this.loadCatalog();
     this.loadSchedule();
+    this.loadHospitals();
+  }
+
+  loadHospitals() {
+    this.http
+      .get<any>(`${this.apiUrl}/hospitals`)
+      .subscribe({ next: (res) => this.hospitals.set(res.data ?? res) });
   }
 
   loadCatalog() {
