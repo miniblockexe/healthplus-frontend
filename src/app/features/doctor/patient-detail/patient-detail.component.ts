@@ -36,6 +36,8 @@ export class PatientDetailComponent implements OnInit {
   activeTab = signal<'vitals' | 'visits' | 'vaccines' | 'diagnosis'>('vitals');
   successMessage = signal('');
   patientId: number = 0;
+  selectedVisitId = signal<number | null>(null);
+  diagnosisMode = signal<'patch' | 'new'>('patch');
 
   diagnosisForm = this.fb.group({
     hospitalName: ['', Validators.required],
@@ -119,7 +121,6 @@ export class PatientDetailComponent implements OnInit {
 
     const val = this.diagnosisForm.value;
     const body: any = {
-      hospitalName: val.hospitalName,
       diagnosis: val.diagnosis,
       visitDate: val.visitDate,
     };
@@ -127,25 +128,54 @@ export class PatientDetailComponent implements OnInit {
     if (val.specialty) body.specialty = val.specialty;
     if (val.followUpDate) body.followUpDate = val.followUpDate;
 
-    this.http
-      .post<
-        ApiResponse<MedicalVisit>
-      >(`${this.apiUrl}/medical-visits/patient/${this.patientId}`, body)
-      .subscribe({
-        next: (res) => {
-          this.medicalVisits.update((list) => [res.data, ...list]);
-          this.diagnosisForm.patchValue({
-            diagnosis: '',
-            treatment: '',
-            followUpDate: '',
-          });
-          this.successMessage.set('✅ Thêm chẩn đoán thành công!');
-          this.isSubmitting.set(false);
-          this.activeTab.set('visits');
-          setTimeout(() => this.successMessage.set(''), 3000);
-        },
-        error: () => this.isSubmitting.set(false),
-      });
+    const visitId = this.selectedVisitId();
+
+    if (visitId) {
+      // PATCH vào visit của user
+      this.http
+        .patch<any>(`${this.apiUrl}/medical-visits/doctor/${visitId}`, body)
+        .subscribe({
+          next: (res) => {
+            this.medicalVisits.update((list) =>
+              list.map((v) => (v.id === visitId ? res.data : v)),
+            );
+            this.diagnosisForm.patchValue({
+              diagnosis: '',
+              treatment: '',
+              followUpDate: '',
+            });
+            this.selectedVisitId.set(null);
+            this.successMessage.set('✅ Cập nhật chẩn đoán thành công!');
+            this.isSubmitting.set(false);
+            this.activeTab.set('visits');
+            setTimeout(() => this.successMessage.set(''), 3000);
+          },
+          error: () => this.isSubmitting.set(false),
+        });
+    } else {
+      // Tạo visit mới nếu không chọn visit có sẵn
+      body.hospitalName = val.hospitalName;
+      this.http
+        .post<any>(
+          `${this.apiUrl}/medical-visits/patient/${this.patientId}`,
+          body,
+        )
+        .subscribe({
+          next: (res) => {
+            this.medicalVisits.update((list) => [res.data, ...list]);
+            this.diagnosisForm.patchValue({
+              diagnosis: '',
+              treatment: '',
+              followUpDate: '',
+            });
+            this.successMessage.set('✅ Thêm chẩn đoán thành công!');
+            this.isSubmitting.set(false);
+            this.activeTab.set('visits');
+            setTimeout(() => this.successMessage.set(''), 3000);
+          },
+          error: () => this.isSubmitting.set(false),
+        });
+    }
   }
 
   getBmiStatus(bmi: number): { label: string; color: string } {

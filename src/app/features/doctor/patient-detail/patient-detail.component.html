@@ -376,30 +376,73 @@
         }
       }
 
-      <!-- Diagnosis Tab (accent emerald - hành động thêm mới) -->
+      <!-- Diagnosis Tab -->
       @if (activeTab() === "diagnosis") {
         <div
           class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-emerald-200 p-6"
         >
           <h3 class="text-sm font-medium text-[var(--hp-text)] mb-4">
-            Thêm chẩn đoán cho {{ patient()!.fullname }}
+            Điền chẩn đoán cho {{ patient()!.fullname }}
           </h3>
+
+          <!-- Chọn visit có sẵn hoặc tạo mới -->
+          <div class="mb-5">
+            <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
+              Gắn vào lần khám nào?
+            </label>
+            <select
+              class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-emerald-500"
+              [value]="selectedVisitId() ?? ''"
+              (change)="
+                selectedVisitId.set(
+                  $any($event.target).value ? +$any($event.target).value : null
+                )
+              "
+            >
+              <option value="">-- Tạo lần khám mới --</option>
+              @for (v of medicalVisits(); track v.id) {
+                <option [value]="v.id">
+                  {{ v.visitDate | date: "dd/MM/yyyy" }} — {{ v.hospitalName }}
+                  @if (v.attachments?.length) {
+                    ({{ v.attachments.length }} file)
+                  }
+                  @if (v.diagnosis) {
+                    ✓
+                  }
+                </option>
+              }
+            </select>
+            @if (selectedVisitId()) {
+              <p class="text-xs text-emerald-600 mt-1.5">
+                <i class="fas fa-circle-check mr-1"></i>Sẽ cập nhật vào lần khám
+                đã chọn
+              </p>
+            } @else {
+              <p class="text-xs text-[var(--hp-text3)] mt-1.5">
+                Tạo bản ghi khám mới độc lập
+              </p>
+            }
+          </div>
+
           <form [formGroup]="diagnosisForm" (ngSubmit)="submitDiagnosis()">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div class="md:col-span-2">
-                <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
-                  Tên bệnh viện / Cơ sở y tế <span class="text-red-600">*</span>
-                </label>
-                <select
-                  formControlName="hospitalName"
-                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-emerald-500"
-                >
-                  <option value="">-- Chọn bệnh viện --</option>
-                  @for (h of hospitals(); track h.id) {
-                    <option [value]="h.name">{{ h.name }}</option>
-                  }
-                </select>
-              </div>
+              @if (!selectedVisitId()) {
+                <div class="md:col-span-2">
+                  <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
+                    Tên bệnh viện / Cơ sở y tế
+                    <span class="text-red-600">*</span>
+                  </label>
+                  <select
+                    formControlName="hospitalName"
+                    class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="">-- Chọn bệnh viện --</option>
+                    @for (h of hospitals(); track h.id) {
+                      <option [value]="h.name">{{ h.name }}</option>
+                    }
+                  </select>
+                </div>
+              }
 
               <div>
                 <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
@@ -468,8 +511,10 @@
             >
               @if (isSubmitting()) {
                 Đang lưu...
+              } @else if (selectedVisitId()) {
+                Cập nhật chẩn đoán vào lần khám đã chọn
               } @else {
-                Lưu chẩn đoán
+                Tạo lần khám mới với chẩn đoán
               }
             </button>
           </form>
