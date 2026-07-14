@@ -223,10 +223,10 @@
       @if (activeTab() === "visits") {
         @if (medicalVisits().length === 0) {
           <div
-            class="text-center py-12 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]"
+            class="flex flex-col items-center justify-center py-16 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]"
           >
             <i
-              class="fas fa-notes-medical text-3xl text-[var(--hp-text3)] mb-3 block"
+              class="fas fa-notes-medical text-4xl text-[var(--hp-text3)] mb-3"
             ></i>
             <p class="text-[var(--hp-text2)] text-sm">Chưa có lịch sử khám</p>
           </div>
