@@ -276,24 +276,48 @@
                     </p>
                     <div class="flex flex-wrap gap-2">
                       @for (att of visit.attachments; track att.id) {
-                        <a
-                          [href]="att.fileUrl"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="inline-flex items-center gap-1.5 text-xs bg-[var(--hp-surface2)] hover:bg-[var(--hp-border2)] text-[var(--hp-text2)] px-3 py-1.5 rounded-full transition-colors border border-[var(--hp-border)]"
-                          [title]="att.fileName"
-                        >
+                        <div class="relative group">
                           @if (att.fileType?.startsWith("image/")) {
-                            <i class="fas fa-image text-emerald-500"></i>
-                          } @else if (att.fileType === "application/pdf") {
-                            <i class="fas fa-file-pdf text-red-500"></i>
+                            <!-- Thumbnail ảnh -->
+                            <a
+                              [href]="att.fileUrl"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                [src]="att.fileUrl"
+                                [alt]="att.fileName"
+                                class="w-20 h-20 object-cover rounded-[var(--hp-radius-sm)] border border-[var(--hp-border)] hover:opacity-90 transition-opacity"
+                              />
+                            </a>
                           } @else {
-                            <i class="fas fa-file-word text-blue-500"></i>
+                            <!-- File chip cho PDF/DOC -->
+                            <a
+                              [href]="att.fileUrl"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="inline-flex items-center gap-1.5 text-xs bg-[var(--hp-surface2)] hover:bg-[var(--hp-border2)] text-[var(--hp-text2)] px-3 py-1.5 rounded-full transition-colors border border-[var(--hp-border)]"
+                              [title]="att.fileName"
+                            >
+                              @if (att.fileType === "application/pdf") {
+                                <i class="fas fa-file-pdf text-red-500"></i>
+                              } @else {
+                                <i class="fas fa-file-word text-blue-500"></i>
+                              }
+                              <span class="max-w-[140px] truncate">{{
+                                att.fileName
+                              }}</span>
+                            </a>
                           }
-                          <span class="max-w-[140px] truncate">{{
-                            att.fileName
-                          }}</span>
-                        </a>
+                          <!-- Nút xóa -->
+                          <button
+                            (click)="deleteAttachment(visit.id, att.id)"
+                            class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full text-[10px] items-center justify-center hidden group-hover:flex transition-all shadow"
+                            title="Xóa file"
+                          >
+                            <i class="fas fa-xmark"></i>
+                          </button>
+                        </div>
                       }
                     </div>
                   </div>

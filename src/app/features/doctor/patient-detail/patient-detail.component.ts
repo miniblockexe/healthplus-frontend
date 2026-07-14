@@ -39,6 +39,30 @@ export class PatientDetailComponent implements OnInit {
   selectedVisitId = signal<number | null>(null);
   diagnosisMode = signal<'patch' | 'new'>('patch');
 
+  deleteAttachment(visitId: number, attachmentId: number) {
+    if (!confirm('Xóa file này?')) return;
+    this.http
+      .delete<any>(
+        `${this.apiUrl}/medical-visits/doctor/${visitId}/attachments/${attachmentId}`,
+      )
+      .subscribe({
+        next: () => {
+          this.medicalVisits.update((list) =>
+            list.map((v) =>
+              v.id === visitId
+                ? {
+                    ...v,
+                    attachments: v.attachments.filter(
+                      (a: any) => a.id !== attachmentId,
+                    ),
+                  }
+                : v,
+            ),
+          );
+        },
+      });
+  }
+
   diagnosisForm = this.fb.group({
     hospitalName: ['', Validators.required],
     diagnosis: ['', Validators.required],

@@ -1,4 +1,9 @@
-import { Component, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  signal,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -19,11 +24,19 @@ export class DoctorComponent implements OnInit {
   patients = signal<User[]>([]);
   isLoading = signal(false);
   searchQuery = signal('');
+  stats = signal({ total: 0, pending: 0, diagnosed: 0 });
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.loadPatients();
+    this.loadStats();
+  }
+
+  loadStats() {
+    this.http
+      .get<any>(`${this.apiUrl}/medical-visits/stats/overview`)
+      .subscribe({ next: (res) => this.stats.set(res.data) });
   }
 
   loadPatients() {
@@ -42,9 +55,10 @@ export class DoctorComponent implements OnInit {
   get filteredPatients() {
     const q = this.searchQuery().toLowerCase();
     if (!q) return this.patients();
-    return this.patients().filter(p =>
-      p.fullname.toLowerCase().includes(q) ||
-      p.email.toLowerCase().includes(q)
+    return this.patients().filter(
+      (p) =>
+        p.fullname.toLowerCase().includes(q) ||
+        p.email.toLowerCase().includes(q),
     );
   }
 
