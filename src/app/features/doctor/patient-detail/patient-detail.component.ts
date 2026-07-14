@@ -56,7 +56,14 @@ export class PatientDetailComponent implements OnInit {
     this.patientId = +this.route.snapshot.params['id'];
     this.loadPatientData();
     this.http.get<any>(`${this.apiUrl}/hospitals`).subscribe({
-      next: (res) => this.hospitals.set(res.data || res),
+      next: (res) => {
+        const list = Array.isArray(res)
+          ? res
+          : Array.isArray(res.data)
+            ? res.data
+            : [];
+        this.hospitals.set(list);
+      },
     });
     // Tự điền chuyên khoa của bác sĩ đang đăng nhập
     this.http.get<any>(`${this.apiUrl}/users/me`).subscribe({
