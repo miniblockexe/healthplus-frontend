@@ -13,6 +13,7 @@ import { UserVaccine, VaccineCatalog } from '../../core/models/vaccine.model';
 import { ApiResponse } from '../../core/models/api-response.model';
 import { VaccineStatusPipe } from '../../shared/pipes/vaccine-status.pipe';
 import { OfflineService } from '../../core/services/offline.service';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-vaccine',
@@ -26,7 +27,6 @@ export class VaccineComponent implements OnInit {
 
   vaccines = signal<UserVaccine[]>([]);
   catalog = signal<VaccineCatalog[]>([]);
-  hospitals = signal<{ id: number; name: string }[]>([]);
   isLoading = signal(false);
   isSubmitting = signal(false);
   showForm = signal(false);
@@ -47,18 +47,12 @@ export class VaccineComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     public offlineService: OfflineService,
+    public notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
     this.loadCatalog();
     this.loadSchedule();
-    this.loadHospitals();
-  }
-
-  loadHospitals() {
-    this.http
-      .get<any>(`${this.apiUrl}/hospitals`)
-      .subscribe({ next: (res) => this.hospitals.set(res.data ?? res) });
   }
 
   loadCatalog() {

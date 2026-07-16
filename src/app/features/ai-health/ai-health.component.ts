@@ -16,6 +16,7 @@ import { firstValueFrom, forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/auth/auth.service';
+import { NotificationService } from '../../core/services/notification.service';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -35,16 +36,13 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
 
   private apiUrl = environment.apiUrl;
 
-  // === Tabs ===
   activeTab = signal<'chat' | 'analyze' | 'qa'>('chat');
 
-  // === Health data (chỉ để hiển thị thống kê trên UI) ===
   vitalSigns = signal<any[]>([]);
   medicalVisits = signal<any[]>([]);
   vaccines = signal<any[]>([]);
   isLoadingData = signal(true);
 
-  // === Chat tab ===
   chatMessages = signal<ChatMessage[]>([
     {
       role: 'assistant',
@@ -59,12 +57,10 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
   isChatLoading = signal(false);
   private shouldScrollChat = false;
 
-  // === Analyze tab ===
   analysisResult = signal('');
   isAnalyzing = signal(false);
   analysisError = signal('');
 
-  // === Q&A tab ===
   qaInput = '';
   qaAnswer = signal('');
   isQaLoading = signal(false);
@@ -74,6 +70,7 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
     private http: HttpClient,
     public authService: AuthService,
     private cdr: ChangeDetectorRef,
+    public notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
@@ -87,7 +84,6 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  // forkJoin để load song song, catchError để 1 cái fail không kéo cả 3 down
   loadHealthData() {
     this.isLoadingData.set(true);
 
@@ -115,7 +111,6 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  // ─── Gọi /ai/chat/health — backend tự đọc DB ────────────────────────────
   private async callAi(
     messages: { role: string; content: string }[],
   ): Promise<string> {
@@ -125,7 +120,6 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
     return res?.data?.reply ?? 'Không nhận được phản hồi.';
   }
 
-  // ─── TAB 1: Chat ─────────────────────────────────────────────────────────
   async sendChat() {
     const input = this.chatInput.trim();
     if (!input || this.isChatLoading()) return;
@@ -134,7 +128,6 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
     this.isChatLoading.set(true);
     this.cdr.markForCheck();
 
-    // Snapshot history TRƯỚC khi update signal — tránh gửi message chưa có reply
     const history = this.chatMessages()
       .slice(1)
       .map((m) => ({ role: m.role, content: m.content }));
@@ -187,7 +180,6 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
     ]);
   }
 
-  // ─── TAB 2: Analyze ──────────────────────────────────────────────────────
   async analyzeHealth() {
     if (this.isAnalyzing()) return;
     this.isAnalyzing.set(true);
@@ -216,7 +208,6 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  // ─── TAB 3: Q&A ──────────────────────────────────────────────────────────
   async askQuestion() {
     const q = this.qaInput.trim();
     if (!q || this.isQaLoading()) return;
@@ -249,7 +240,6 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
     this.askQuestion();
   }
 
-  // ─── Helpers ─────────────────────────────────────────────────────────────
   now(): string {
     return new Date().toLocaleTimeString('vi-VN', {
       hour: '2-digit',
@@ -258,13 +248,11 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
   }
 
   formatContent(text: string): string {
-    // 1. Escape HTML trước
     let html = text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
 
-    // 2. Headers: ### ## #
     html = html
       .replace(
         /^### (.+)$/gm,
@@ -273,13 +261,10 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
       .replace(/^## (.+)$/gm, '<h3 class="text-sm font-bold mt-3 mb-1">$1</h3>')
       .replace(/^# (.+)$/gm, '<h3 class="text-sm font-bold mt-3 mb-1">$1</h3>');
 
-    // 3. Bold / italic
     html = html
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(?!\s)(.+?)(?<!\s)\*/g, '<em>$1</em>');
 
-    // 4. List items: dòng bắt đầu bằng "* " hoặc "- "
-    //    Bọc các block liên tiếp thành <ul>
     html = html.replace(/((?:^[*-] .+$\n?)+)/gm, (block) => {
       const items = block
         .trim()
@@ -292,7 +277,6 @@ export class AiHealthComponent implements OnInit, AfterViewChecked {
       return `<ul class="space-y-1 my-1">${items}</ul>`;
     });
 
-    // 5. Newlines còn lại → <br>
     html = html.replace(/\n/g, '<br>');
 
     return html;

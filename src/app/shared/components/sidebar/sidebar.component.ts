@@ -21,7 +21,7 @@ interface MenuItem {
 })
 export class SidebarComponent {
   isCollapsed = signal(false);
-  showNotifications = signal(false);
+  showNotifications = this.notificationService.showPanel;
 
   private allMenuItems: MenuItem[] = [
     {
@@ -94,10 +94,11 @@ export class SidebarComponent {
   }
 
   toggleNotifications() {
-    this.showNotifications.update((v) => !v);
-    if (this.showNotifications()) {
-      this.notificationService.loadNotifications();
-    }
+    this.notificationService.togglePanel();
+  }
+
+  closeNotifications() {
+    this.notificationService.closePanel();
   }
 
   onNotificationClick(notification: Notification) {
@@ -107,7 +108,7 @@ export class SidebarComponent {
     if (notification.link) {
       this.router.navigate([notification.link]);
     }
-    this.showNotifications.set(false);
+    this.notificationService.closePanel();
   }
 
   async subscribePush() {

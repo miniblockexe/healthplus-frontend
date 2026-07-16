@@ -22,6 +22,18 @@ export class NotificationService implements OnDestroy {
 
   notifications = signal<Notification[]>([]);
   unreadCount = signal(0);
+  showPanel = signal(false);
+
+  togglePanel(): void {
+    this.showPanel.update((v) => !v);
+    if (this.showPanel()) {
+      this.loadNotifications();
+    }
+  }
+
+  closePanel(): void {
+    this.showPanel.set(false);
+  }
 
   // Subject dùng để hủy interval khi logout
   private destroy$ = new Subject<void>();

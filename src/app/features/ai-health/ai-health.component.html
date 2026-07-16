@@ -25,23 +25,67 @@
         </div>
       </div>
       @if (isLoadingData()) {
-        <div
-          class="flex items-center gap-2 text-xs"
-          style="color: rgba(255, 255, 255, 0.6)"
-        >
-          <span
-            class="w-1.5 h-1.5 rounded-full animate-pulse"
-            style="background: var(--hp-nav-accent)"
-          ></span>
-          Đang tải dữ liệu...
+        <div class="flex items-center gap-3">
+          <div
+            class="flex items-center gap-2 text-xs"
+            style="color: rgba(255, 255, 255, 0.6)"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full animate-pulse"
+              style="background: var(--hp-nav-accent)"
+            ></span>
+            Đang tải dữ liệu...
+          </div>
+          <button
+            (click)="notificationService.togglePanel()"
+            class="relative shrink-0"
+            style="color: rgba(255, 255, 255, 0.72)"
+            onmouseenter="this.style.color = '#fff'"
+            onmouseleave="this.style.color = 'rgba(255,255,255,0.72)'"
+          >
+            <i class="fas fa-bell text-base"></i>
+            @if (notificationService.unreadCount() > 0) {
+              <span
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] rounded-full w-3.5 h-3.5 flex items-center justify-center"
+              >
+                {{
+                  notificationService.unreadCount() > 9
+                    ? "9+"
+                    : notificationService.unreadCount()
+                }}
+              </span>
+            }
+          </button>
         </div>
       } @else {
-        <div
-          class="text-xs text-right"
-          style="color: rgba(255, 255, 255, 0.55)"
-        >
-          <div>{{ vitalSigns().length }} chỉ số</div>
-          <div>{{ medicalVisits().length }} lần khám</div>
+        <div class="flex items-center gap-3">
+          <div
+            class="text-xs text-right"
+            style="color: rgba(255, 255, 255, 0.55)"
+          >
+            <div>{{ vitalSigns().length }} chỉ số</div>
+            <div>{{ medicalVisits().length }} lần khám</div>
+          </div>
+          <button
+            (click)="notificationService.togglePanel()"
+            class="relative shrink-0"
+            style="color: rgba(255, 255, 255, 0.72)"
+            onmouseenter="this.style.color = '#fff'"
+            onmouseleave="this.style.color = 'rgba(255,255,255,0.72)'"
+          >
+            <i class="fas fa-bell text-base"></i>
+            @if (notificationService.unreadCount() > 0) {
+              <span
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] rounded-full w-3.5 h-3.5 flex items-center justify-center"
+              >
+                {{
+                  notificationService.unreadCount() > 9
+                    ? "9+"
+                    : notificationService.unreadCount()
+                }}
+              </span>
+            }
+          </button>
         </div>
       }
     </div>

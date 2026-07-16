@@ -24,6 +24,26 @@
           </p>
         </div>
       </div>
+      <button
+        (click)="notificationService.togglePanel()"
+        class="relative shrink-0 ml-auto"
+        style="color: rgba(255, 255, 255, 0.72)"
+        onmouseenter="this.style.color = '#fff'"
+        onmouseleave="this.style.color = 'rgba(255,255,255,0.72)'"
+      >
+        <i class="fas fa-bell text-base"></i>
+        @if (notificationService.unreadCount() > 0) {
+          <span
+            class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] rounded-full w-3.5 h-3.5 flex items-center justify-center"
+          >
+            {{
+              notificationService.unreadCount() > 9
+                ? "9+"
+                : notificationService.unreadCount()
+            }}
+          </span>
+        }
+      </button>
     </div>
   </header>
 
@@ -192,15 +212,12 @@
               <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
                 >Nơi tiêm</label
               >
-              <select
+              <input
+                type="text"
                 formControlName="location"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-              >
-                <option value="">-- Chọn cơ sở y tế --</option>
-                @for (h of hospitals(); track h.id) {
-                  <option [value]="h.name">{{ h.name }}</option>
-                }
-              </select>
+                placeholder="Trung tâm y tế quận 1..."
+                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
+              />
             </div>
 
             <div>

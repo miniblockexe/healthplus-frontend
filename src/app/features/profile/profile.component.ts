@@ -10,6 +10,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/auth/auth.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { ApiResponse } from '../../core/models/api-response.model';
 import { User } from '../../core/models/user.model';
 
@@ -77,6 +78,7 @@ export class ProfileComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     public authService: AuthService,
+    public notificationService: NotificationService,
   ) {}
 
   ngOnInit() {

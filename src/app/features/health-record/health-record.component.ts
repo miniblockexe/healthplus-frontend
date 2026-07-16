@@ -15,6 +15,7 @@ import { environment } from '../../../environments/environment';
 import { VitalSign } from '../../core/models/health-record.model';
 import { ApiResponse } from '../../core/models/api-response.model';
 import { OfflineService } from '../../core/services/offline.service';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-health-record',
@@ -83,6 +84,7 @@ export class HealthRecordComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     public offlineService: OfflineService,
+    public notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
