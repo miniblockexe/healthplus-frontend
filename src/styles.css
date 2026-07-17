@@ -91,6 +91,15 @@ body {
   100% { background-position:  400px 0; }
 }
 
+/* ─── Slide-down animation ───────────────────────────── */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-down {
+  animation: slideDown 0.2s ease forwards;
+}
+
 /* ─── Reduced motion ─────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .hp-lift, .hp-skeleton, * {

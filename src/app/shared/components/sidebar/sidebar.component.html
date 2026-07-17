@@ -295,6 +295,174 @@
   </main>
 </div>
 
+<!-- ===== MOBILE NOTIFICATION PANEL (sm:hidden) ===== -->
+@if (showNotifications()) {
+  <!-- Backdrop -->
+  <div
+    class="fixed inset-0 z-40 sm:hidden"
+    style="background: rgba(0, 0, 0, 0.45)"
+    (click)="closeNotifications()"
+  ></div>
+
+  <!-- Panel slide-down from top -->
+  <div
+    class="fixed top-0 left-0 right-0 z-50 sm:hidden animate-slide-down"
+    style="
+      background: var(--hp-surface);
+      border-bottom: 1px solid var(--hp-border2);
+      border-radius: 0 0 var(--hp-radius) var(--hp-radius);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    "
+  >
+    <!-- Panel header -->
+    <div
+      class="flex items-center justify-between px-4 py-3 shrink-0"
+      style="
+        border-bottom: 1px solid var(--hp-border);
+        background: var(--hp-nav-bg2);
+        border-radius: 0;
+      "
+    >
+      <div class="flex items-center gap-2">
+        <span
+          class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
+          style="background: var(--hp-gradient)"
+        >
+          <i class="fas fa-bell text-xs text-white"></i>
+        </span>
+        <span class="text-sm font-semibold text-white">Thông báo</span>
+        @if (notificationService.unreadCount() > 0) {
+          <span
+            class="bg-red-500 text-white text-[10px] rounded-full px-1.5 py-0.5 font-medium"
+          >
+            {{
+              notificationService.unreadCount() > 9
+                ? "9+"
+                : notificationService.unreadCount()
+            }}
+          </span>
+        }
+      </div>
+      <div class="flex items-center gap-3">
+        @if (notificationService.unreadCount() > 0) {
+          <button
+            (click)="notificationService.markAllAsRead()"
+            class="text-xs"
+            style="color: var(--hp-primary2)"
+          >
+            Đọc tất cả
+          </button>
+        }
+        <button
+          (click)="closeNotifications()"
+          class="w-7 h-7 flex items-center justify-center rounded-[var(--hp-radius-sm)] transition-colors"
+          style="color: rgba(255, 255, 255, 0.72)"
+          onmouseenter="
+            this.style.color = '#fff';
+            this.style.background = 'rgba(255,255,255,0.1)';
+          "
+          onmouseleave="
+            this.style.color = 'rgba(255,255,255,0.72)';
+            this.style.background = 'transparent';
+          "
+        >
+          <i class="fas fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Notification list -->
+    <div class="overflow-y-auto flex-1">
+      @if (notificationService.notifications().length === 0) {
+        <div
+          class="flex flex-col items-center justify-center py-12 text-sm"
+          style="color: var(--hp-text3)"
+        >
+          <i class="fas fa-bell-slash text-3xl mb-3" style="opacity: 0.5"></i>
+          Không có thông báo
+        </div>
+      } @else {
+        @for (n of notificationService.notifications(); track n.id) {
+          <div
+            (click)="onNotificationClick(n)"
+            class="px-4 py-3 cursor-pointer transition-colors"
+            style="border-bottom: 1px solid var(--hp-border)"
+            [style.background]="
+              !n.isRead ? 'rgba(59,130,246,0.07)' : 'transparent'
+            "
+          >
+            <div class="flex items-start gap-3">
+              <!-- icon by type -->
+              <div
+                class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                [style.background]="
+                  !n.isRead ? 'rgba(59,130,246,0.15)' : 'var(--hp-surface2)'
+                "
+              >
+                <i
+                  class="fas text-sm"
+                  [class.fa-stethoscope]="n.type === 'diagnosis'"
+                  [class.fa-calendar-check]="n.type === 'appointment'"
+                  [class.fa-syringe]="n.type === 'vaccine'"
+                  [class.fa-bell]="
+                    n.type !== 'diagnosis' &&
+                    n.type !== 'appointment' &&
+                    n.type !== 'vaccine'
+                  "
+                  [style.color]="
+                    !n.isRead ? 'var(--hp-primary2)' : 'var(--hp-text3)'
+                  "
+                ></i>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-2">
+                  <p
+                    class="text-sm font-medium leading-snug"
+                    style="color: var(--hp-text)"
+                    [class.font-semibold]="!n.isRead"
+                  >
+                    {{ n.title }}
+                  </p>
+                  <button
+                    (click)="
+                      $event.stopPropagation(); notificationService.delete(n.id)
+                    "
+                    class="shrink-0 text-xs transition-colors mt-0.5"
+                    style="color: var(--hp-text3)"
+                    onmouseenter="this.style.color = '#ef4444'"
+                    onmouseleave="this.style.color = 'var(--hp-text3)'"
+                  >
+                    <i class="fas fa-xmark"></i>
+                  </button>
+                </div>
+                <p class="text-xs mt-0.5" style="color: var(--hp-text2)">
+                  {{ n.message }}
+                </p>
+                <p class="text-xs mt-1" style="color: var(--hp-text3)">
+                  {{ n.createdAt | date: "dd/MM HH:mm" }}
+                </p>
+              </div>
+
+              <!-- unread dot -->
+              @if (!n.isRead) {
+                <span
+                  class="w-2 h-2 rounded-full shrink-0 mt-1.5"
+                  style="background: var(--hp-primary2)"
+                ></span>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+}
+<!-- ===== END MOBILE NOTIFICATION PANEL ===== -->
+
 <!-- Bottom nav: mobile only -->
 <nav
   class="fixed bottom-0 left-0 right-0 z-50 flex sm:hidden"
