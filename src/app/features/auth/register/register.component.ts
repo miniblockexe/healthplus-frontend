@@ -1,4 +1,11 @@
-import { Component, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  signal,
+  AfterViewInit,
+  NgZone,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -10,7 +17,7 @@ import { AuthService } from '../../../core/auth/auth.service';
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = signal(false);
   errorMessage = signal('');
 
@@ -22,11 +29,57 @@ export class RegisterComponent {
     phone: [''],
   });
 
+  private isMobile = false;
+  private viewportHandler: (() => void) | null = null;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    private ngZone: NgZone,
   ) {}
+
+  ngOnInit() {
+    this.isMobile = window.innerWidth < 1024;
+  }
+
+  ngAfterViewInit() {
+    if (!this.isMobile) return;
+
+    this.ngZone.runOutsideAngular(() => {
+      // scrollIntoView khi focus vào input/select
+      const inputs = document.querySelectorAll<HTMLElement>('input, select');
+      inputs.forEach((input) => {
+        input.addEventListener('focus', () => {
+          setTimeout(() => {
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 350);
+        });
+      });
+
+      // visualViewport API cho iOS Safari
+      if (window.visualViewport) {
+        this.viewportHandler = () => {
+          const active = document.activeElement as HTMLElement;
+          if (
+            active &&
+            (active.tagName === 'INPUT' || active.tagName === 'SELECT')
+          ) {
+            setTimeout(() => {
+              active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+          }
+        };
+        window.visualViewport.addEventListener('resize', this.viewportHandler);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (window.visualViewport && this.viewportHandler) {
+      window.visualViewport.removeEventListener('resize', this.viewportHandler);
+    }
+  }
 
   onSubmit() {
     if (this.form.invalid) return;
