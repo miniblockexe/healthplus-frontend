@@ -207,56 +207,56 @@
         </p>
       </div>
 
-      <!-- Mini feature chips -->
-      <div class="flex gap-2 mt-5 flex-wrap relative z-10">
+      <!-- Mini feature chips — grid 2x2 không bị xuống dòng lẻ -->
+      <div class="grid grid-cols-2 gap-1.5 mt-4 relative z-10">
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full"
+          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.8);
           "
         >
           <i
-            class="fas fa-chart-line text-[10px]"
+            class="fas fa-chart-line text-[10px] shrink-0"
             style="color: var(--hp-nav-accent)"
           ></i>
           Dashboard
         </span>
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full"
+          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.8);
           "
         >
           <i
-            class="fas fa-robot text-[10px]"
+            class="fas fa-robot text-[10px] shrink-0"
             style="color: var(--hp-nav-accent)"
           ></i>
           AI Sức khỏe
         </span>
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full"
+          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.8);
           "
         >
           <i
-            class="fas fa-syringe text-[10px]"
+            class="fas fa-syringe text-[10px] shrink-0"
             style="color: var(--hp-nav-accent)"
           ></i>
           Vaccine
         </span>
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full"
+          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.8);
           "
         >
           <i
-            class="fas fa-shield-halved text-[10px]"
+            class="fas fa-shield-halved text-[10px] shrink-0"
             style="color: var(--hp-nav-accent)"
           ></i>
           Bảo mật
@@ -486,7 +486,6 @@
           }, 350);
         });
       });
-
       if (window.visualViewport) {
         window.visualViewport.addEventListener("resize", function () {
           var active = document.activeElement;
