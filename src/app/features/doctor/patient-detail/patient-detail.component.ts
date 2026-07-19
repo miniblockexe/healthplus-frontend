@@ -30,6 +30,14 @@ export class PatientDetailComponent implements OnInit {
   vitalSigns = signal<VitalSign[]>([]);
   medicalVisits = signal<MedicalVisit[]>([]);
   vaccines = signal<UserVaccine[]>([]);
+  hospitalOpen = signal(false);
+  hospitalLabel = signal('-- Chọn bệnh viện --');
+  selectHospital(val: string, label: string) {
+    this.diagnosisForm.get('hospitalName')?.setValue(val);
+    this.hospitalLabel.set(label);
+    this.hospitalOpen.set(false);
+  }
+
   hospitals = signal<{ id: number; name: string }[]>([]);
   isLoading = signal(false);
   isSubmitting = signal(false);

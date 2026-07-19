@@ -190,22 +190,518 @@
               <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
                 >Ngày tiêm</label
               >
-              <input
-                type="date"
-                formControlName="vaccinatedDate"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-              />
+              <div class="relative">
+                <!-- Trigger button -->
+                <button
+                  type="button"
+                  (click)="vaccinatedPicker.set(!vaccinatedPicker())"
+                  class="w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
+                  style="
+                    background: var(--hp-surface2);
+                    border: 1px solid var(--hp-border2);
+                    color: var(--hp-text);
+                  "
+                >
+                  <i
+                    class="fas fa-calendar-days text-[11px] shrink-0"
+                    style="color: var(--hp-text3)"
+                  ></i>
+                  <span
+                    [style.color]="
+                      vaccinatedDisplay() ? 'var(--hp-text)' : 'var(--hp-text3)'
+                    "
+                  >
+                    {{ vaccinatedDisplay() || "Chọn ngày tiêm" }}
+                  </span>
+                </button>
+
+                <!-- Calendar dropdown -->
+                @if (vaccinatedPicker()) {
+                  <div
+                    class="absolute z-50 mt-1 rounded-[var(--hp-radius)] overflow-hidden select-none"
+                    style="
+                      background: var(--hp-surface);
+                      border: 1px solid var(--hp-border2);
+                      box-shadow: 0 8px 28px rgba(30, 64, 120, 0.14);
+                      width: 280px;
+                    "
+                  >
+                    <!-- Nav header -->
+                    <div
+                      class="flex items-center justify-between px-3 py-2.5"
+                      style="border-bottom: 1px solid var(--hp-border)"
+                    >
+                      <button
+                        type="button"
+                        (click)="
+                          vacView() === 'year'
+                            ? shiftYears('vac', -1)
+                            : prevMonth('vac')
+                        "
+                        class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                        style="color: var(--hp-text2)"
+                        onmouseenter="
+                          this.style.background = 'var(--hp-surface2)'
+                        "
+                        onmouseleave="this.style.background = 'transparent'"
+                      >
+                        <i class="fas fa-chevron-left text-[10px]"></i>
+                      </button>
+                      <button
+                        type="button"
+                        (click)="toggleView('vac')"
+                        class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm font-medium transition-colors"
+                        style="color: var(--hp-text)"
+                        onmouseenter="
+                          this.style.background = 'var(--hp-surface2)'
+                        "
+                        onmouseleave="this.style.background = 'transparent'"
+                      >
+                        {{ MONTHS[vacCal().month] }} {{ vacCal().year }}
+                        <i
+                          class="fas text-[9px]"
+                          style="color: var(--hp-text3)"
+                          [class.fa-chevron-up]="vacView() !== 'day'"
+                          [class.fa-chevron-down]="vacView() === 'day'"
+                        ></i>
+                      </button>
+                      <button
+                        type="button"
+                        (click)="
+                          vacView() === 'year'
+                            ? shiftYears('vac', 1)
+                            : nextMonth('vac')
+                        "
+                        class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                        style="color: var(--hp-text2)"
+                        onmouseenter="
+                          this.style.background = 'var(--hp-surface2)'
+                        "
+                        onmouseleave="this.style.background = 'transparent'"
+                      >
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                      </button>
+                    </div>
+
+                    <!-- YEAR VIEW -->
+                    @if (vacView() === "year") {
+                      <div class="grid grid-cols-3 gap-1.5 p-3">
+                        @for (y of getYearRange(vacYearStart()); track y) {
+                          <button
+                            type="button"
+                            (click)="selectYear('vac', y)"
+                            class="py-2 rounded-lg text-xs font-medium transition-colors"
+                            [style.background]="
+                              vacCal().year === y
+                                ? 'var(--hp-nav-bg)'
+                                : 'transparent'
+                            "
+                            [style.color]="
+                              vacCal().year === y ? '#fff' : 'var(--hp-text)'
+                            "
+                            onmouseenter="
+                              if (this.style.background === 'transparent')
+                                this.style.background = 'var(--hp-surface2)';
+                            "
+                            onmouseleave="
+                              if (!this.style.color.includes('fff'))
+                                this.style.background = 'transparent';
+                            "
+                          >
+                            {{ y }}
+                          </button>
+                        }
+                      </div>
+                    }
+
+                    <!-- MONTH VIEW -->
+                    @if (vacView() === "month") {
+                      <div class="grid grid-cols-3 gap-1.5 p-3">
+                        @for (m of MONTHS_SHORT; track $index) {
+                          <button
+                            type="button"
+                            (click)="selectMonth('vac', $index)"
+                            class="py-2 rounded-lg text-xs font-medium transition-colors"
+                            [style.background]="
+                              vacCal().month === $index
+                                ? 'var(--hp-nav-bg)'
+                                : 'transparent'
+                            "
+                            [style.color]="
+                              vacCal().month === $index
+                                ? '#fff'
+                                : 'var(--hp-text)'
+                            "
+                            onmouseenter="
+                              if (this.style.background === 'transparent')
+                                this.style.background = 'var(--hp-surface2)';
+                            "
+                            onmouseleave="
+                              if (!this.style.color.includes('fff'))
+                                this.style.background = 'transparent';
+                            "
+                          >
+                            {{ m }}
+                          </button>
+                        }
+                      </div>
+                    }
+
+                    <!-- DAY VIEW -->
+                    @if (vacView() === "day") {
+                      <div class="grid grid-cols-7 px-3 pt-2 pb-1">
+                        @for (h of DAYS_HDR; track h) {
+                          <div
+                            class="text-center text-[10px] font-medium py-1"
+                            style="color: var(--hp-text3)"
+                          >
+                            {{ h }}
+                          </div>
+                        }
+                      </div>
+                      <div class="grid grid-cols-7 px-3 pb-3 gap-y-0.5">
+                        @for (
+                          day of getCalDays(vacCal().year, vacCal().month);
+                          track $index
+                        ) {
+                          @if (day === null) {
+                            <div></div>
+                          } @else {
+                            <button
+                              type="button"
+                              (click)="selectVacDate(day)"
+                              [disabled]="isVacDayDisabled(day)"
+                              class="w-8 h-8 mx-auto rounded-full text-xs flex items-center justify-center transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                              [style.background]="
+                                isVacSelected(day)
+                                  ? 'var(--hp-nav-bg)'
+                                  : isToday(vacCal().year, vacCal().month, day)
+                                    ? 'rgba(56,189,248,0.12)'
+                                    : 'transparent'
+                              "
+                              [style.color]="
+                                isVacSelected(day)
+                                  ? '#fff'
+                                  : isToday(vacCal().year, vacCal().month, day)
+                                    ? 'var(--hp-nav-accent)'
+                                    : 'var(--hp-text)'
+                              "
+                              [style.fontWeight]="
+                                isVacSelected(day) ||
+                                isToday(vacCal().year, vacCal().month, day)
+                                  ? '600'
+                                  : '400'
+                              "
+                              onmouseenter="
+                                if (
+                                  !this.disabled &&
+                                  !this.style.background.includes('nav-bg')
+                                )
+                                  this.style.background = 'var(--hp-surface2)';
+                              "
+                              onmouseleave="
+                                if (!this.style.color.includes('fff'))
+                                  this.style.background = '';
+                              "
+                            >
+                              {{ day }}
+                            </button>
+                          }
+                        }
+                      </div>
+                    }
+
+                    <!-- Footer -->
+                    <div
+                      class="flex items-center justify-between px-4 py-2"
+                      style="border-top: 1px solid var(--hp-border)"
+                    >
+                      <button
+                        type="button"
+                        (click)="
+                          form.get('vaccinatedDate')?.setValue('');
+                          vaccinatedDisplay.set('');
+                          vaccinatedPicker.set(false);
+                          onVaccinatedDateChange()
+                        "
+                        class="text-xs transition-colors"
+                        style="color: var(--hp-text3)"
+                        onmouseenter="this.style.color = 'var(--hp-red)'"
+                        onmouseleave="this.style.color = 'var(--hp-text3)'"
+                      >
+                        <i class="fas fa-xmark mr-1"></i>Xoá
+                      </button>
+                      <span class="text-[10px]" style="color: var(--hp-text3)"
+                        >Hôm nay hoặc trước đó</span
+                      >
+                    </div>
+                  </div>
+                }
+              </div>
             </div>
 
             <div>
               <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
                 >Ngày hẹn tiếp theo</label
               >
-              <input
-                type="date"
-                formControlName="nextDueDate"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-              />
+              <div class="relative">
+                <!-- Trigger button -->
+                <button
+                  type="button"
+                  (click)="
+                    form.get('vaccinatedDate')?.value &&
+                      nextDuePicker.set(!nextDuePicker())
+                  "
+                  class="w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
+                  style="
+                    background: var(--hp-surface2);
+                    border: 1px solid var(--hp-border2);
+                    color: var(--hp-text);
+                  "
+                >
+                  <i
+                    class="fas fa-calendar-days text-[11px] shrink-0"
+                    style="color: var(--hp-text3)"
+                  ></i>
+                  <span
+                    [style.color]="
+                      nextDueDisplay() ? 'var(--hp-text)' : 'var(--hp-text3)'
+                    "
+                  >
+                    {{ nextDueDisplay() || "Chọn ngày hẹn" }}
+                  </span>
+                </button>
+
+                <!-- Calendar dropdown -->
+                @if (nextDuePicker()) {
+                  <div
+                    class="absolute z-50 mt-1 rounded-[var(--hp-radius)] overflow-hidden select-none"
+                    style="
+                      background: var(--hp-surface);
+                      border: 1px solid var(--hp-border2);
+                      box-shadow: 0 8px 28px rgba(30, 64, 120, 0.14);
+                      width: 280px;
+                    "
+                  >
+                    <!-- Nav header -->
+                    <div
+                      class="flex items-center justify-between px-3 py-2.5"
+                      style="border-bottom: 1px solid var(--hp-border)"
+                    >
+                      <button
+                        type="button"
+                        (click)="
+                          nextView() === 'year'
+                            ? shiftYears('next', -1)
+                            : prevMonth('next')
+                        "
+                        class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                        style="color: var(--hp-text2)"
+                        onmouseenter="
+                          this.style.background = 'var(--hp-surface2)'
+                        "
+                        onmouseleave="this.style.background = 'transparent'"
+                      >
+                        <i class="fas fa-chevron-left text-[10px]"></i>
+                      </button>
+                      <button
+                        type="button"
+                        (click)="toggleView('next')"
+                        class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm font-medium transition-colors"
+                        style="color: var(--hp-text)"
+                        onmouseenter="
+                          this.style.background = 'var(--hp-surface2)'
+                        "
+                        onmouseleave="this.style.background = 'transparent'"
+                      >
+                        {{ MONTHS[nextCal().month] }} {{ nextCal().year }}
+                        <i
+                          class="fas text-[9px]"
+                          style="color: var(--hp-text3)"
+                          [class.fa-chevron-up]="nextView() !== 'day'"
+                          [class.fa-chevron-down]="nextView() === 'day'"
+                        ></i>
+                      </button>
+                      <button
+                        type="button"
+                        (click)="
+                          nextView() === 'year'
+                            ? shiftYears('next', 1)
+                            : nextMonth('next')
+                        "
+                        class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                        style="color: var(--hp-text2)"
+                        onmouseenter="
+                          this.style.background = 'var(--hp-surface2)'
+                        "
+                        onmouseleave="this.style.background = 'transparent'"
+                      >
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                      </button>
+                    </div>
+
+                    <!-- YEAR VIEW -->
+                    @if (nextView() === "year") {
+                      <div class="grid grid-cols-3 gap-1.5 p-3">
+                        @for (y of getYearRange(nextYearStart()); track y) {
+                          <button
+                            type="button"
+                            (click)="selectYear('next', y)"
+                            class="py-2 rounded-lg text-xs font-medium transition-colors"
+                            [style.background]="
+                              nextCal().year === y
+                                ? 'var(--hp-nav-bg)'
+                                : 'transparent'
+                            "
+                            [style.color]="
+                              nextCal().year === y ? '#fff' : 'var(--hp-text)'
+                            "
+                            onmouseenter="
+                              if (this.style.background === 'transparent')
+                                this.style.background = 'var(--hp-surface2)';
+                            "
+                            onmouseleave="
+                              if (!this.style.color.includes('fff'))
+                                this.style.background = 'transparent';
+                            "
+                          >
+                            {{ y }}
+                          </button>
+                        }
+                      </div>
+                    }
+
+                    <!-- MONTH VIEW -->
+                    @if (nextView() === "month") {
+                      <div class="grid grid-cols-3 gap-1.5 p-3">
+                        @for (m of MONTHS_SHORT; track $index) {
+                          <button
+                            type="button"
+                            (click)="selectMonth('next', $index)"
+                            class="py-2 rounded-lg text-xs font-medium transition-colors"
+                            [style.background]="
+                              nextCal().month === $index
+                                ? 'var(--hp-nav-bg)'
+                                : 'transparent'
+                            "
+                            [style.color]="
+                              nextCal().month === $index
+                                ? '#fff'
+                                : 'var(--hp-text)'
+                            "
+                            onmouseenter="
+                              if (this.style.background === 'transparent')
+                                this.style.background = 'var(--hp-surface2)';
+                            "
+                            onmouseleave="
+                              if (!this.style.color.includes('fff'))
+                                this.style.background = 'transparent';
+                            "
+                          >
+                            {{ m }}
+                          </button>
+                        }
+                      </div>
+                    }
+
+                    <!-- DAY VIEW -->
+                    @if (nextView() === "day") {
+                      <div class="grid grid-cols-7 px-3 pt-2 pb-1">
+                        @for (h of DAYS_HDR; track h) {
+                          <div
+                            class="text-center text-[10px] font-medium py-1"
+                            style="color: var(--hp-text3)"
+                          >
+                            {{ h }}
+                          </div>
+                        }
+                      </div>
+                      <div class="grid grid-cols-7 px-3 pb-3 gap-y-0.5">
+                        @for (
+                          day of getCalDays(nextCal().year, nextCal().month);
+                          track $index
+                        ) {
+                          @if (day === null) {
+                            <div></div>
+                          } @else {
+                            <button
+                              type="button"
+                              (click)="selectNextDate(day)"
+                              [disabled]="isNextDayDisabled(day)"
+                              class="w-8 h-8 mx-auto rounded-full text-xs flex items-center justify-center transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                              [style.background]="
+                                isNextSelected(day)
+                                  ? 'var(--hp-nav-bg)'
+                                  : isToday(
+                                        nextCal().year,
+                                        nextCal().month,
+                                        day
+                                      )
+                                    ? 'rgba(56,189,248,0.12)'
+                                    : 'transparent'
+                              "
+                              [style.color]="
+                                isNextSelected(day)
+                                  ? '#fff'
+                                  : isToday(
+                                        nextCal().year,
+                                        nextCal().month,
+                                        day
+                                      )
+                                    ? 'var(--hp-nav-accent)'
+                                    : 'var(--hp-text)'
+                              "
+                              [style.fontWeight]="
+                                isNextSelected(day) ||
+                                isToday(nextCal().year, nextCal().month, day)
+                                  ? '600'
+                                  : '400'
+                              "
+                              onmouseenter="
+                                if (
+                                  !this.disabled &&
+                                  !this.style.background.includes('nav-bg')
+                                )
+                                  this.style.background = 'var(--hp-surface2)';
+                              "
+                              onmouseleave="
+                                if (!this.style.color.includes('fff'))
+                                  this.style.background = '';
+                              "
+                            >
+                              {{ day }}
+                            </button>
+                          }
+                        }
+                      </div>
+                    }
+
+                    <!-- Footer -->
+                    <div
+                      class="flex items-center justify-between px-4 py-2"
+                      style="border-top: 1px solid var(--hp-border)"
+                    >
+                      <button
+                        type="button"
+                        (click)="
+                          form.get('nextDueDate')?.setValue('');
+                          nextDueDisplay.set('');
+                          nextDuePicker.set(false)
+                        "
+                        class="text-xs transition-colors"
+                        style="color: var(--hp-text3)"
+                        onmouseenter="this.style.color = 'var(--hp-red)'"
+                        onmouseleave="this.style.color = 'var(--hp-text3)'"
+                      >
+                        <i class="fas fa-xmark mr-1"></i>Xoá
+                      </button>
+                      <span class="text-[10px]" style="color: var(--hp-text3)"
+                        >Phải sau ngày tiêm</span
+                      >
+                    </div>
+                  </div>
+                }
+              </div>
             </div>
 
             <div>

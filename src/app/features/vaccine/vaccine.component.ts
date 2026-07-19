@@ -33,6 +33,177 @@ export class VaccineComponent implements OnInit {
   successMessage = signal('');
   offlineMessage = signal('');
 
+  // Ngày hôm nay dạng yyyy-MM-dd
+  readonly today = new Date().toISOString().split('T')[0];
+
+  // Min date cho ngày hẹn = ngày tiêm + 1 ngày
+  minNextDueDate = signal('');
+
+  // Custom date picker state
+  vaccinatedPicker = signal(false);
+  nextDuePicker    = signal(false);
+  vaccinatedDisplay = signal('');
+  nextDueDisplay    = signal('');
+
+  // Calendar navigation
+  vacCal  = signal({ year: new Date().getFullYear(), month: new Date().getMonth() });
+  nextCal = signal({ year: new Date().getFullYear(), month: new Date().getMonth() });
+
+  readonly MONTHS = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
+                     'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+  readonly MONTHS_SHORT = ['Th1','Th2','Th3','Th4','Th5','Th6','Th7','Th8','Th9','Th10','Th11','Th12'];
+  readonly DAYS_HDR = ['CN','T2','T3','T4','T5','T6','T7'];
+
+  // view: 'day' | 'month' | 'year'
+  vacView  = signal<'day'|'month'|'year'>('day');
+  nextView = signal<'day'|'month'|'year'>('day');
+
+  // year range start
+  vacYearStart  = signal(new Date().getFullYear() - 6);
+  nextYearStart = signal(new Date().getFullYear() - 6);
+
+  getYearRange(start: number): number[] {
+    return Array.from({ length: 12 }, (_, i) => start + i);
+  }
+
+  selectMonth(picker: 'vac'|'next', monthIdx: number) {
+    if (picker === 'vac') {
+      this.vacCal.update(c => ({ ...c, month: monthIdx }));
+      this.vacView.set('day');
+    } else {
+      this.nextCal.update(c => ({ ...c, month: monthIdx }));
+      this.nextView.set('day');
+    }
+  }
+
+  selectYear(picker: 'vac'|'next', year: number) {
+    if (picker === 'vac') {
+      this.vacCal.update(c => ({ ...c, year }));
+      this.vacView.set('month');
+    } else {
+      this.nextCal.update(c => ({ ...c, year }));
+      this.nextView.set('month');
+    }
+  }
+
+  toggleView(picker: 'vac'|'next') {
+    if (picker === 'vac') {
+      this.vacView.set(this.vacView() === 'day' ? 'year' : 'day');
+    } else {
+      this.nextView.set(this.nextView() === 'day' ? 'year' : 'day');
+    }
+  }
+
+  shiftYears(picker: 'vac'|'next', dir: number) {
+    if (picker === 'vac') this.vacYearStart.update(y => y + dir * 12);
+    else this.nextYearStart.update(y => y + dir * 12);
+  }
+
+  getCalDays(year: number, month: number): (number|null)[] {
+    const first = new Date(year, month, 1).getDay();
+    const total = new Date(year, month + 1, 0).getDate();
+    const cells: (number|null)[] = Array(first).fill(null);
+    for (let d = 1; d <= total; d++) cells.push(d);
+    while (cells.length % 7 !== 0) cells.push(null);
+    return cells;
+  }
+
+  toDateStr(year: number, month: number, day: number): string {
+    return `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  }
+
+  toDisplayStr(dateStr: string): string {
+    if (!dateStr) return '';
+    const [y,m,d] = dateStr.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
+  selectVacDate(day: number) {
+    const { year, month } = this.vacCal();
+    const val = this.toDateStr(year, month, day);
+    this.form.get('vaccinatedDate')?.setValue(val);
+    this.vaccinatedDisplay.set(this.toDisplayStr(val));
+    this.vaccinatedPicker.set(false);
+    this.onVaccinatedDateChange();
+    // Cập nhật calendar ngày hẹn bắt đầu từ tháng sau
+    const next = new Date(year, month + 1, 1);
+    this.nextCal.set({ year: next.getFullYear(), month: next.getMonth() });
+  }
+
+  selectNextDate(day: number) {
+    const { year, month } = this.nextCal();
+    const val = this.toDateStr(year, month, day);
+    this.form.get('nextDueDate')?.setValue(val);
+    this.nextDueDisplay.set(this.toDisplayStr(val));
+    this.nextDuePicker.set(false);
+  }
+
+  prevMonth(picker: 'vac'|'next') {
+    if (picker === 'vac') {
+      const { year, month } = this.vacCal();
+      const d = new Date(year, month - 1, 1);
+      this.vacCal.set({ year: d.getFullYear(), month: d.getMonth() });
+    } else {
+      const { year, month } = this.nextCal();
+      const d = new Date(year, month - 1, 1);
+      this.nextCal.set({ year: d.getFullYear(), month: d.getMonth() });
+    }
+  }
+
+  nextMonth(picker: 'vac'|'next') {
+    if (picker === 'vac') {
+      const { year, month } = this.vacCal();
+      const d = new Date(year, month + 1, 1);
+      this.vacCal.set({ year: d.getFullYear(), month: d.getMonth() });
+    } else {
+      const { year, month } = this.nextCal();
+      const d = new Date(year, month + 1, 1);
+      this.nextCal.set({ year: d.getFullYear(), month: d.getMonth() });
+    }
+  }
+
+  isVacDayDisabled(day: number): boolean {
+    const { year, month } = this.vacCal();
+    return this.toDateStr(year, month, day) > this.today;
+  }
+
+  isNextDayDisabled(day: number): boolean {
+    const { year, month } = this.nextCal();
+    const val = this.toDateStr(year, month, day);
+    return val <= (this.form.get('vaccinatedDate')?.value || this.today);
+  }
+
+  isVacSelected(day: number): boolean {
+    const { year, month } = this.vacCal();
+    return this.toDateStr(year, month, day) === this.form.get('vaccinatedDate')?.value;
+  }
+
+  isNextSelected(day: number): boolean {
+    const { year, month } = this.nextCal();
+    return this.toDateStr(year, month, day) === this.form.get('nextDueDate')?.value;
+  }
+
+  isToday(year: number, month: number, day: number): boolean {
+    return this.toDateStr(year, month, day) === this.today;
+  }
+
+  onVaccinatedDateChange() {
+    const vacDate = this.form.get('vaccinatedDate')?.value;
+    if (vacDate) {
+      // Cộng thêm 1 ngày vào ngày tiêm
+      const d = new Date(vacDate);
+      d.setDate(d.getDate() + 1);
+      this.minNextDueDate.set(d.toISOString().split('T')[0]);
+    } else {
+      this.minNextDueDate.set('');
+    }
+    // Reset ngày hẹn nếu đang chọn ngày không hợp lệ
+    const nextDate = this.form.get('nextDueDate')?.value;
+    if (nextDate && nextDate <= vacDate!) {
+      this.form.get('nextDueDate')?.setValue('');
+    }
+  }
+
   form = this.fb.group({
     vaccineId: ['', Validators.required],
     doseNumber: [1, Validators.required],

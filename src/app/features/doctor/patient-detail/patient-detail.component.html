@@ -484,15 +484,69 @@
                     Tên bệnh viện / Cơ sở y tế
                     <span class="text-red-600">*</span>
                   </label>
-                  <select
-                    formControlName="hospitalName"
-                    class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-emerald-500"
-                  >
-                    <option value="">-- Chọn bệnh viện --</option>
-                    @for (h of hospitals(); track h.id) {
-                      <option [value]="h.name">{{ h.name }}</option>
+                  <div class="relative">
+                    <button
+                      type="button"
+                      (click)="hospitalOpen.set(!hospitalOpen())"
+                      class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
+                      style="
+                        background: var(--hp-surface2);
+                        border: 1px solid var(--hp-border2);
+                        color: var(--hp-text);
+                      "
+                    >
+                      <span
+                        [style.color]="
+                          diagnosisForm.get('hospitalName')?.value
+                            ? 'var(--hp-text)'
+                            : 'var(--hp-text3)'
+                        "
+                      >
+                        {{ hospitalLabel() }}
+                      </span>
+                      <i
+                        class="fas text-[9px]"
+                        style="color: var(--hp-text3)"
+                        [class.fa-chevron-up]="hospitalOpen()"
+                        [class.fa-chevron-down]="!hospitalOpen()"
+                      ></i>
+                    </button>
+                    @if (hospitalOpen()) {
+                      <div
+                        class="absolute z-50 w-full mt-1 rounded-[var(--hp-radius-sm)] overflow-y-auto"
+                        style="
+                          max-height: 200px;
+                          background: var(--hp-surface);
+                          border: 1px solid var(--hp-border2);
+                          box-shadow: 0 8px 24px rgba(30, 64, 120, 0.12);
+                        "
+                      >
+                        @for (h of hospitals(); track h.id) {
+                          <button
+                            type="button"
+                            (click)="selectHospital(h.name, h.name)"
+                            class="w-full px-4 py-2.5 text-sm text-left flex items-center justify-between transition-colors"
+                            style="color: var(--hp-text)"
+                            onmouseenter="
+                              this.style.background = 'var(--hp-surface2)'
+                            "
+                            onmouseleave="this.style.background = 'transparent'"
+                          >
+                            <span>{{ h.name }}</span>
+                            @if (
+                              diagnosisForm.get("hospitalName")?.value ===
+                              h.name
+                            ) {
+                              <i
+                                class="fas fa-check text-[10px]"
+                                style="color: #10b981"
+                              ></i>
+                            }
+                          </button>
+                        }
+                      </div>
                     }
-                  </select>
+                  </div>
                 </div>
               }
 

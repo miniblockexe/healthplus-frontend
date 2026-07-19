@@ -28,6 +28,20 @@ interface Hospital {
   templateUrl: './admin.component.html',
 })
 export class AdminComponent implements OnInit {
+  targetGroupOpen = signal(false);
+  targetGroupLabel = signal('Tất cả');
+  readonly targetGroupOptions = [
+    { value: 'all', label: 'Tất cả', icon: 'fa-users' },
+    { value: 'child', label: 'Trẻ em', icon: 'fa-child' },
+    { value: 'adult', label: 'Người lớn', icon: 'fa-person' },
+    { value: 'elderly', label: 'Người cao tuổi', icon: 'fa-person-cane' },
+  ];
+  selectTargetGroup(value: string, label: string) {
+    this.vaccineForm?.get('targetGroup')?.setValue(value);
+    this.targetGroupLabel.set(label);
+    this.targetGroupOpen.set(false);
+  }
+
   private apiUrl = environment.apiUrl;
 
   activeTab = signal<'users' | 'vaccines' | 'hospitals'>('users');

@@ -169,20 +169,81 @@
               <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
                 Bệnh viện / Cơ sở y tế <span class="text-red-600">*</span>
               </label>
-              <select
-                formControlName="hospitalId"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-              >
-                <option value="">-- Chọn bệnh viện --</option>
-                @for (h of hospitals(); track h.id) {
-                  <option [value]="h.id">
-                    {{ h.name }}
-                    @if (h.specialty) {
-                      ({{ h.specialty }})
+              <div class="relative">
+                <button
+                  type="button"
+                  (click)="hospitalOpen.set(!hospitalOpen())"
+                  class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
+                  style="
+                    background: var(--hp-surface2);
+                    border: 1px solid var(--hp-border2);
+                    color: var(--hp-text);
+                  "
+                >
+                  <span
+                    [style.color]="
+                      form.get('hospitalId')?.value
+                        ? 'var(--hp-text)'
+                        : 'var(--hp-text3)'
+                    "
+                  >
+                    {{ hospitalLabel() }}
+                  </span>
+                  <i
+                    class="fas text-[9px]"
+                    style="color: var(--hp-text3)"
+                    [class.fa-chevron-up]="hospitalOpen()"
+                    [class.fa-chevron-down]="!hospitalOpen()"
+                  ></i>
+                </button>
+                @if (hospitalOpen()) {
+                  <div
+                    class="absolute z-50 w-full mt-1 rounded-[var(--hp-radius-sm)] overflow-y-auto"
+                    style="
+                      max-height: 200px;
+                      background: var(--hp-surface);
+                      border: 1px solid var(--hp-border2);
+                      box-shadow: 0 8px 24px rgba(30, 64, 120, 0.12);
+                    "
+                  >
+                    @for (h of hospitals(); track h.id) {
+                      <button
+                        type="button"
+                        (click)="
+                          selectHospital(
+                            h.id.toString(),
+                            h.name +
+                              (h.specialty ? ' (' + h.specialty + ')' : '')
+                          )
+                        "
+                        class="w-full px-4 py-2.5 text-sm text-left flex items-center justify-between transition-colors"
+                        style="color: var(--hp-text)"
+                        onmouseenter="
+                          this.style.background = 'var(--hp-surface2)'
+                        "
+                        onmouseleave="this.style.background = 'transparent'"
+                      >
+                        <div>
+                          <span class="font-medium">{{ h.name }}</span>
+                          @if (h.specialty) {
+                            <span
+                              class="text-[11px] ml-1.5"
+                              style="color: var(--hp-text3)"
+                              >({{ h.specialty }})</span
+                            >
+                          }
+                        </div>
+                        @if (form.get("hospitalId")?.value == h.id.toString()) {
+                          <i
+                            class="fas fa-check text-[10px] shrink-0"
+                            style="color: var(--hp-primary)"
+                          ></i>
+                        }
+                      </button>
                     }
-                  </option>
+                  </div>
                 }
-              </select>
+              </div>
               @if (hospitals().length === 0) {
                 <p class="text-xs text-[var(--hp-text3)] mt-1.5">
                   Chưa có bệnh viện trong danh sách

@@ -294,15 +294,66 @@
                 <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
                   >Đối tượng</label
                 >
-                <select
-                  formControlName="targetGroup"
-                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)]"
-                >
-                  <option value="all">Tất cả</option>
-                  <option value="child">Trẻ em</option>
-                  <option value="adult">Người lớn</option>
-                  <option value="elderly">Người cao tuổi</option>
-                </select>
+                <div class="relative">
+                  <button
+                    type="button"
+                    (click)="targetGroupOpen.set(!targetGroupOpen())"
+                    class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
+                    style="
+                      background: var(--hp-surface2);
+                      border: 1px solid var(--hp-border2);
+                      color: var(--hp-text);
+                    "
+                  >
+                    <span style="color: var(--hp-text)">{{
+                      targetGroupLabel()
+                    }}</span>
+                    <i
+                      class="fas text-[9px]"
+                      style="color: var(--hp-text3)"
+                      [class.fa-chevron-up]="targetGroupOpen()"
+                      [class.fa-chevron-down]="!targetGroupOpen()"
+                    ></i>
+                  </button>
+                  @if (targetGroupOpen()) {
+                    <div
+                      class="absolute z-50 w-full mt-1 rounded-[var(--hp-radius-sm)] overflow-hidden"
+                      style="
+                        background: var(--hp-surface);
+                        border: 1px solid var(--hp-border2);
+                        box-shadow: 0 8px 24px rgba(30, 64, 120, 0.12);
+                      "
+                    >
+                      @for (opt of targetGroupOptions; track opt.value) {
+                        <button
+                          type="button"
+                          (click)="selectTargetGroup(opt.value, opt.label)"
+                          class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors"
+                          style="color: var(--hp-text)"
+                          onmouseenter="
+                            this.style.background = 'var(--hp-surface2)'
+                          "
+                          onmouseleave="this.style.background = 'transparent'"
+                        >
+                          <i
+                            class="fas text-[11px] w-4 text-center"
+                            [class]="opt.icon"
+                            style="color: var(--hp-text3)"
+                          ></i>
+                          {{ opt.label }}
+                          @if (
+                            vaccineForm?.get("targetGroup")?.value === opt.value
+                          ) {
+                            <i
+                              class="fas fa-check ml-auto text-[10px]"
+                              style="color: var(--hp-primary)"
+                            ></i>
+                          }
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
               </div>
               <div class="md:col-span-2">
                 <label class="block text-xs text-[var(--hp-text2)] mb-1.5"

@@ -41,6 +41,35 @@ export class ProfileComponent implements OnInit {
   // True nếu Google user đã từng đặt mật khẩu (backend trả về hasPassword)
   hasPassword = signal(false);
 
+  // Custom dropdown signals
+  genderOpen   = signal(false);
+  genderLabel  = signal('Chọn giới tính');
+  dayOpen      = signal(false);
+  dayLabel     = signal('Ngày');
+  monthOpen    = signal(false);
+  monthLabel   = signal('Tháng');
+  yearOpen     = signal(false);
+  yearLabel    = signal('Năm');
+
+  setDropdown(field: 'gender'|'day'|'month'|'year', value: string|number, label: string) {
+    this.profileForm.get(
+      field === 'gender' ? 'gender' :
+      field === 'day'    ? 'dobDay' :
+      field === 'month'  ? 'dobMonth' : 'dobYear'
+    )?.setValue(String(value));
+    if (field === 'gender') { this.genderLabel.set(label); this.genderOpen.set(false); }
+    if (field === 'day')    { this.dayLabel.set(label);    this.dayOpen.set(false); }
+    if (field === 'month')  { this.monthLabel.set(label);  this.monthOpen.set(false); }
+    if (field === 'year')   { this.yearLabel.set(label);   this.yearOpen.set(false); }
+  }
+
+  toggleDropdown(field: 'gender'|'day'|'month'|'year') {
+    this.genderOpen.set(field === 'gender' ? !this.genderOpen() : false);
+    this.dayOpen.set(field === 'day'       ? !this.dayOpen()    : false);
+    this.monthOpen.set(field === 'month'   ? !this.monthOpen()  : false);
+    this.yearOpen.set(field === 'year'     ? !this.yearOpen()   : false);
+  }
+
   // Dữ liệu cho 3 select ngày sinh
   days = Array.from({ length: 31 }, (_, i) => i + 1);
   months = [

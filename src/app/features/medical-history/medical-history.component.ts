@@ -35,6 +35,15 @@ export class MedicalHistoryComponent implements OnInit {
   private apiUrl = environment.apiUrl;
 
   // ─── State ───────────────────────────────────────────────────
+  hospitalOpen = signal(false);
+  hospitalLabel = signal('-- Chọn bệnh viện --');
+
+  selectHospital(id: string, name: string) {
+    this.form.get('hospitalId')?.setValue(id);
+    this.hospitalLabel.set(name);
+    this.hospitalOpen.set(false);
+  }
+
   visits = signal<MedicalVisit[]>([]);
   hospitals = signal<Hospital[]>([]);
   isLoading = signal(false);
