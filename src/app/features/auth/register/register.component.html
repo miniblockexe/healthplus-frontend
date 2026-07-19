@@ -44,7 +44,7 @@
       </p>
     </div>
 
-    <!-- 3 steps -->
+    <!-- 3 Steps -->
     <div class="flex flex-col gap-3 relative z-10">
       <p
         class="text-[10px] font-medium uppercase tracking-widest"
@@ -110,7 +110,7 @@
       </div>
     </div>
 
-    <!-- Bottom badges -->
+    <!-- Badges -->
     <div class="grid grid-cols-3 gap-2 relative z-10">
       <div
         class="rounded-xl py-3 px-2 text-center"
@@ -161,12 +161,15 @@
   </div>
 
   <!-- ══════════════════════════════════════════
-       RIGHT / MOBILE — full layout
+       RIGHT COLUMN
   ══════════════════════════════════════════ -->
-  <div class="flex-1 flex flex-col min-h-screen animate-fade-in">
-    <!-- ── MOBILE HERO HEADER (hidden on lg) ── -->
+  <div
+    class="flex-1 flex flex-col animate-fade-in"
+    style="overflow-y: auto; -webkit-overflow-scrolling: touch"
+  >
+    <!-- ── MOBILE HERO (ẩn trên desktop) ── -->
     <div
-      class="lg:hidden relative overflow-hidden px-6 pt-14 pb-10"
+      class="lg:hidden relative overflow-hidden px-6 pt-12 pb-8 shrink-0"
       style="background-color: var(--hp-nav-bg)"
     >
       <div
@@ -177,8 +180,6 @@
         class="absolute -bottom-10 -left-10 w-36 h-36 rounded-full pointer-events-none"
         style="background: rgba(56, 189, 248, 0.05)"
       ></div>
-
-      <!-- Brand -->
       <div class="flex items-center gap-2.5 mb-6 relative z-10">
         <div
           class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
@@ -190,8 +191,6 @@
           Health<span style="color: var(--hp-nav-accent)">+</span>
         </span>
       </div>
-
-      <!-- Tagline -->
       <div class="relative z-10">
         <h1
           class="text-2xl font-semibold text-white leading-snug mb-2"
@@ -203,69 +202,70 @@
           Chỉ mất 30 giây để bắt đầu hành trình sức khỏe
         </p>
       </div>
-
-      <!-- Mini steps chips -->
-      <div class="flex gap-2 mt-5 flex-wrap relative z-10">
+      <!-- Chips 2x2 -->
+      <div class="grid grid-cols-2 gap-1.5 mt-4 relative z-10">
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full"
+          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.8);
           "
         >
           <i
-            class="fas fa-user-plus text-[10px]"
+            class="fas fa-user-plus text-[10px] shrink-0"
             style="color: var(--hp-nav-accent)"
-          ></i>
-          Tạo tài khoản
+          ></i
+          >Tạo tài khoản
         </span>
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full"
+          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.8);
           "
         >
           <i
-            class="fas fa-notes-medical text-[10px]"
+            class="fas fa-notes-medical text-[10px] shrink-0"
             style="color: var(--hp-nav-accent)"
-          ></i>
-          Hồ sơ sức khỏe
+          ></i
+          >Hồ sơ sức khỏe
         </span>
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full"
+          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.8);
           "
         >
           <i
-            class="fas fa-robot text-[10px]"
+            class="fas fa-robot text-[10px] shrink-0"
             style="color: var(--hp-nav-accent)"
-          ></i>
-          AI tư vấn
+          ></i
+          >AI tư vấn
+        </span>
+        <span
+          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
+          style="
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+          "
+        >
+          <i
+            class="fas fa-shield-halved text-[10px] shrink-0"
+            style="color: var(--hp-nav-accent)"
+          ></i
+          >Bảo mật
         </span>
       </div>
     </div>
 
-    <!-- ── FORM AREA ── -->
+    <!-- ══ DESKTOP FORM ══ -->
     <div
-      class="flex-1 flex flex-col lg:justify-center lg:bg-[var(--hp-bg)]"
-      style="
-        background-color: var(--hp-bg);
-        padding-bottom: env(safe-area-inset-bottom, 24px);
-      "
+      class="hidden lg:flex flex-1 items-center justify-center px-16 xl:px-24"
+      style="background-color: var(--hp-bg)"
     >
-      <!-- Mobile inner card với margin 2 bên -->
-      <div
-        class="mx-4 -mt-5 lg:mt-0 lg:mx-auto lg:w-full lg:max-w-none rounded-3xl lg:rounded-none px-6 pt-8 pb-8 lg:px-16 xl:px-24 lg:shadow-none"
-        style="
-          background-color: var(--hp-surface);
-          box-shadow: 0 -2px 16px rgba(30, 64, 120, 0.06);
-        "
-      >
-        <!-- Desktop header -->
-        <div class="hidden lg:block mb-6">
+      <div class="w-full max-w-md">
+        <div class="mb-6">
           <h1 class="text-xl font-semibold mb-1" style="color: var(--hp-text)">
             Tạo tài khoản mới ✨
           </h1>
@@ -274,7 +274,6 @@
           </p>
         </div>
 
-        <!-- Error alert -->
         @if (errorMessage()) {
           <div
             class="animate-fade-in flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-5"
@@ -284,256 +283,426 @@
               color: var(--hp-red);
             "
           >
-            <i class="fas fa-circle-exclamation shrink-0"></i>
-            {{ errorMessage() }}
+            <i class="fas fa-circle-exclamation shrink-0"></i
+            >{{ errorMessage() }}
           </div>
         }
 
-        <div
-          class="w-full lg:max-w-md lg:mx-auto lg:rounded-2xl lg:p-8 lg:bg-[var(--hp-surface)]"
-          style="box-shadow: var(--hp-shadow)"
-        >
-          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-            <!-- Fullname -->
-            <div>
-              <label
-                class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-                style="color: var(--hp-text2)"
-              >
-                <i
-                  class="fas fa-user text-[11px]"
-                  style="color: var(--hp-text3)"
-                ></i
-                >Họ và tên
-              </label>
-              <input
-                formControlName="fullname"
-                type="text"
-                placeholder="Nguyễn Văn A"
-                class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
-                style="
-                  background: var(--hp-surface2);
-                  border: 1px solid var(--hp-border2);
-                  color: var(--hp-text);
-                "
-                onfocus="this.style.borderColor = 'var(--hp-primary)'"
-                onblur="this.style.borderColor = 'var(--hp-border2)'"
-              />
-              @if (
-                form.get("fullname")?.invalid && form.get("fullname")?.touched
-              ) {
-                <p
-                  class="flex items-center gap-1 text-xs mt-1.5"
-                  style="color: var(--hp-red)"
-                >
-                  <i class="fas fa-triangle-exclamation text-[10px]"></i>
-                  Họ tên tối thiểu 2 ký tự
-                </p>
-              }
-            </div>
-
-            <!-- Email -->
-            <div>
-              <label
-                class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-                style="color: var(--hp-text2)"
-              >
-                <i
-                  class="fas fa-envelope text-[11px]"
-                  style="color: var(--hp-text3)"
-                ></i
-                >Email
-              </label>
-              <input
-                formControlName="email"
-                type="email"
-                placeholder="you@example.com"
-                class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
-                style="
-                  background: var(--hp-surface2);
-                  border: 1px solid var(--hp-border2);
-                  color: var(--hp-text);
-                "
-                onfocus="this.style.borderColor = 'var(--hp-primary)'"
-                onblur="this.style.borderColor = 'var(--hp-border2)'"
-              />
-              @if (form.get("email")?.invalid && form.get("email")?.touched) {
-                <p
-                  class="flex items-center gap-1 text-xs mt-1.5"
-                  style="color: var(--hp-red)"
-                >
-                  <i class="fas fa-triangle-exclamation text-[10px]"></i>
-                  Email không đúng định dạng
-                </p>
-              }
-            </div>
-
-            <!-- Password -->
-            <div>
-              <label
-                class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-                style="color: var(--hp-text2)"
-              >
-                <i
-                  class="fas fa-lock text-[11px]"
-                  style="color: var(--hp-text3)"
-                ></i
-                >Mật khẩu
-              </label>
-              <input
-                formControlName="password"
-                type="password"
-                placeholder="Tối thiểu 6 ký tự"
-                class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
-                style="
-                  background: var(--hp-surface2);
-                  border: 1px solid var(--hp-border2);
-                  color: var(--hp-text);
-                "
-                onfocus="this.style.borderColor = 'var(--hp-primary)'"
-                onblur="this.style.borderColor = 'var(--hp-border2)'"
-              />
-              @if (
-                form.get("password")?.invalid && form.get("password")?.touched
-              ) {
-                <p
-                  class="flex items-center gap-1 text-xs mt-1.5"
-                  style="color: var(--hp-red)"
-                >
-                  <i class="fas fa-triangle-exclamation text-[10px]"></i>
-                  Mật khẩu tối thiểu 6 ký tự
-                </p>
-              }
-            </div>
-
-            <!-- Gender + Phone -->
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label
-                  class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-                  style="color: var(--hp-text2)"
-                >
-                  <i
-                    class="fas fa-venus-mars text-[11px]"
-                    style="color: var(--hp-text3)"
-                  ></i
-                  >Giới tính
-                </label>
-                <select
-                  formControlName="gender"
-                  class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
-                  style="
-                    background: var(--hp-surface2);
-                    border: 1px solid var(--hp-border2);
-                    color: var(--hp-text);
-                  "
-                  onfocus="this.style.borderColor = 'var(--hp-primary)'"
-                  onblur="this.style.borderColor = 'var(--hp-border2)'"
-                >
-                  <option value="">Chọn</option>
-                  <option value="male">Nam</option>
-                  <option value="female">Nữ</option>
-                  <option value="other">Khác</option>
-                </select>
-              </div>
-              <div>
-                <label
-                  class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-                  style="color: var(--hp-text2)"
-                >
-                  <i
-                    class="fas fa-phone text-[11px]"
-                    style="color: var(--hp-text3)"
-                  ></i
-                  >Số điện thoại
-                </label>
-                <input
-                  formControlName="phone"
-                  type="tel"
-                  placeholder="0901234567"
-                  class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
-                  style="
-                    background: var(--hp-surface2);
-                    border: 1px solid var(--hp-border2);
-                    color: var(--hp-text);
-                  "
-                  onfocus="this.style.borderColor = 'var(--hp-primary)'"
-                  onblur="this.style.borderColor = 'var(--hp-border2)'"
-                />
-              </div>
-            </div>
-
-            <!-- Submit -->
-            <button
-              type="submit"
-              [disabled]="isLoading()"
-              class="w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-white rounded-xl transition-all duration-150 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
-              style="background: var(--hp-nav-bg)"
-              onmouseenter="
-                if (!this.disabled) this.style.background = 'var(--hp-nav-bg2)';
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+          <div>
+            <label
+              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
+              style="color: var(--hp-text2)"
+            >
+              <i
+                class="fas fa-user text-[11px]"
+                style="color: var(--hp-text3)"
+              ></i
+              >Họ và tên
+            </label>
+            <input
+              formControlName="fullname"
+              type="text"
+              placeholder="Nguyễn Văn A"
+              class="w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all duration-150"
+              style="
+                background: var(--hp-surface2);
+                border: 1px solid var(--hp-border2);
+                color: var(--hp-text);
               "
-              onmouseleave="this.style.background = 'var(--hp-nav-bg)'"
+              onfocus="this.style.borderColor = 'var(--hp-primary)'"
+              onblur="this.style.borderColor = 'var(--hp-border2)'"
+            />
+            @if (
+              form.get("fullname")?.invalid && form.get("fullname")?.touched
+            ) {
+              <p
+                class="flex items-center gap-1 text-xs mt-1.5"
+                style="color: var(--hp-red)"
+              >
+                <i class="fas fa-triangle-exclamation text-[10px]"></i>Họ tên
+                tối thiểu 2 ký tự
+              </p>
+            }
+          </div>
+          <div>
+            <label
+              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
+              style="color: var(--hp-text2)"
             >
-              @if (isLoading()) {
-                <i class="fas fa-circle-notch fa-spin text-sm"></i>
-                Đang xử lý...
-              } @else {
-                <i class="fas fa-user-plus text-sm"></i>
-                Tạo tài khoản
-              }
-            </button>
-          </form>
+              <i
+                class="fas fa-envelope text-[11px]"
+                style="color: var(--hp-text3)"
+              ></i
+              >Email
+            </label>
+            <input
+              formControlName="email"
+              type="email"
+              placeholder="you@example.com"
+              class="w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all duration-150"
+              style="
+                background: var(--hp-surface2);
+                border: 1px solid var(--hp-border2);
+                color: var(--hp-text);
+              "
+              onfocus="this.style.borderColor = 'var(--hp-primary)'"
+              onblur="this.style.borderColor = 'var(--hp-border2)'"
+            />
+            @if (form.get("email")?.invalid && form.get("email")?.touched) {
+              <p
+                class="flex items-center gap-1 text-xs mt-1.5"
+                style="color: var(--hp-red)"
+              >
+                <i class="fas fa-triangle-exclamation text-[10px]"></i>Email
+                không đúng định dạng
+              </p>
+            }
+          </div>
+          <div>
+            <label
+              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
+              style="color: var(--hp-text2)"
+            >
+              <i
+                class="fas fa-lock text-[11px]"
+                style="color: var(--hp-text3)"
+              ></i
+              >Mật khẩu
+            </label>
+            <input
+              formControlName="password"
+              type="password"
+              placeholder="Tối thiểu 6 ký tự"
+              class="w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all duration-150"
+              style="
+                background: var(--hp-surface2);
+                border: 1px solid var(--hp-border2);
+                color: var(--hp-text);
+              "
+              onfocus="this.style.borderColor = 'var(--hp-primary)'"
+              onblur="this.style.borderColor = 'var(--hp-border2)'"
+            />
+            @if (
+              form.get("password")?.invalid && form.get("password")?.touched
+            ) {
+              <p
+                class="flex items-center gap-1 text-xs mt-1.5"
+                style="color: var(--hp-red)"
+              >
+                <i class="fas fa-triangle-exclamation text-[10px]"></i>Mật khẩu
+                tối thiểu 6 ký tự
+              </p>
+            }
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label
+                class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
+                style="color: var(--hp-text2)"
+              >
+                <i
+                  class="fas fa-venus-mars text-[11px]"
+                  style="color: var(--hp-text3)"
+                ></i
+                >Giới tính
+              </label>
+              <select
+                formControlName="gender"
+                class="w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all duration-150"
+                style="
+                  background: var(--hp-surface2);
+                  border: 1px solid var(--hp-border2);
+                  color: var(--hp-text);
+                "
+                onfocus="this.style.borderColor = 'var(--hp-primary)'"
+                onblur="this.style.borderColor = 'var(--hp-border2)'"
+              >
+                <option value="">Chọn</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+                <option value="other">Khác</option>
+              </select>
+            </div>
+            <div>
+              <label
+                class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
+                style="color: var(--hp-text2)"
+              >
+                <i
+                  class="fas fa-phone text-[11px]"
+                  style="color: var(--hp-text3)"
+                ></i
+                >Số điện thoại
+              </label>
+              <input
+                formControlName="phone"
+                type="tel"
+                placeholder="0901234567"
+                class="w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all duration-150"
+                style="
+                  background: var(--hp-surface2);
+                  border: 1px solid var(--hp-border2);
+                  color: var(--hp-text);
+                "
+                onfocus="this.style.borderColor = 'var(--hp-primary)'"
+                onblur="this.style.borderColor = 'var(--hp-border2)'"
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            [disabled]="isLoading()"
+            class="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-white rounded-xl transition-all duration-150 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+            style="background: var(--hp-nav-bg)"
+            onmouseenter="
+              if (!this.disabled) this.style.background = 'var(--hp-nav-bg2)';
+            "
+            onmouseleave="this.style.background = 'var(--hp-nav-bg)'"
+          >
+            @if (isLoading()) {
+              <i class="fas fa-circle-notch fa-spin text-sm"></i>Đang xử lý...
+            } @else {
+              <i class="fas fa-user-plus text-sm"></i>Tạo tài khoản
+            }
+          </button>
+        </form>
 
-          <!-- Login link -->
-          <p class="text-center text-xs mt-6" style="color: var(--hp-text3)">
-            Đã có tài khoản?
-            <a
-              routerLink="/auth/login"
-              class="font-medium transition-colors"
-              style="color: var(--hp-primary2)"
-              onmouseenter="this.style.color = 'var(--hp-nav-accent)'"
-              onmouseleave="this.style.color = 'var(--hp-primary2)'"
-            >
-              <i class="fas fa-arrow-left text-[10px] mr-0.5"></i>
-              Đăng nhập
-            </a>
-          </p>
-        </div>
+        <p class="text-center text-xs mt-6" style="color: var(--hp-text3)">
+          Đã có tài khoản?
+          <a
+            routerLink="/auth/login"
+            class="font-medium transition-colors"
+            style="color: var(--hp-primary2)"
+            onmouseenter="this.style.color = 'var(--hp-nav-accent)'"
+            onmouseleave="this.style.color = 'var(--hp-primary2)'"
+          >
+            <i class="fas fa-arrow-left text-[10px] mr-0.5"></i>Đăng nhập
+          </a>
+        </p>
       </div>
-      <!-- end mobile inner card -->
+    </div>
+
+    <!-- ══ MOBILE FORM ══ -->
+    <div
+      class="lg:hidden flex-1"
+      style="
+        background-color: var(--hp-bg);
+        padding-bottom: env(safe-area-inset-bottom, 24px);
+      "
+    >
+      <div
+        class="mx-4 -mt-5 rounded-3xl px-6 pt-8 pb-8"
+        style="
+          background-color: var(--hp-surface);
+          box-shadow: 0 4px 24px rgba(30, 64, 120, 0.08);
+        "
+      >
+        @if (errorMessage()) {
+          <div
+            class="animate-fade-in flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-5"
+            style="
+              background: #fef2f2;
+              border: 1px solid #fecaca;
+              color: var(--hp-red);
+            "
+          >
+            <i class="fas fa-circle-exclamation shrink-0"></i
+            >{{ errorMessage() }}
+          </div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+          <div>
+            <label
+              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
+              style="color: var(--hp-text2)"
+            >
+              <i
+                class="fas fa-user text-[11px]"
+                style="color: var(--hp-text3)"
+              ></i
+              >Họ và tên
+            </label>
+            <input
+              formControlName="fullname"
+              type="text"
+              placeholder="Nguyễn Văn A"
+              class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
+              style="
+                background: var(--hp-surface2);
+                border: 1px solid var(--hp-border2);
+                color: var(--hp-text);
+              "
+              onfocus="this.style.borderColor = 'var(--hp-primary)'"
+              onblur="this.style.borderColor = 'var(--hp-border2)'"
+            />
+            @if (
+              form.get("fullname")?.invalid && form.get("fullname")?.touched
+            ) {
+              <p
+                class="flex items-center gap-1 text-xs mt-1.5"
+                style="color: var(--hp-red)"
+              >
+                <i class="fas fa-triangle-exclamation text-[10px]"></i>Họ tên
+                tối thiểu 2 ký tự
+              </p>
+            }
+          </div>
+          <div>
+            <label
+              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
+              style="color: var(--hp-text2)"
+            >
+              <i
+                class="fas fa-envelope text-[11px]"
+                style="color: var(--hp-text3)"
+              ></i
+              >Email
+            </label>
+            <input
+              formControlName="email"
+              type="email"
+              placeholder="you@example.com"
+              class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
+              style="
+                background: var(--hp-surface2);
+                border: 1px solid var(--hp-border2);
+                color: var(--hp-text);
+              "
+              onfocus="this.style.borderColor = 'var(--hp-primary)'"
+              onblur="this.style.borderColor = 'var(--hp-border2)'"
+            />
+            @if (form.get("email")?.invalid && form.get("email")?.touched) {
+              <p
+                class="flex items-center gap-1 text-xs mt-1.5"
+                style="color: var(--hp-red)"
+              >
+                <i class="fas fa-triangle-exclamation text-[10px]"></i>Email
+                không đúng định dạng
+              </p>
+            }
+          </div>
+          <div>
+            <label
+              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
+              style="color: var(--hp-text2)"
+            >
+              <i
+                class="fas fa-lock text-[11px]"
+                style="color: var(--hp-text3)"
+              ></i
+              >Mật khẩu
+            </label>
+            <input
+              formControlName="password"
+              type="password"
+              placeholder="Tối thiểu 6 ký tự"
+              class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
+              style="
+                background: var(--hp-surface2);
+                border: 1px solid var(--hp-border2);
+                color: var(--hp-text);
+              "
+              onfocus="this.style.borderColor = 'var(--hp-primary)'"
+              onblur="this.style.borderColor = 'var(--hp-border2)'"
+            />
+            @if (
+              form.get("password")?.invalid && form.get("password")?.touched
+            ) {
+              <p
+                class="flex items-center gap-1 text-xs mt-1.5"
+                style="color: var(--hp-red)"
+              >
+                <i class="fas fa-triangle-exclamation text-[10px]"></i>Mật khẩu
+                tối thiểu 6 ký tự
+              </p>
+            }
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label
+                class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
+                style="color: var(--hp-text2)"
+              >
+                <i
+                  class="fas fa-venus-mars text-[11px]"
+                  style="color: var(--hp-text3)"
+                ></i
+                >Giới tính
+              </label>
+              <select
+                formControlName="gender"
+                class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
+                style="
+                  background: var(--hp-surface2);
+                  border: 1px solid var(--hp-border2);
+                  color: var(--hp-text);
+                "
+                onfocus="this.style.borderColor = 'var(--hp-primary)'"
+                onblur="this.style.borderColor = 'var(--hp-border2)'"
+              >
+                <option value="">Chọn</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+                <option value="other">Khác</option>
+              </select>
+            </div>
+            <div>
+              <label
+                class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
+                style="color: var(--hp-text2)"
+              >
+                <i
+                  class="fas fa-phone text-[11px]"
+                  style="color: var(--hp-text3)"
+                ></i
+                >Số điện thoại
+              </label>
+              <input
+                formControlName="phone"
+                type="tel"
+                placeholder="0901234567"
+                class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
+                style="
+                  background: var(--hp-surface2);
+                  border: 1px solid var(--hp-border2);
+                  color: var(--hp-text);
+                "
+                onfocus="this.style.borderColor = 'var(--hp-primary)'"
+                onblur="this.style.borderColor = 'var(--hp-border2)'"
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            [disabled]="isLoading()"
+            class="w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-white rounded-xl transition-all duration-150 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+            style="background: var(--hp-nav-bg)"
+            onmouseenter="
+              if (!this.disabled) this.style.background = 'var(--hp-nav-bg2)';
+            "
+            onmouseleave="this.style.background = 'var(--hp-nav-bg)'"
+          >
+            @if (isLoading()) {
+              <i class="fas fa-circle-notch fa-spin text-sm"></i>Đang xử lý...
+            } @else {
+              <i class="fas fa-user-plus text-sm"></i>Tạo tài khoản
+            }
+          </button>
+        </form>
+
+        <p class="text-center text-xs mt-6" style="color: var(--hp-text3)">
+          Đã có tài khoản?
+          <a
+            routerLink="/auth/login"
+            class="font-medium"
+            style="color: var(--hp-primary2)"
+          >
+            <i class="fas fa-arrow-left text-[10px] mr-0.5"></i>Đăng nhập
+          </a>
+        </p>
+      </div>
     </div>
   </div>
-
-  <script>
-    (function () {
-      if (window.innerWidth >= 1024) return;
-
-      const inputs = document.querySelectorAll("input, select");
-
-      inputs.forEach(function (input) {
-        input.addEventListener("focus", function () {
-          setTimeout(function () {
-            input.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }, 350);
-        });
-      });
-
-      if (window.visualViewport) {
-        window.visualViewport.addEventListener("resize", function () {
-          var active = document.activeElement;
-          if (
-            active &&
-            (active.tagName === "INPUT" || active.tagName === "SELECT")
-          ) {
-            setTimeout(function () {
-              active.scrollIntoView({ behavior: "smooth", block: "center" });
-            }, 100);
-          }
-        });
-      }
-    })();
-  </script>
 </div>
