@@ -407,22 +407,93 @@
                 ></i
                 >Giới tính
               </label>
-              <select
-                formControlName="gender"
-                class="w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all duration-150"
-                style="
-                  background: var(--hp-surface2);
-                  border: 1px solid var(--hp-border2);
-                  color: var(--hp-text);
-                "
-                onfocus="this.style.borderColor = 'var(--hp-primary)'"
-                onblur="this.style.borderColor = 'var(--hp-border2)'"
-              >
-                <option value="">Chọn</option>
-                <option value="male">Nam</option>
-                <option value="female">Nữ</option>
-                <option value="other">Khác</option>
-              </select>
+              <div class="relative">
+                <button
+                  type="button"
+                  (click)="toggleGender()"
+                  class="w-full rounded-xl px-3.5 py-2.5 text-sm text-left flex items-center justify-between focus:outline-none transition-all duration-150"
+                  style="
+                    background: var(--hp-surface2);
+                    border: 1px solid var(--hp-border2);
+                    color: var(--hp-text);
+                  "
+                >
+                  <span
+                    [style.color]="
+                      form.get('gender')?.value
+                        ? 'var(--hp-text)'
+                        : 'var(--hp-text3)'
+                    "
+                  >
+                    {{ genderLabel() }}
+                  </span>
+                  <i
+                    class="fas text-[10px] transition-transform duration-200"
+                    [class.fa-chevron-up]="genderOpen()"
+                    [class.fa-chevron-down]="!genderOpen()"
+                    style="color: var(--hp-text3)"
+                  ></i>
+                </button>
+                @if (genderOpen()) {
+                  <div
+                    class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden"
+                    style="
+                      background: var(--hp-surface);
+                      border: 1px solid var(--hp-border2);
+                      box-shadow: 0 8px 24px rgba(30, 64, 120, 0.12);
+                    "
+                  >
+                    <button
+                      type="button"
+                      (click)="setGender('male', 'Nam')"
+                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      style="color: var(--hp-text)"
+                      onmouseenter="
+                        this.style.background = 'var(--hp-surface2)'
+                      "
+                      onmouseleave="this.style.background = 'transparent'"
+                    >
+                      <i
+                        class="fas fa-mars text-[11px]"
+                        style="color: #3b82f6; width: 14px"
+                      ></i
+                      >Nam
+                    </button>
+                    <button
+                      type="button"
+                      (click)="setGender('female', 'Nữ')"
+                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      style="color: var(--hp-text)"
+                      onmouseenter="
+                        this.style.background = 'var(--hp-surface2)'
+                      "
+                      onmouseleave="this.style.background = 'transparent'"
+                    >
+                      <i
+                        class="fas fa-venus text-[11px]"
+                        style="color: #ec4899; width: 14px"
+                      ></i
+                      >Nữ
+                    </button>
+                    <button
+                      type="button"
+                      (click)="setGender('other', 'Khác')"
+                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      style="color: var(--hp-text)"
+                      onmouseenter="
+                        this.style.background = 'var(--hp-surface2)'
+                      "
+                      onmouseleave="this.style.background = 'transparent'"
+                    >
+                      <i
+                        class="fas fa-genderless text-[11px]"
+                        style="color: #8b5cf6; width: 14px"
+                      ></i
+                      >Khác
+                    </button>
+                  </div>
+                }
+              </div>
             </div>
             <div>
               <label
@@ -631,22 +702,93 @@
                 ></i
                 >Giới tính
               </label>
-              <select
-                formControlName="gender"
-                class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
-                style="
-                  background: var(--hp-surface2);
-                  border: 1px solid var(--hp-border2);
-                  color: var(--hp-text);
-                "
-                onfocus="this.style.borderColor = 'var(--hp-primary)'"
-                onblur="this.style.borderColor = 'var(--hp-border2)'"
-              >
-                <option value="">Chọn</option>
-                <option value="male">Nam</option>
-                <option value="female">Nữ</option>
-                <option value="other">Khác</option>
-              </select>
+              <div class="relative">
+                <button
+                  type="button"
+                  (click)="toggleGender()"
+                  class="w-full rounded-xl px-3.5 py-3 text-sm text-left flex items-center justify-between focus:outline-none transition-all duration-150"
+                  style="
+                    background: var(--hp-surface2);
+                    border: 1px solid var(--hp-border2);
+                    color: var(--hp-text);
+                  "
+                >
+                  <span
+                    [style.color]="
+                      form.get('gender')?.value
+                        ? 'var(--hp-text)'
+                        : 'var(--hp-text3)'
+                    "
+                  >
+                    {{ genderLabel() }}
+                  </span>
+                  <i
+                    class="fas text-[10px] transition-transform duration-200"
+                    [class.fa-chevron-up]="genderOpen()"
+                    [class.fa-chevron-down]="!genderOpen()"
+                    style="color: var(--hp-text3)"
+                  ></i>
+                </button>
+                @if (genderOpen()) {
+                  <div
+                    class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden"
+                    style="
+                      background: var(--hp-surface);
+                      border: 1px solid var(--hp-border2);
+                      box-shadow: 0 8px 24px rgba(30, 64, 120, 0.12);
+                    "
+                  >
+                    <button
+                      type="button"
+                      (click)="setGender('male', 'Nam')"
+                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      style="color: var(--hp-text)"
+                      onmouseenter="
+                        this.style.background = 'var(--hp-surface2)'
+                      "
+                      onmouseleave="this.style.background = 'transparent'"
+                    >
+                      <i
+                        class="fas fa-mars text-[11px]"
+                        style="color: #3b82f6; width: 14px"
+                      ></i
+                      >Nam
+                    </button>
+                    <button
+                      type="button"
+                      (click)="setGender('female', 'Nữ')"
+                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      style="color: var(--hp-text)"
+                      onmouseenter="
+                        this.style.background = 'var(--hp-surface2)'
+                      "
+                      onmouseleave="this.style.background = 'transparent'"
+                    >
+                      <i
+                        class="fas fa-venus text-[11px]"
+                        style="color: #ec4899; width: 14px"
+                      ></i
+                      >Nữ
+                    </button>
+                    <button
+                      type="button"
+                      (click)="setGender('other', 'Khác')"
+                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      style="color: var(--hp-text)"
+                      onmouseenter="
+                        this.style.background = 'var(--hp-surface2)'
+                      "
+                      onmouseleave="this.style.background = 'transparent'"
+                    >
+                      <i
+                        class="fas fa-genderless text-[11px]"
+                        style="color: #8b5cf6; width: 14px"
+                      ></i
+                      >Khác
+                    </button>
+                  </div>
+                }
+              </div>
             </div>
             <div>
               <label

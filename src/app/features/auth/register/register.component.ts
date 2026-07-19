@@ -29,6 +29,9 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     phone: [''],
   });
 
+  genderOpen = signal(false);
+  genderLabel = signal('Chọn giới tính');
+
   private isMobile = false;
   private viewportHandler: (() => void) | null = null;
 
@@ -38,6 +41,16 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private ngZone: NgZone,
   ) {}
+
+  setGender(value: string, label: string) {
+    this.form.get('gender')?.setValue(value);
+    this.genderLabel.set(label);
+    this.genderOpen.set(false);
+  }
+
+  toggleGender() {
+    this.genderOpen.set(!this.genderOpen());
+  }
 
   ngOnInit() {
     this.isMobile = window.innerWidth < 1024;
