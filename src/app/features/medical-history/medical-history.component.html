@@ -733,16 +733,263 @@
               }
             </div>
 
-            <!-- Ngày khám -->
+            <!-- Ngày khám - Custom Date Picker -->
             <div>
               <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
                 Ngày khám <span class="text-red-600">*</span>
               </label>
-              <input
-                type="date"
-                formControlName="visitDate"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-              />
+              <div class="relative">
+                <button
+                  type="button"
+                  (click)="visitDatePicker.set(!visitDatePicker())"
+                  class="w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
+                  style="
+                    background: var(--hp-surface2);
+                    border: 1px solid var(--hp-border2);
+                    color: var(--hp-text);
+                  "
+                >
+                  <i
+                    class="fas fa-calendar-days text-[11px] shrink-0"
+                    style="color: var(--hp-text3)"
+                  ></i>
+                  <span
+                    [style.color]="
+                      visitDateDisplay() ? 'var(--hp-text)' : 'var(--hp-text3)'
+                    "
+                  >
+                    {{ visitDateDisplay() || "Chọn ngày khám" }}
+                  </span>
+                </button>
+                @if (visitDatePicker()) {
+                  <div
+                    class="absolute z-50 mt-1 rounded-[var(--hp-radius)] overflow-hidden select-none"
+                    style="
+                      background: var(--hp-surface);
+                      border: 1px solid var(--hp-border2);
+                      box-shadow: 0 8px 28px rgba(30, 64, 120, 0.14);
+                      width: 280px;
+                    "
+                  >
+                    <div
+                      class="flex items-center justify-between px-3 py-2.5"
+                      style="border-bottom: 1px solid var(--hp-border)"
+                    >
+                      <button
+                        type="button"
+                        (click)="
+                          visitDateView() === 'year'
+                            ? shiftVisitDateYears(-1)
+                            : visitDatePrevMonth()
+                        "
+                        class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                        style="color: var(--hp-text2)"
+                        onmouseenter="
+                          this.style.background = 'var(--hp-surface2)'
+                        "
+                        onmouseleave="this.style.background = 'transparent'"
+                      >
+                        <i class="fas fa-chevron-left text-[10px]"></i>
+                      </button>
+                      <button
+                        type="button"
+                        (click)="toggleVisitDateView()"
+                        class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm font-medium transition-colors"
+                        style="color: var(--hp-text)"
+                        onmouseenter="
+                          this.style.background = 'var(--hp-surface2)'
+                        "
+                        onmouseleave="this.style.background = 'transparent'"
+                      >
+                        {{ CAL_MONTHS[visitDateCal().month] }}
+                        {{ visitDateCal().year }}
+                        <i
+                          class="fas text-[9px]"
+                          style="color: var(--hp-text3)"
+                          [class.fa-chevron-up]="visitDateView() !== 'day'"
+                          [class.fa-chevron-down]="visitDateView() === 'day'"
+                        ></i>
+                      </button>
+                      <button
+                        type="button"
+                        (click)="
+                          visitDateView() === 'year'
+                            ? shiftVisitDateYears(1)
+                            : visitDateNextMonth()
+                        "
+                        class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                        style="color: var(--hp-text2)"
+                        onmouseenter="
+                          this.style.background = 'var(--hp-surface2)'
+                        "
+                        onmouseleave="this.style.background = 'transparent'"
+                      >
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                      </button>
+                    </div>
+                    @if (visitDateView() === "year") {
+                      <div class="grid grid-cols-3 gap-1.5 p-3">
+                        @for (
+                          y of getFilterYearRange(visitDateYearStart());
+                          track y
+                        ) {
+                          <button
+                            type="button"
+                            (click)="selectVisitDateYear(y)"
+                            class="py-2 rounded-lg text-xs font-medium transition-colors"
+                            [style.background]="
+                              visitDateCal().year === y
+                                ? 'var(--hp-nav-bg)'
+                                : 'transparent'
+                            "
+                            [style.color]="
+                              visitDateCal().year === y
+                                ? '#fff'
+                                : 'var(--hp-text)'
+                            "
+                            onmouseenter="
+                              if (this.style.background === 'transparent')
+                                this.style.background = 'var(--hp-surface2)';
+                            "
+                            onmouseleave="
+                              if (!this.style.color.includes('fff'))
+                                this.style.background = 'transparent';
+                            "
+                          >
+                            {{ y }}
+                          </button>
+                        }
+                      </div>
+                    }
+                    @if (visitDateView() === "month") {
+                      <div class="grid grid-cols-3 gap-1.5 p-3">
+                        @for (m of CAL_MONTHS_S; track $index) {
+                          <button
+                            type="button"
+                            (click)="selectVisitDateMonth($index)"
+                            class="py-2 rounded-lg text-xs font-medium transition-colors"
+                            [style.background]="
+                              visitDateCal().month === $index
+                                ? 'var(--hp-nav-bg)'
+                                : 'transparent'
+                            "
+                            [style.color]="
+                              visitDateCal().month === $index
+                                ? '#fff'
+                                : 'var(--hp-text)'
+                            "
+                            onmouseenter="
+                              if (this.style.background === 'transparent')
+                                this.style.background = 'var(--hp-surface2)';
+                            "
+                            onmouseleave="
+                              if (!this.style.color.includes('fff'))
+                                this.style.background = 'transparent';
+                            "
+                          >
+                            {{ m }}
+                          </button>
+                        }
+                      </div>
+                    }
+                    @if (visitDateView() === "day") {
+                      <div class="grid grid-cols-7 px-3 pt-2 pb-1">
+                        @for (h of CAL_DAYS_HDR; track h) {
+                          <div
+                            class="text-center text-[10px] font-medium py-1"
+                            style="color: var(--hp-text3)"
+                          >
+                            {{ h }}
+                          </div>
+                        }
+                      </div>
+                      <div class="grid grid-cols-7 px-3 pb-3 gap-y-0.5">
+                        @for (
+                          day of getFilterCalDays(
+                            visitDateCal().year,
+                            visitDateCal().month
+                          );
+                          track $index
+                        ) {
+                          @if (day === null) {
+                            <div></div>
+                          } @else {
+                            <button
+                              type="button"
+                              (click)="selectVisitDay(day)"
+                              [disabled]="isVisitDayDisabled(day)"
+                              class="w-8 h-8 mx-auto rounded-full text-xs flex items-center justify-center transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                              [style.background]="
+                                isVisitDaySelected(day)
+                                  ? 'var(--hp-nav-bg)'
+                                  : isFilterFromToday(
+                                        visitDateCal().year,
+                                        visitDateCal().month,
+                                        day
+                                      )
+                                    ? 'rgba(56,189,248,0.12)'
+                                    : 'transparent'
+                              "
+                              [style.color]="
+                                isVisitDaySelected(day)
+                                  ? '#fff'
+                                  : isFilterFromToday(
+                                        visitDateCal().year,
+                                        visitDateCal().month,
+                                        day
+                                      )
+                                    ? 'var(--hp-nav-accent)'
+                                    : 'var(--hp-text)'
+                              "
+                              [style.fontWeight]="
+                                isVisitDaySelected(day) ||
+                                isFilterFromToday(
+                                  visitDateCal().year,
+                                  visitDateCal().month,
+                                  day
+                                )
+                                  ? '600'
+                                  : '400'
+                              "
+                              onmouseenter="
+                                if (
+                                  !this.disabled &&
+                                  !this.style.background.includes('nav-bg')
+                                )
+                                  this.style.background = 'var(--hp-surface2)';
+                              "
+                              onmouseleave="
+                                if (!this.style.color.includes('fff'))
+                                  this.style.background = '';
+                              "
+                            >
+                              {{ day }}
+                            </button>
+                          }
+                        }
+                      </div>
+                    }
+                    <div
+                      class="flex items-center justify-between px-4 py-2"
+                      style="border-top: 1px solid var(--hp-border)"
+                    >
+                      <button
+                        type="button"
+                        (click)="clearVisitDate()"
+                        class="text-xs transition-colors"
+                        style="color: var(--hp-text3)"
+                        onmouseenter="this.style.color = 'var(--hp-red)'"
+                        onmouseleave="this.style.color = 'var(--hp-text3)'"
+                      >
+                        <i class="fas fa-xmark mr-1"></i>Xóá
+                      </button>
+                      <span class="text-[10px]" style="color: var(--hp-text3)"
+                        >Hôm nay hoặc trước đó</span
+                      >
+                    </div>
+                  </div>
+                }
+              </div>
             </div>
 
             <!-- Ghi chú -->

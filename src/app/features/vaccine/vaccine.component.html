@@ -805,12 +805,112 @@
               <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
                 >Nơi tiêm</label
               >
-              <input
-                type="text"
-                formControlName="location"
-                placeholder="Trung tâm y tế quận 1..."
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-              />
+              <div class="relative">
+                <!-- Trigger -->
+                <button
+                  type="button"
+                  (click)="locationOpen.set(!locationOpen())"
+                  class="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
+                  style="
+                    background: var(--hp-surface2);
+                    border: 1px solid var(--hp-border2);
+                    color: var(--hp-text);
+                  "
+                >
+                  <span
+                    [style.color]="
+                      locationLabel() === '-- Chọn nơi tiêm --'
+                        ? 'var(--hp-text3)'
+                        : 'var(--hp-text)'
+                    "
+                  >
+                    {{ locationLabel() }}
+                  </span>
+                  <i
+                    class="fas text-[10px] shrink-0"
+                    style="color: var(--hp-text3)"
+                    [class.fa-chevron-down]="!locationOpen()"
+                    [class.fa-chevron-up]="locationOpen()"
+                  ></i>
+                </button>
+                <!-- Dropdown -->
+                @if (locationOpen()) {
+                  <div
+                    class="absolute z-50 mt-1 w-full rounded-[var(--hp-radius)] overflow-hidden"
+                    style="
+                      background: var(--hp-surface);
+                      border: 1px solid var(--hp-border2);
+                      box-shadow: 0 8px 28px rgba(30, 64, 120, 0.14);
+                      max-height: 220px;
+                      overflow-y: auto;
+                    "
+                  >
+                    <!-- Search -->
+                    <div
+                      class="px-2.5 pt-2.5 pb-1.5"
+                      style="border-bottom: 1px solid var(--hp-border)"
+                    >
+                      <div
+                        class="flex items-center gap-2 px-2.5 py-1.5 rounded-[var(--hp-radius-sm)]"
+                        style="background: var(--hp-surface2)"
+                      >
+                        <i
+                          class="fas fa-magnifying-glass text-[10px]"
+                          style="color: var(--hp-text3)"
+                        ></i>
+                        <input
+                          type="text"
+                          [(ngModel)]="locationSearchVal"
+                          placeholder="Tìm nơi tiêm..."
+                          class="flex-1 bg-transparent text-xs outline-none"
+                          style="color: var(--hp-text)"
+                        />
+                      </div>
+                    </div>
+                    <div class="py-1">
+                      @for (loc of filteredLocations; track loc) {
+                        <button
+                          type="button"
+                          (click)="selectLocation(loc)"
+                          class="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left transition-colors"
+                          [style.color]="
+                            form.get('location')?.value === loc.name
+                              ? 'var(--hp-purple)'
+                              : 'var(--hp-text)'
+                          "
+                          [style.background]="
+                            form.get('location')?.value === loc.name
+                              ? 'rgba(99,102,241,0.08)'
+                              : 'transparent'
+                          "
+                          onmouseenter="
+                            if (!this.style.background.includes('241'))
+                              this.style.background = 'var(--hp-surface2)';
+                          "
+                          onmouseleave="
+                            if (!this.style.background.includes('241'))
+                              this.style.background = 'transparent';
+                          "
+                        >
+                          <i
+                            class="fas fa-hospital text-[10px] shrink-0"
+                            style="color: var(--hp-teal)"
+                          ></i>
+                          {{ loc.name }}
+                        </button>
+                      }
+                      @if (filteredLocations.length === 0) {
+                        <div
+                          class="px-3 py-3 text-xs text-center"
+                          style="color: var(--hp-text3)"
+                        >
+                          Không tìm thấy cơ sở
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
             </div>
 
             <div>

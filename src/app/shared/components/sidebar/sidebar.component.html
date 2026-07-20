@@ -87,7 +87,7 @@
                 {{ authService.currentUser()?.role }}
               </span>
             </div>
-            <!-- Bell -->
+            <!-- Bell — chỉ hiện khi sidebar mở rộng -->
             <button
               (click)="toggleNotifications()"
               class="relative shrink-0 transition-colors"
@@ -113,7 +113,7 @@
       }
     </div>
 
-    <!-- Notification Dropdown -->
+    <!-- Notification Dropdown — chỉ hiện khi sidebar KHÔNG collapsed -->
     @if (showNotifications() && !isCollapsed()) {
       <div
         class="animate-slide-down absolute top-[108px] left-3 right-3 z-50 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius)] shadow-2xl shadow-black/40 max-h-72 overflow-y-auto"
@@ -295,18 +295,18 @@
   </main>
 </div>
 
-<!-- ===== MOBILE NOTIFICATION PANEL (lg:hidden) ===== -->
+<!-- ===== MOBILE NOTIFICATION PANEL (chỉ hiện trên mobile: hidden sm:hidden) ===== -->
 @if (showNotifications()) {
   <!-- Backdrop -->
   <div
-    class="fixed inset-0 z-40 lg:hidden"
+    class="fixed inset-0 z-40 sm:hidden"
     style="background: rgba(0, 0, 0, 0.45)"
     (click)="closeNotifications()"
   ></div>
 
-  <!-- Panel slide-down from top -->
+  <!-- Panel slide-down from top — chỉ hiện trên mobile (sm:hidden) -->
   <div
-    class="fixed top-0 left-0 right-0 z-50 lg:hidden animate-slide-down"
+    class="fixed top-0 left-0 right-0 z-50 sm:hidden animate-slide-down"
     style="
       background: var(--hp-surface);
       border-bottom: 1px solid var(--hp-border2);

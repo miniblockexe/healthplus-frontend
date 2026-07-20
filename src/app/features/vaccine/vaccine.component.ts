@@ -5,7 +5,12 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormsModule,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -19,7 +24,13 @@ import { NotificationService } from '../../core/services/notification.service';
   selector: 'app-vaccine',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, VaccineStatusPipe],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    RouterLink,
+    VaccineStatusPipe,
+  ],
   templateUrl: './vaccine.component.html',
 })
 export class VaccineComponent implements OnInit {
@@ -29,6 +40,32 @@ export class VaccineComponent implements OnInit {
   vaccineOpen = signal(false);
   vaccineLabel = signal('-- Chọn vaccine --');
   vaccineSearch = signal('');
+
+  // Location select - data tu API /hospitals
+  locationOpen = signal(false);
+  locationLabel = signal('-- Chọn nơi tiêm --');
+  locationSearchVal = '';
+  hospitals = signal<{ id: number; name: string }[]>([]);
+
+  get filteredLocations() {
+    const q = this.locationSearchVal.toLowerCase();
+    return q
+      ? this.hospitals().filter((h) => h.name.toLowerCase().includes(q))
+      : this.hospitals();
+  }
+
+  loadHospitals() {
+    this.http
+      .get<{ data: { id: number; name: string }[] }>(`${this.apiUrl}/hospitals`)
+      .subscribe({ next: (res) => this.hospitals.set(res.data) });
+  }
+
+  selectLocation(hospital: { id: number; name: string }) {
+    this.form.get('location')?.setValue(hospital.name);
+    this.locationLabel.set(hospital.name);
+    this.locationOpen.set(false);
+    this.locationSearchVal = '';
+  }
 
   get filteredCatalog() {
     const q = this.vaccineSearch().toLowerCase();
@@ -278,6 +315,7 @@ export class VaccineComponent implements OnInit {
   ngOnInit() {
     this.loadCatalog();
     this.loadSchedule();
+    this.loadHospitals();
   }
 
   loadCatalog() {
@@ -363,6 +401,7 @@ export class VaccineComponent implements OnInit {
           } as any;
           this.vaccines.update((list) => [...list, tempItem]);
           this.form.reset({ doseNumber: 1 });
+          this.locationLabel.set('-- Chọn nơi tiêm --');
           this.showForm.set(false);
           this.successMessage.set('Da luu offline! Se dong bo khi co mang.');
           this.isSubmitting.set(false);
@@ -382,6 +421,7 @@ export class VaccineComponent implements OnInit {
             await this.offlineService.saveVaccines(this.vaccines());
           } catch {}
           this.form.reset({ doseNumber: 1 });
+          this.locationLabel.set('-- Chọn nơi tiêm --');
           this.showForm.set(false);
           this.successMessage.set('Them vaccine thanh cong!');
           this.isSubmitting.set(false);

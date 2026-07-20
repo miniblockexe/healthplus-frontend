@@ -253,6 +253,77 @@ export class MedicalHistoryComponent implements OnInit {
     this.onFilterChange();
   }
 
+  // Visit Date Picker signals
+  visitDatePicker = signal(false);
+  visitDateDisplay = signal('');
+  visitDateCal = signal({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth(),
+  });
+  visitDateView = signal<'day' | 'month' | 'year'>('day');
+  visitDateYearStart = signal(new Date().getFullYear() - 5);
+  readonly today = new Date().toISOString().split('T')[0];
+
+  toggleVisitDateView() {
+    this.visitDateView.set(this.visitDateView() === 'day' ? 'year' : 'day');
+  }
+
+  visitDatePrevMonth() {
+    const { year, month } = this.visitDateCal();
+    this.visitDateCal.set({
+      year: new Date(year, month - 1, 1).getFullYear(),
+      month: new Date(year, month - 1, 1).getMonth(),
+    });
+  }
+
+  visitDateNextMonth() {
+    const { year, month } = this.visitDateCal();
+    this.visitDateCal.set({
+      year: new Date(year, month + 1, 1).getFullYear(),
+      month: new Date(year, month + 1, 1).getMonth(),
+    });
+  }
+
+  selectVisitDateMonth(monthIdx: number) {
+    this.visitDateCal.update((c) => ({ ...c, month: monthIdx }));
+    this.visitDateView.set('day');
+  }
+  selectVisitDateYear(year: number) {
+    this.visitDateCal.update((c) => ({ ...c, year }));
+    this.visitDateView.set('month');
+  }
+  shiftVisitDateYears(dir: number) {
+    this.visitDateYearStart.update((y) => y + dir * 12);
+  }
+
+  selectVisitDay(day: number) {
+    const { year, month } = this.visitDateCal();
+    const val = this.toFilterDateStr(year, month, day);
+    this.form.get('visitDate')?.setValue(val);
+    this.visitDateDisplay.set(this.toFilterDisplay(val));
+    this.visitDatePicker.set(false);
+    this.visitDateView.set('day');
+  }
+
+  isVisitDayDisabled(day: number): boolean {
+    const { year, month } = this.visitDateCal();
+    return this.toFilterDateStr(year, month, day) > this.today;
+  }
+
+  isVisitDaySelected(day: number): boolean {
+    const { year, month } = this.visitDateCal();
+    return (
+      this.toFilterDateStr(year, month, day) ===
+      this.form.get('visitDate')?.value
+    );
+  }
+
+  clearVisitDate() {
+    this.form.get('visitDate')?.setValue('');
+    this.visitDateDisplay.set('');
+    this.visitDatePicker.set(false);
+  }
+
   private searchSubject = new Subject<string>();
 
   form = this.fb.group({
