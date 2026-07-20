@@ -107,24 +107,505 @@
           </button>
         }
       </div>
-      <!-- Date range -->
-      <input
-        type="date"
-        [(ngModel)]="filterFrom"
-        (change)="onFilterChange()"
-        title="Từ ngày"
-        class="px-3 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-      />
+      <!-- Date range custom pickers -->
+      <div class="relative">
+        <button
+          type="button"
+          (click)="filterFromOpen.set(!filterFromOpen())"
+          title="Từ ngày"
+          class="flex items-center gap-2 px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none"
+          style="
+            background: var(--hp-surface);
+            border: 1px solid var(--hp-border2);
+            color: var(--hp-text);
+            min-width: 130px;
+          "
+        >
+          <i
+            class="fas fa-calendar-days text-[11px] shrink-0"
+            style="color: var(--hp-text3)"
+          ></i>
+          <span
+            [style.color]="
+              filterFromDisplay() ? 'var(--hp-text)' : 'var(--hp-text3)'
+            "
+            class="flex-1 text-left"
+          >
+            {{ filterFromDisplay() || "Từ ngày" }}
+          </span>
+          @if (filterFromDisplay()) {
+            <button
+              type="button"
+              (click)="clearFilterDate('from'); $event.stopPropagation()"
+              class="text-[10px] transition-colors"
+              style="color: var(--hp-text3)"
+              onmouseenter="this.style.color = 'var(--hp-red)'"
+              onmouseleave="this.style.color = 'var(--hp-text3)'"
+            >
+              <i class="fas fa-xmark"></i>
+            </button>
+          }
+        </button>
+
+        @if (filterFromOpen()) {
+          <div
+            class="absolute z-50 mt-1 rounded-[var(--hp-radius)] overflow-hidden"
+            style="
+              width: 260px;
+              background: var(--hp-surface);
+              border: 1px solid var(--hp-border2);
+              box-shadow: 0 8px 28px rgba(30, 64, 120, 0.14);
+            "
+          >
+            <!-- Nav -->
+            <div
+              class="flex items-center justify-between px-3 py-2.5"
+              style="border-bottom: 1px solid var(--hp-border)"
+            >
+              <button
+                type="button"
+                (click)="
+                  filterFromView() === 'year'
+                    ? shiftFilterYears('from', -1)
+                    : filterPrevMonth('from')
+                "
+                class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                style="color: var(--hp-text2)"
+                onmouseenter="this.style.background = 'var(--hp-surface2)'"
+                onmouseleave="this.style.background = 'transparent'"
+              >
+                <i class="fas fa-chevron-left text-[10px]"></i>
+              </button>
+              <button
+                type="button"
+                (click)="toggleFilterView('from')"
+                class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm font-medium transition-colors"
+                style="color: var(--hp-text)"
+                onmouseenter="this.style.background = 'var(--hp-surface2)'"
+                onmouseleave="this.style.background = 'transparent'"
+              >
+                {{ CAL_MONTHS[filterFromCal().month] }}
+                {{ filterFromCal().year }}
+                <i
+                  class="fas text-[9px]"
+                  style="color: var(--hp-text3)"
+                  [class.fa-chevron-up]="filterFromView() !== 'day'"
+                  [class.fa-chevron-down]="filterFromView() === 'day'"
+                ></i>
+              </button>
+              <button
+                type="button"
+                (click)="
+                  filterFromView() === 'year'
+                    ? shiftFilterYears('from', 1)
+                    : filterNextMonth('from')
+                "
+                class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                style="color: var(--hp-text2)"
+                onmouseenter="this.style.background = 'var(--hp-surface2)'"
+                onmouseleave="this.style.background = 'transparent'"
+              >
+                <i class="fas fa-chevron-right text-[10px]"></i>
+              </button>
+            </div>
+
+            <!-- Year view -->
+            @if (filterFromView() === "year") {
+              <div class="grid grid-cols-3 gap-1.5 p-3">
+                @for (y of getFilterYearRange(filterFromYearStart()); track y) {
+                  <button
+                    type="button"
+                    (click)="selectFilterYear('from', y)"
+                    class="py-2 rounded-lg text-xs font-medium transition-colors text-center"
+                    [style.background]="
+                      filterFromCal().year === y
+                        ? 'var(--hp-nav-bg)'
+                        : 'transparent'
+                    "
+                    [style.color]="
+                      filterFromCal().year === y ? '#fff' : 'var(--hp-text)'
+                    "
+                    onmouseenter="
+                      if (this.style.background === 'transparent')
+                        this.style.background = 'var(--hp-surface2)';
+                    "
+                    onmouseleave="
+                      if (!this.style.color.includes('fff'))
+                        this.style.background = 'transparent';
+                    "
+                  >
+                    {{ y }}
+                  </button>
+                }
+              </div>
+            }
+
+            <!-- Month view -->
+            @if (filterFromView() === "month") {
+              <div class="grid grid-cols-3 gap-1.5 p-3">
+                @for (m of CAL_MONTHS_S; track $index) {
+                  <button
+                    type="button"
+                    (click)="selectFilterMonth('from', $index)"
+                    class="py-2 rounded-lg text-xs font-medium transition-colors text-center"
+                    [style.background]="
+                      filterFromCal().month === $index
+                        ? 'var(--hp-nav-bg)'
+                        : 'transparent'
+                    "
+                    [style.color]="
+                      filterFromCal().month === $index
+                        ? '#fff'
+                        : 'var(--hp-text)'
+                    "
+                    onmouseenter="
+                      if (this.style.background === 'transparent')
+                        this.style.background = 'var(--hp-surface2)';
+                    "
+                    onmouseleave="
+                      if (!this.style.color.includes('fff'))
+                        this.style.background = 'transparent';
+                    "
+                  >
+                    {{ m }}
+                  </button>
+                }
+              </div>
+            }
+
+            <!-- Day view -->
+            @if (filterFromView() === "day") {
+              <div class="grid grid-cols-7 px-2 pt-2 pb-1">
+                @for (h of CAL_DAYS_HDR; track h) {
+                  <div
+                    class="text-center text-[10px] font-medium py-1"
+                    style="color: var(--hp-text3)"
+                  >
+                    {{ h }}
+                  </div>
+                }
+              </div>
+              <div class="grid grid-cols-7 px-2 pb-3 gap-y-0.5">
+                @for (
+                  day of getFilterCalDays(
+                    filterFromCal().year,
+                    filterFromCal().month
+                  );
+                  track $index
+                ) {
+                  @if (day === null) {
+                    <div></div>
+                  } @else {
+                    <button
+                      type="button"
+                      (click)="selectFilterDate('from', day)"
+                      class="w-8 h-8 mx-auto rounded-full text-xs flex items-center justify-center transition-all"
+                      [style.background]="
+                        toFilterDateStr(
+                          filterFromCal().year,
+                          filterFromCal().month,
+                          day
+                        ) === filterFrom
+                          ? 'var(--hp-nav-bg)'
+                          : isFilterFromToday(
+                                filterFromCal().year,
+                                filterFromCal().month,
+                                day
+                              )
+                            ? 'rgba(56,189,248,0.12)'
+                            : 'transparent'
+                      "
+                      [style.color]="
+                        toFilterDateStr(
+                          filterFromCal().year,
+                          filterFromCal().month,
+                          day
+                        ) === filterFrom
+                          ? '#fff'
+                          : isFilterFromToday(
+                                filterFromCal().year,
+                                filterFromCal().month,
+                                day
+                              )
+                            ? 'var(--hp-nav-accent)'
+                            : 'var(--hp-text)'
+                      "
+                      onmouseenter="
+                        if (!this.style.background.includes('nav-bg'))
+                          this.style.background = 'var(--hp-surface2)';
+                      "
+                      onmouseleave="
+                        if (!this.style.color.includes('fff'))
+                          this.style.background = '';
+                      "
+                    >
+                      {{ day }}
+                    </button>
+                  }
+                }
+              </div>
+            }
+
+            <div
+              class="px-3 py-2"
+              style="border-top: 1px solid var(--hp-border)"
+            >
+              <span class="text-[10px]" style="color: var(--hp-text3)"
+                >Lọc từ ngày này</span
+              >
+            </div>
+          </div>
+        }
+      </div>
       <i
         class="hidden md:block fas fa-arrow-right text-xs text-[var(--hp-text3)]"
       ></i>
-      <input
-        type="date"
-        [(ngModel)]="filterTo"
-        (change)="onFilterChange()"
-        title="Đến ngày"
-        class="px-3 py-2 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-      />
+      <div class="relative">
+        <button
+          type="button"
+          (click)="filterToOpen.set(!filterToOpen())"
+          title="Đến ngày"
+          class="flex items-center gap-2 px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none"
+          style="
+            background: var(--hp-surface);
+            border: 1px solid var(--hp-border2);
+            color: var(--hp-text);
+            min-width: 130px;
+          "
+        >
+          <i
+            class="fas fa-calendar-days text-[11px] shrink-0"
+            style="color: var(--hp-text3)"
+          ></i>
+          <span
+            [style.color]="
+              filterToDisplay() ? 'var(--hp-text)' : 'var(--hp-text3)'
+            "
+            class="flex-1 text-left"
+          >
+            {{ filterToDisplay() || "Đến ngày" }}
+          </span>
+          @if (filterToDisplay()) {
+            <button
+              type="button"
+              (click)="clearFilterDate('to'); $event.stopPropagation()"
+              class="text-[10px] transition-colors"
+              style="color: var(--hp-text3)"
+              onmouseenter="this.style.color = 'var(--hp-red)'"
+              onmouseleave="this.style.color = 'var(--hp-text3)'"
+            >
+              <i class="fas fa-xmark"></i>
+            </button>
+          }
+        </button>
+
+        @if (filterToOpen()) {
+          <div
+            class="absolute z-50 mt-1 rounded-[var(--hp-radius)] overflow-hidden"
+            style="
+              width: 260px;
+              background: var(--hp-surface);
+              border: 1px solid var(--hp-border2);
+              box-shadow: 0 8px 28px rgba(30, 64, 120, 0.14);
+            "
+          >
+            <!-- Nav -->
+            <div
+              class="flex items-center justify-between px-3 py-2.5"
+              style="border-bottom: 1px solid var(--hp-border)"
+            >
+              <button
+                type="button"
+                (click)="
+                  filterToView() === 'year'
+                    ? shiftFilterYears('to', -1)
+                    : filterPrevMonth('to')
+                "
+                class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                style="color: var(--hp-text2)"
+                onmouseenter="this.style.background = 'var(--hp-surface2)'"
+                onmouseleave="this.style.background = 'transparent'"
+              >
+                <i class="fas fa-chevron-left text-[10px]"></i>
+              </button>
+              <button
+                type="button"
+                (click)="toggleFilterView('to')"
+                class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm font-medium transition-colors"
+                style="color: var(--hp-text)"
+                onmouseenter="this.style.background = 'var(--hp-surface2)'"
+                onmouseleave="this.style.background = 'transparent'"
+              >
+                {{ CAL_MONTHS[filterToCal().month] }} {{ filterToCal().year }}
+                <i
+                  class="fas text-[9px]"
+                  style="color: var(--hp-text3)"
+                  [class.fa-chevron-up]="filterToView() !== 'day'"
+                  [class.fa-chevron-down]="filterToView() === 'day'"
+                ></i>
+              </button>
+              <button
+                type="button"
+                (click)="
+                  filterToView() === 'year'
+                    ? shiftFilterYears('to', 1)
+                    : filterNextMonth('to')
+                "
+                class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                style="color: var(--hp-text2)"
+                onmouseenter="this.style.background = 'var(--hp-surface2)'"
+                onmouseleave="this.style.background = 'transparent'"
+              >
+                <i class="fas fa-chevron-right text-[10px]"></i>
+              </button>
+            </div>
+
+            <!-- Year view -->
+            @if (filterToView() === "year") {
+              <div class="grid grid-cols-3 gap-1.5 p-3">
+                @for (y of getFilterYearRange(filterToYearStart()); track y) {
+                  <button
+                    type="button"
+                    (click)="selectFilterYear('to', y)"
+                    class="py-2 rounded-lg text-xs font-medium transition-colors text-center"
+                    [style.background]="
+                      filterToCal().year === y
+                        ? 'var(--hp-nav-bg)'
+                        : 'transparent'
+                    "
+                    [style.color]="
+                      filterToCal().year === y ? '#fff' : 'var(--hp-text)'
+                    "
+                    onmouseenter="
+                      if (this.style.background === 'transparent')
+                        this.style.background = 'var(--hp-surface2)';
+                    "
+                    onmouseleave="
+                      if (!this.style.color.includes('fff'))
+                        this.style.background = 'transparent';
+                    "
+                  >
+                    {{ y }}
+                  </button>
+                }
+              </div>
+            }
+
+            <!-- Month view -->
+            @if (filterToView() === "month") {
+              <div class="grid grid-cols-3 gap-1.5 p-3">
+                @for (m of CAL_MONTHS_S; track $index) {
+                  <button
+                    type="button"
+                    (click)="selectFilterMonth('to', $index)"
+                    class="py-2 rounded-lg text-xs font-medium transition-colors text-center"
+                    [style.background]="
+                      filterToCal().month === $index
+                        ? 'var(--hp-nav-bg)'
+                        : 'transparent'
+                    "
+                    [style.color]="
+                      filterToCal().month === $index ? '#fff' : 'var(--hp-text)'
+                    "
+                    onmouseenter="
+                      if (this.style.background === 'transparent')
+                        this.style.background = 'var(--hp-surface2)';
+                    "
+                    onmouseleave="
+                      if (!this.style.color.includes('fff'))
+                        this.style.background = 'transparent';
+                    "
+                  >
+                    {{ m }}
+                  </button>
+                }
+              </div>
+            }
+
+            <!-- Day view -->
+            @if (filterToView() === "day") {
+              <div class="grid grid-cols-7 px-2 pt-2 pb-1">
+                @for (h of CAL_DAYS_HDR; track h) {
+                  <div
+                    class="text-center text-[10px] font-medium py-1"
+                    style="color: var(--hp-text3)"
+                  >
+                    {{ h }}
+                  </div>
+                }
+              </div>
+              <div class="grid grid-cols-7 px-2 pb-3 gap-y-0.5">
+                @for (
+                  day of getFilterCalDays(
+                    filterToCal().year,
+                    filterToCal().month
+                  );
+                  track $index
+                ) {
+                  @if (day === null) {
+                    <div></div>
+                  } @else {
+                    <button
+                      type="button"
+                      (click)="selectFilterDate('to', day)"
+                      class="w-8 h-8 mx-auto rounded-full text-xs flex items-center justify-center transition-all"
+                      [style.background]="
+                        toFilterDateStr(
+                          filterToCal().year,
+                          filterToCal().month,
+                          day
+                        ) === filterTo
+                          ? 'var(--hp-nav-bg)'
+                          : isFilterFromToday(
+                                filterToCal().year,
+                                filterToCal().month,
+                                day
+                              )
+                            ? 'rgba(56,189,248,0.12)'
+                            : 'transparent'
+                      "
+                      [style.color]="
+                        toFilterDateStr(
+                          filterToCal().year,
+                          filterToCal().month,
+                          day
+                        ) === filterTo
+                          ? '#fff'
+                          : isFilterFromToday(
+                                filterToCal().year,
+                                filterToCal().month,
+                                day
+                              )
+                            ? 'var(--hp-nav-accent)'
+                            : 'var(--hp-text)'
+                      "
+                      onmouseenter="
+                        if (!this.style.background.includes('nav-bg'))
+                          this.style.background = 'var(--hp-surface2)';
+                      "
+                      onmouseleave="
+                        if (!this.style.color.includes('fff'))
+                          this.style.background = '';
+                      "
+                    >
+                      {{ day }}
+                    </button>
+                  }
+                }
+              </div>
+            }
+
+            <div
+              class="px-3 py-2"
+              style="border-top: 1px solid var(--hp-border)"
+            >
+              <span class="text-[10px]" style="color: var(--hp-text3)"
+                >Lọc đến ngày này</span
+              >
+            </div>
+          </div>
+        }
+      </div>
       <!-- Add button -->
       <button
         (click)="showForm.set(!showForm())"

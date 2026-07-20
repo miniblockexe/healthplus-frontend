@@ -158,15 +158,112 @@
               <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
                 Vaccine <span class="text-red-600">*</span>
               </label>
-              <select
-                formControlName="vaccineId"
-                class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-[var(--hp-purple)] focus:ring-1 focus:ring-[var(--hp-purple)]/20"
-              >
-                <option value="">-- Chọn vaccine --</option>
-                @for (v of catalog(); track v.id) {
-                  <option [value]="v.id">{{ v.vaccineName }}</option>
+              <div class="relative">
+                <!-- Trigger -->
+                <button
+                  type="button"
+                  (click)="vaccineOpen.set(!vaccineOpen())"
+                  class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
+                  style="
+                    background: var(--hp-surface2);
+                    border: 1px solid var(--hp-border2);
+                    color: var(--hp-text);
+                  "
+                >
+                  <span
+                    [style.color]="
+                      form.get('vaccineId')?.value
+                        ? 'var(--hp-text)'
+                        : 'var(--hp-text3)'
+                    "
+                  >
+                    {{ vaccineLabel() }}
+                  </span>
+                  <i
+                    class="fas text-[9px]"
+                    style="color: var(--hp-text3)"
+                    [class.fa-chevron-up]="vaccineOpen()"
+                    [class.fa-chevron-down]="!vaccineOpen()"
+                  ></i>
+                </button>
+
+                @if (vaccineOpen()) {
+                  <div
+                    class="absolute z-50 w-full mt-1 rounded-[var(--hp-radius-sm)] overflow-hidden"
+                    style="
+                      background: var(--hp-surface);
+                      border: 1px solid var(--hp-border2);
+                      box-shadow: 0 8px 28px rgba(30, 64, 120, 0.14);
+                    "
+                  >
+                    <!-- Search box -->
+                    <div
+                      class="p-2"
+                      style="border-bottom: 1px solid var(--hp-border)"
+                    >
+                      <div class="relative">
+                        <i
+                          class="fas fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[11px]"
+                          style="color: var(--hp-text3)"
+                        ></i>
+                        <input
+                          type="text"
+                          placeholder="Tìm vaccine..."
+                          [value]="vaccineSearch()"
+                          (input)="vaccineSearch.set($any($event.target).value)"
+                          class="w-full pl-8 pr-3 py-1.5 text-sm rounded-lg focus:outline-none"
+                          style="
+                            background: var(--hp-surface2);
+                            border: 1px solid var(--hp-border2);
+                            color: var(--hp-text);
+                          "
+                          (click)="$event.stopPropagation()"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- List -->
+                    <div style="max-height: 220px; overflow-y: auto">
+                      @if (filteredCatalog.length === 0) {
+                        <div
+                          class="px-4 py-3 text-sm text-center"
+                          style="color: var(--hp-text3)"
+                        >
+                          Không tìm thấy vaccine
+                        </div>
+                      }
+                      @for (v of filteredCatalog; track v.id) {
+                        <button
+                          type="button"
+                          (click)="selectVaccine(v.id, v.vaccineName)"
+                          class="w-full px-4 py-2.5 text-sm text-left flex items-center justify-between transition-colors"
+                          style="color: var(--hp-text)"
+                          onmouseenter="
+                            this.style.background = 'var(--hp-surface2)'
+                          "
+                          onmouseleave="this.style.background = 'transparent'"
+                        >
+                          <div class="flex items-center gap-2.5">
+                            <i
+                              class="fas fa-syringe text-[11px] shrink-0"
+                              style="color: var(--hp-nav-accent)"
+                            ></i>
+                            <span>{{ v.vaccineName }}</span>
+                          </div>
+                          @if (
+                            form.get("vaccineId")?.value === v.id.toString()
+                          ) {
+                            <i
+                              class="fas fa-check text-[10px] shrink-0"
+                              style="color: var(--hp-primary)"
+                            ></i>
+                          }
+                        </button>
+                      }
+                    </div>
+                  </div>
                 }
-              </select>
+              </div>
               @if (catalog().length === 0) {
                 <p class="text-xs text-[var(--hp-text3)] mt-1.5">
                   Chưa có vaccine trong danh mục. Thêm qua API /vaccines/catalog

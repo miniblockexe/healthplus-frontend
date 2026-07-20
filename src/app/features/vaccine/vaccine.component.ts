@@ -26,6 +26,24 @@ export class VaccineComponent implements OnInit {
   private apiUrl = environment.apiUrl;
 
   vaccines = signal<UserVaccine[]>([]);
+  vaccineOpen = signal(false);
+  vaccineLabel = signal('-- Chọn vaccine --');
+  vaccineSearch = signal('');
+
+  get filteredCatalog() {
+    const q = this.vaccineSearch().toLowerCase();
+    return q
+      ? this.catalog().filter((v) => v.vaccineName.toLowerCase().includes(q))
+      : this.catalog();
+  }
+
+  selectVaccine(id: number, name: string) {
+    this.form.get('vaccineId')?.setValue(String(id));
+    this.vaccineLabel.set(name);
+    this.vaccineOpen.set(false);
+    this.vaccineSearch.set('');
+  }
+
   catalog = signal<VaccineCatalog[]>([]);
   isLoading = signal(false);
   isSubmitting = signal(false);
@@ -41,52 +59,83 @@ export class VaccineComponent implements OnInit {
 
   // Custom date picker state
   vaccinatedPicker = signal(false);
-  nextDuePicker    = signal(false);
+  nextDuePicker = signal(false);
   vaccinatedDisplay = signal('');
-  nextDueDisplay    = signal('');
+  nextDueDisplay = signal('');
 
   // Calendar navigation
-  vacCal  = signal({ year: new Date().getFullYear(), month: new Date().getMonth() });
-  nextCal = signal({ year: new Date().getFullYear(), month: new Date().getMonth() });
+  vacCal = signal({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth(),
+  });
+  nextCal = signal({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth(),
+  });
 
-  readonly MONTHS = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
-                     'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
-  readonly MONTHS_SHORT = ['Th1','Th2','Th3','Th4','Th5','Th6','Th7','Th8','Th9','Th10','Th11','Th12'];
-  readonly DAYS_HDR = ['CN','T2','T3','T4','T5','T6','T7'];
+  readonly MONTHS = [
+    'Tháng 1',
+    'Tháng 2',
+    'Tháng 3',
+    'Tháng 4',
+    'Tháng 5',
+    'Tháng 6',
+    'Tháng 7',
+    'Tháng 8',
+    'Tháng 9',
+    'Tháng 10',
+    'Tháng 11',
+    'Tháng 12',
+  ];
+  readonly MONTHS_SHORT = [
+    'Th1',
+    'Th2',
+    'Th3',
+    'Th4',
+    'Th5',
+    'Th6',
+    'Th7',
+    'Th8',
+    'Th9',
+    'Th10',
+    'Th11',
+    'Th12',
+  ];
+  readonly DAYS_HDR = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 
   // view: 'day' | 'month' | 'year'
-  vacView  = signal<'day'|'month'|'year'>('day');
-  nextView = signal<'day'|'month'|'year'>('day');
+  vacView = signal<'day' | 'month' | 'year'>('day');
+  nextView = signal<'day' | 'month' | 'year'>('day');
 
   // year range start
-  vacYearStart  = signal(new Date().getFullYear() - 6);
+  vacYearStart = signal(new Date().getFullYear() - 6);
   nextYearStart = signal(new Date().getFullYear() - 6);
 
   getYearRange(start: number): number[] {
     return Array.from({ length: 12 }, (_, i) => start + i);
   }
 
-  selectMonth(picker: 'vac'|'next', monthIdx: number) {
+  selectMonth(picker: 'vac' | 'next', monthIdx: number) {
     if (picker === 'vac') {
-      this.vacCal.update(c => ({ ...c, month: monthIdx }));
+      this.vacCal.update((c) => ({ ...c, month: monthIdx }));
       this.vacView.set('day');
     } else {
-      this.nextCal.update(c => ({ ...c, month: monthIdx }));
+      this.nextCal.update((c) => ({ ...c, month: monthIdx }));
       this.nextView.set('day');
     }
   }
 
-  selectYear(picker: 'vac'|'next', year: number) {
+  selectYear(picker: 'vac' | 'next', year: number) {
     if (picker === 'vac') {
-      this.vacCal.update(c => ({ ...c, year }));
+      this.vacCal.update((c) => ({ ...c, year }));
       this.vacView.set('month');
     } else {
-      this.nextCal.update(c => ({ ...c, year }));
+      this.nextCal.update((c) => ({ ...c, year }));
       this.nextView.set('month');
     }
   }
 
-  toggleView(picker: 'vac'|'next') {
+  toggleView(picker: 'vac' | 'next') {
     if (picker === 'vac') {
       this.vacView.set(this.vacView() === 'day' ? 'year' : 'day');
     } else {
@@ -94,27 +143,27 @@ export class VaccineComponent implements OnInit {
     }
   }
 
-  shiftYears(picker: 'vac'|'next', dir: number) {
-    if (picker === 'vac') this.vacYearStart.update(y => y + dir * 12);
-    else this.nextYearStart.update(y => y + dir * 12);
+  shiftYears(picker: 'vac' | 'next', dir: number) {
+    if (picker === 'vac') this.vacYearStart.update((y) => y + dir * 12);
+    else this.nextYearStart.update((y) => y + dir * 12);
   }
 
-  getCalDays(year: number, month: number): (number|null)[] {
+  getCalDays(year: number, month: number): (number | null)[] {
     const first = new Date(year, month, 1).getDay();
     const total = new Date(year, month + 1, 0).getDate();
-    const cells: (number|null)[] = Array(first).fill(null);
+    const cells: (number | null)[] = Array(first).fill(null);
     for (let d = 1; d <= total; d++) cells.push(d);
     while (cells.length % 7 !== 0) cells.push(null);
     return cells;
   }
 
   toDateStr(year: number, month: number, day: number): string {
-    return `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   }
 
   toDisplayStr(dateStr: string): string {
     if (!dateStr) return '';
-    const [y,m,d] = dateStr.split('-');
+    const [y, m, d] = dateStr.split('-');
     return `${d}/${m}/${y}`;
   }
 
@@ -138,7 +187,7 @@ export class VaccineComponent implements OnInit {
     this.nextDuePicker.set(false);
   }
 
-  prevMonth(picker: 'vac'|'next') {
+  prevMonth(picker: 'vac' | 'next') {
     if (picker === 'vac') {
       const { year, month } = this.vacCal();
       const d = new Date(year, month - 1, 1);
@@ -150,7 +199,7 @@ export class VaccineComponent implements OnInit {
     }
   }
 
-  nextMonth(picker: 'vac'|'next') {
+  nextMonth(picker: 'vac' | 'next') {
     if (picker === 'vac') {
       const { year, month } = this.vacCal();
       const d = new Date(year, month + 1, 1);
@@ -175,12 +224,17 @@ export class VaccineComponent implements OnInit {
 
   isVacSelected(day: number): boolean {
     const { year, month } = this.vacCal();
-    return this.toDateStr(year, month, day) === this.form.get('vaccinatedDate')?.value;
+    return (
+      this.toDateStr(year, month, day) ===
+      this.form.get('vaccinatedDate')?.value
+    );
   }
 
   isNextSelected(day: number): boolean {
     const { year, month } = this.nextCal();
-    return this.toDateStr(year, month, day) === this.form.get('nextDueDate')?.value;
+    return (
+      this.toDateStr(year, month, day) === this.form.get('nextDueDate')?.value
+    );
   }
 
   isToday(year: number, month: number, day: number): boolean {

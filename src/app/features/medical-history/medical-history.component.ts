@@ -79,6 +79,170 @@ export class MedicalHistoryComponent implements OnInit {
   filterFrom = '';
   filterTo = '';
 
+  // Custom date picker cho filter
+  filterFromOpen = signal(false);
+  filterToOpen = signal(false);
+  filterFromDisplay = signal('');
+  filterToDisplay = signal('');
+  filterFromCal = signal({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth(),
+  });
+  filterToCal = signal({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth(),
+  });
+  filterFromView = signal<'day' | 'month' | 'year'>('day');
+  filterToView = signal<'day' | 'month' | 'year'>('day');
+  filterFromYearStart = signal(new Date().getFullYear() - 5);
+  filterToYearStart = signal(new Date().getFullYear() - 5);
+
+  readonly CAL_MONTHS = [
+    'Tháng 1',
+    'Tháng 2',
+    'Tháng 3',
+    'Tháng 4',
+    'Tháng 5',
+    'Tháng 6',
+    'Tháng 7',
+    'Tháng 8',
+    'Tháng 9',
+    'Tháng 10',
+    'Tháng 11',
+    'Tháng 12',
+  ];
+  readonly CAL_MONTHS_S = [
+    'Th1',
+    'Th2',
+    'Th3',
+    'Th4',
+    'Th5',
+    'Th6',
+    'Th7',
+    'Th8',
+    'Th9',
+    'Th10',
+    'Th11',
+    'Th12',
+  ];
+  readonly CAL_DAYS_HDR = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+
+  getFilterCalDays(year: number, month: number): (number | null)[] {
+    const first = new Date(year, month, 1).getDay();
+    const total = new Date(year, month + 1, 0).getDate();
+    const cells: (number | null)[] = Array(first).fill(null);
+    for (let d = 1; d <= total; d++) cells.push(d);
+    while (cells.length % 7 !== 0) cells.push(null);
+    return cells;
+  }
+
+  toFilterDateStr(year: number, month: number, day: number): string {
+    return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  }
+  toFilterDisplay(s: string): string {
+    if (!s) return '';
+    const [y, m, d] = s.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
+  selectFilterDate(which: 'from' | 'to', day: number) {
+    const cal = which === 'from' ? this.filterFromCal() : this.filterToCal();
+    const val = this.toFilterDateStr(cal.year, cal.month, day);
+    if (which === 'from') {
+      this.filterFrom = val;
+      this.filterFromDisplay.set(this.toFilterDisplay(val));
+      this.filterFromOpen.set(false);
+      this.filterFromView.set('day');
+    } else {
+      this.filterTo = val;
+      this.filterToDisplay.set(this.toFilterDisplay(val));
+      this.filterToOpen.set(false);
+      this.filterToView.set('day');
+    }
+    this.onFilterChange();
+  }
+
+  toggleFilterView(which: 'from' | 'to') {
+    if (which === 'from')
+      this.filterFromView.set(this.filterFromView() === 'day' ? 'year' : 'day');
+    else this.filterToView.set(this.filterToView() === 'day' ? 'year' : 'day');
+  }
+
+  filterPrevMonth(which: 'from' | 'to') {
+    if (which === 'from') {
+      const { year, month } = this.filterFromCal();
+      const d = new Date(year, month - 1, 1);
+      this.filterFromCal.set({ year: d.getFullYear(), month: d.getMonth() });
+    } else {
+      const { year, month } = this.filterToCal();
+      const d = new Date(year, month - 1, 1);
+      this.filterToCal.set({ year: d.getFullYear(), month: d.getMonth() });
+    }
+  }
+
+  filterNextMonth(which: 'from' | 'to') {
+    if (which === 'from') {
+      const { year, month } = this.filterFromCal();
+      const d = new Date(year, month + 1, 1);
+      this.filterFromCal.set({ year: d.getFullYear(), month: d.getMonth() });
+    } else {
+      const { year, month } = this.filterToCal();
+      const d = new Date(year, month + 1, 1);
+      this.filterToCal.set({ year: d.getFullYear(), month: d.getMonth() });
+    }
+  }
+
+  selectFilterMonth(which: 'from' | 'to', monthIdx: number) {
+    if (which === 'from') {
+      this.filterFromCal.update((c) => ({ ...c, month: monthIdx }));
+      this.filterFromView.set('day');
+    } else {
+      this.filterToCal.update((c) => ({ ...c, month: monthIdx }));
+      this.filterToView.set('day');
+    }
+  }
+
+  selectFilterYear(which: 'from' | 'to', year: number) {
+    if (which === 'from') {
+      this.filterFromCal.update((c) => ({ ...c, year }));
+      this.filterFromView.set('month');
+    } else {
+      this.filterToCal.update((c) => ({ ...c, year }));
+      this.filterToView.set('month');
+    }
+  }
+
+  shiftFilterYears(which: 'from' | 'to', dir: number) {
+    if (which === 'from') this.filterFromYearStart.update((y) => y + dir * 12);
+    else this.filterToYearStart.update((y) => y + dir * 12);
+  }
+
+  getFilterYearRange(start: number): number[] {
+    return Array.from({ length: 12 }, (_, i) => start + i);
+  }
+
+  isFilterFromToday(year: number, month: number, day: number): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return (
+      this.toFilterDateStr(year, month, day) ===
+      today.toISOString().split('T')[0]
+    );
+  }
+
+  clearFilterDate(which: 'from' | 'to') {
+    if (which === 'from') {
+      this.filterFrom = '';
+      this.filterFromDisplay.set('');
+      this.filterFromOpen.set(false);
+    } else {
+      this.filterTo = '';
+      this.filterToDisplay.set('');
+      this.filterToOpen.set(false);
+    }
+    this.onFilterChange();
+  }
+
   private searchSubject = new Subject<string>();
 
   form = this.fb.group({
