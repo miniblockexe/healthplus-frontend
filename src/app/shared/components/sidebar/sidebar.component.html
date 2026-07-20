@@ -295,18 +295,18 @@
   </main>
 </div>
 
-<!-- ===== MOBILE NOTIFICATION PANEL (chỉ hiện trên mobile: hidden sm:hidden) ===== -->
-@if (showNotifications()) {
+<!-- ===== MOBILE NOTIFICATION PANEL (chỉ hiện trên mobile) ===== -->
+@if (showNotifications() && isMobileView()) {
   <!-- Backdrop -->
   <div
-    class="fixed inset-0 z-40 sm:hidden"
+    class="fixed inset-0 z-40"
     style="background: rgba(0, 0, 0, 0.45)"
     (click)="closeNotifications()"
   ></div>
 
-  <!-- Panel slide-down from top — chỉ hiện trên mobile (sm:hidden) -->
+  <!-- Panel slide-down from top -->
   <div
-    class="fixed top-0 left-0 right-0 z-50 sm:hidden animate-slide-down"
+    class="fixed top-0 left-0 right-0 z-50 animate-slide-down"
     style="
       background: var(--hp-surface);
       border-bottom: 1px solid var(--hp-border2);

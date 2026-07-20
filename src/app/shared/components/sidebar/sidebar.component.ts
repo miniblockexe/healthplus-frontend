@@ -1,4 +1,4 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -22,6 +22,15 @@ interface MenuItem {
 export class SidebarComponent {
   isCollapsed = signal(false);
   showNotifications = this.notificationService.showPanel;
+
+  isMobileView = signal(
+    typeof window !== 'undefined' && window.innerWidth < 640,
+  );
+
+  @HostListener('window:resize')
+  onResize() {
+    this.isMobileView.set(window.innerWidth < 640);
+  }
 
   private allMenuItems: MenuItem[] = [
     {
@@ -114,9 +123,9 @@ export class SidebarComponent {
   async subscribePush() {
     try {
       await this.pushService.subscribe();
-      alert('✅ Đăng ký push notification thành công!');
+      alert('Đăng ký push notification thành công!');
     } catch {
-      alert('❌ Cần HTTPS hoặc localhost với Service Worker');
+      alert('Cần HTTPS hoặc localhost với Service Worker');
     }
   }
 
