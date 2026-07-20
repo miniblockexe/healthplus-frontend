@@ -26,7 +26,7 @@
       </div>
       <button
         (click)="notificationService.togglePanel()"
-        class="relative shrink-0 ml-auto"
+        class="relative shrink-0 ml-auto lg:hidden"
         style="color: rgba(255, 255, 255, 0.72)"
         onmouseenter="this.style.color = '#fff'"
         onmouseleave="this.style.color = 'rgba(255,255,255,0.72)'"
@@ -111,7 +111,7 @@
       <div class="relative">
         <button
           type="button"
-          (click)="filterFromOpen.set(!filterFromOpen())"
+          (click)="toggleFilterPicker('from')"
           title="Từ ngày"
           class="flex items-center gap-2 px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none"
           style="
@@ -363,7 +363,7 @@
       <div class="relative">
         <button
           type="button"
-          (click)="filterToOpen.set(!filterToOpen())"
+          (click)="toggleFilterPicker('to')"
           title="Đến ngày"
           class="flex items-center gap-2 px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none"
           style="

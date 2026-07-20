@@ -82,6 +82,16 @@ export class MedicalHistoryComponent implements OnInit {
   // Custom date picker cho filter
   filterFromOpen = signal(false);
   filterToOpen = signal(false);
+
+  toggleFilterPicker(which: 'from' | 'to') {
+    if (which === 'from') {
+      this.filterFromOpen.set(!this.filterFromOpen());
+      this.filterToOpen.set(false);
+    } else {
+      this.filterToOpen.set(!this.filterToOpen());
+      this.filterFromOpen.set(false);
+    }
+  }
   filterFromDisplay = signal('');
   filterToDisplay = signal('');
   filterFromCal = signal({
