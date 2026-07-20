@@ -295,18 +295,18 @@
   </main>
 </div>
 
-<!-- ===== MOBILE NOTIFICATION PANEL (sm:hidden) ===== -->
+<!-- ===== MOBILE NOTIFICATION PANEL (lg:hidden) ===== -->
 @if (showNotifications()) {
   <!-- Backdrop -->
   <div
-    class="fixed inset-0 z-40 sm:hidden"
+    class="fixed inset-0 z-40 lg:hidden"
     style="background: rgba(0, 0, 0, 0.45)"
     (click)="closeNotifications()"
   ></div>
 
   <!-- Panel slide-down from top -->
   <div
-    class="fixed top-0 left-0 right-0 z-50 sm:hidden animate-slide-down"
+    class="fixed top-0 left-0 right-0 z-50 lg:hidden animate-slide-down"
     style="
       background: var(--hp-surface);
       border-bottom: 1px solid var(--hp-border2);
