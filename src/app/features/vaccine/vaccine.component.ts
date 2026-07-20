@@ -44,14 +44,32 @@ export class VaccineComponent implements OnInit {
   // Location select - data tu API /hospitals
   locationOpen = signal(false);
   locationLabel = signal('-- Chọn nơi tiêm --');
-  locationSearchVal = '';
+  locationSearchVal = signal('');
   hospitals = signal<{ id: number; name: string }[]>([]);
 
   get filteredLocations() {
-    const q = this.locationSearchVal.toLowerCase();
+    const q = this.locationSearchVal().toLowerCase();
     return q
       ? this.hospitals().filter((h) => h.name.toLowerCase().includes(q))
       : this.hospitals();
+  }
+
+  toggleVaccineDropdown() {
+    const next = !this.vaccineOpen();
+    this.vaccineOpen.set(next);
+    if (next) {
+      this.locationOpen.set(false);
+      this.locationSearchVal.set('');
+    }
+  }
+
+  toggleLocationDropdown() {
+    const next = !this.locationOpen();
+    this.locationOpen.set(next);
+    if (next) {
+      this.vaccineOpen.set(false);
+      this.vaccineSearch.set('');
+    }
   }
 
   loadHospitals() {
@@ -64,7 +82,7 @@ export class VaccineComponent implements OnInit {
     this.form.get('location')?.setValue(hospital.name);
     this.locationLabel.set(hospital.name);
     this.locationOpen.set(false);
-    this.locationSearchVal = '';
+    this.locationSearchVal.set('');
   }
 
   get filteredCatalog() {

@@ -162,7 +162,7 @@
                 <!-- Trigger -->
                 <button
                   type="button"
-                  (click)="vaccineOpen.set(!vaccineOpen())"
+                  (click)="toggleVaccineDropdown()"
                   class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
                   style="
                     background: var(--hp-surface2);
@@ -809,7 +809,7 @@
                 <!-- Trigger -->
                 <button
                   type="button"
-                  (click)="locationOpen.set(!locationOpen())"
+                  (click)="toggleLocationDropdown()"
                   class="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
                   style="
                     background: var(--hp-surface2);
@@ -860,7 +860,10 @@
                         ></i>
                         <input
                           type="text"
-                          [(ngModel)]="locationSearchVal"
+                          [value]="locationSearchVal()"
+                          (input)="
+                            locationSearchVal.set($any($event.target).value)
+                          "
                           placeholder="Tìm nơi tiêm..."
                           class="flex-1 bg-transparent text-xs outline-none"
                           style="color: var(--hp-text)"
