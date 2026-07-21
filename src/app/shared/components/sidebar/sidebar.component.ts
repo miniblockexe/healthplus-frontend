@@ -1,6 +1,21 @@
-import { Component, signal, computed, HostListener } from '@angular/core';
+import {
+  Component,
+  signal,
+  computed,
+  HostListener,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import {
+  RouterLink,
+  RouterLinkActive,
+  Router,
+  NavigationStart,
+  NavigationEnd,
+} from '@angular/router';
+import { filter, Subscription } from 'rxjs';
+import gsap from 'gsap';
 import { AuthService } from '../../../core/auth/auth.service';
 import { PushNotificationService } from '../../../core/services/push-notification.service';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -19,7 +34,7 @@ interface MenuItem {
   imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './sidebar.component.html',
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit, OnDestroy {
   isCollapsed = signal(false);
   showNotifications = this.notificationService.showPanel;
 
@@ -27,9 +42,60 @@ export class SidebarComponent {
     typeof window !== 'undefined' && window.innerWidth < 640,
   );
 
+  private routerSub!: Subscription;
+  private readonly MAIN_SEL = '.hp-main-content';
+
   @HostListener('window:resize')
   onResize() {
     this.isMobileView.set(window.innerWidth < 640);
+  }
+
+  ngOnInit() {
+    // Bỏ qua nếu user đã bật prefers-reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    this.routerSub = this.router.events
+      .pipe(
+        filter(
+          (e) => e instanceof NavigationStart || e instanceof NavigationEnd,
+        ),
+      )
+      .subscribe((event) => {
+        const el = document.querySelector<HTMLElement>(this.MAIN_SEL);
+        if (!el) return;
+
+        if (event instanceof NavigationStart) {
+          // Fade-out + slide lên nhẹ trước khi Angular swap component
+          gsap.killTweensOf(el);
+          gsap.to(el, {
+            opacity: 0,
+            y: -6,
+            duration: 0.15,
+            ease: 'power2.in',
+          });
+        } else {
+          // Đợi Angular render xong rồi mới fade-in
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              const fresh = document.querySelector<HTMLElement>(this.MAIN_SEL);
+              if (!fresh) return;
+              gsap.killTweensOf(fresh);
+              gsap.fromTo(
+                fresh,
+                { opacity: 0, y: 12 },
+                { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' },
+              );
+            });
+          });
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.routerSub?.unsubscribe();
+    // Reset transform nếu component bị destroy giữa chừng
+    const el = document.querySelector<HTMLElement>(this.MAIN_SEL);
+    if (el) gsap.set(el, { clearProps: 'opacity,transform' });
   }
 
   private allMenuItems: MenuItem[] = [

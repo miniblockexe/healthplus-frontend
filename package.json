@@ -22,6 +22,7 @@
     "@fortawesome/fontawesome-free": "^7.2.0",
     "apexcharts": "^5.13.0",
     "crypto-js": "^4.2.0",
+    "gsap": "^3.15.0",
     "jspdf": "^4.2.1",
     "ng-apexcharts": "^1.11.0",
     "ngx-indexed-db": "^17.0.0",

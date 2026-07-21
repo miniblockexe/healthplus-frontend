@@ -11,6 +11,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { environment } from '../../../../environments/environment';
+import { pageEnter } from '../../../shared/utils/page-transition';
 
 @Component({
   selector: 'app-login',
@@ -51,6 +52,9 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    // Animate toàn bộ trang vào — GSAP thay cho animate-fade-in CSS
+    pageEnter('.hp-auth-page');
+
     if (!this.isMobile) return;
 
     // Chạy ngoài Angular zone để không trigger change detection liên tục

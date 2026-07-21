@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { pageEnter } from '../../../shared/utils/page-transition';
 
 @Component({
   selector: 'app-register',
@@ -57,6 +58,9 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    // Animate toàn bộ trang vào — GSAP thay cho animate-fade-in CSS
+    pageEnter('.hp-auth-page');
+
     if (!this.isMobile) return;
 
     this.ngZone.runOutsideAngular(() => {
