@@ -37,7 +37,7 @@ export class AdminComponent implements OnInit {
     { value: 'elderly', label: 'Người cao tuổi', icon: 'fa-person-cane' },
   ];
   selectTargetGroup(value: string, label: string) {
-    this.vaccineForm?.get('targetGroup')?.setValue(value);
+    this.vaccineForm.get('targetGroup')?.setValue(value);
     this.targetGroupLabel.set(label);
     this.targetGroupOpen.set(false);
   }
