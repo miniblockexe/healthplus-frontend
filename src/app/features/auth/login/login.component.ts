@@ -1,9 +1,9 @@
 import {
   Component,
   OnInit,
+  AfterViewInit,
   OnDestroy,
   signal,
-  AfterViewInit,
   NgZone,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { environment } from '../../../../environments/environment';
 import {
   authEnter,
-  mobileHeroEnter,
+  heartbeatPulse,
   shakeError,
 } from '../../../shared/utils/page-transition';
 
@@ -34,7 +34,6 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  private isMobile = false;
   private viewportHandler: (() => void) | null = null;
 
   constructor(
@@ -51,46 +50,50 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         this.errorMessage.set('Đăng nhập Google thất bại, vui lòng thử lại.');
       }
     });
-
-    this.isMobile = window.innerWidth < 1024;
   }
 
   ngAfterViewInit() {
-    // Staggered entry: left panel + pills + form fields
+    // Auth panels + form fields stagger
     authEnter();
 
-    // Mobile hero chips pop in
-    if (this.isMobile) {
-      mobileHeroEnter();
-    }
+    // Heartbeat icon trên logo brand — nhịp đập nhẹ
+    heartbeatPulse('.hp-heartbeat-icon');
 
-    if (!this.isMobile) return;
-
-    this.ngZone.runOutsideAngular(() => {
-      const inputs = document.querySelectorAll<HTMLElement>('input, select');
-      inputs.forEach((input) => {
-        input.addEventListener('focus', () => {
-          setTimeout(() => {
-            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 350);
+    // Fix iOS Safari: khi bàn phím pop lên, scroll input vào view
+    if (window.innerWidth < 1024) {
+      this.ngZone.runOutsideAngular(() => {
+        const inputs = document.querySelectorAll<HTMLElement>('input');
+        inputs.forEach((input) => {
+          input.addEventListener('focus', () => {
+            setTimeout(
+              () =>
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' }),
+              320,
+            );
+          });
         });
-      });
 
-      if (window.visualViewport) {
-        this.viewportHandler = () => {
-          const active = document.activeElement as HTMLElement;
-          if (
-            active &&
-            (active.tagName === 'INPUT' || active.tagName === 'SELECT')
-          ) {
-            setTimeout(() => {
-              active.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-          }
-        };
-        window.visualViewport.addEventListener('resize', this.viewportHandler);
-      }
-    });
+        if (window.visualViewport) {
+          this.viewportHandler = () => {
+            const active = document.activeElement as HTMLElement;
+            if (active?.tagName === 'INPUT') {
+              setTimeout(
+                () =>
+                  active.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                  }),
+                100,
+              );
+            }
+          };
+          window.visualViewport.addEventListener(
+            'resize',
+            this.viewportHandler,
+          );
+        }
+      });
+    }
   }
 
   ngOnDestroy() {
@@ -106,15 +109,13 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     this.errorMessage.set('');
 
     this.authService.login(this.form.value as any).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard']);
-      },
+      next: () => this.router.navigate(['/dashboard']),
       error: (err) => {
         this.errorMessage.set(
           err.error?.message || 'Đăng nhập thất bại, thử lại!',
         );
         this.isLoading.set(false);
-        // Shake the error message after Angular renders it
+        // shakeError sau 1 tick để Angular render banner trước
         setTimeout(() => shakeError('.hp-error-msg'), 50);
       },
     });

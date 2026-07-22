@@ -1,194 +1,339 @@
 import gsap from 'gsap';
 
-const reduced = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-export function pageEnter(
-  selector: string,
-  opts: { duration?: number; delay?: number; y?: number } = {},
-): void {
-  if (typeof window === 'undefined' || reduced()) return;
-
-  const el = document.querySelector<HTMLElement>(selector);
-  if (!el) return;
-
-  const { duration = 0.38, delay = 0, y = 18 } = opts;
-
-  gsap.fromTo(
-    el,
-    { opacity: 0, y },
-    { opacity: 1, y: 0, duration, delay, ease: 'power2.out' },
-  );
-}
-
+const mm = gsap.matchMedia();
 export function authEnter(): void {
-  if (typeof window === 'undefined' || reduced()) return;
+  if (typeof window === 'undefined') return;
 
-  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  mm.add(
+    {
+      motion: '(prefers-reduced-motion: no-preference)',
+      reduce: '(prefers-reduced-motion: reduce)',
+    },
+    (ctx) => {
+      const { reduce } = ctx.conditions as { motion: boolean; reduce: boolean };
 
-  const leftPanel = document.querySelector<HTMLElement>('.hp-auth-left');
-  if (leftPanel) {
-    tl.fromTo(
-      leftPanel,
-      { opacity: 0, x: -40 },
-      { opacity: 1, x: 0, duration: 0.55 },
-      0,
-    );
+      if (reduce) {
+        // Show everything instantly — GSAP still sets them so CSS opacity:0 is cleared
+        gsap.set(
+          [
+            '.hp-auth-left',
+            '.hp-auth-right',
+            '.hp-auth-pill',
+            '.hp-auth-stat',
+            '.hp-auth-field',
+            '.hp-auth-submit',
+          ],
+          { autoAlpha: 1, y: 0, x: 0, scale: 1 },
+        );
+        return;
+      }
 
-    const pills = leftPanel.querySelectorAll('.hp-auth-pill');
-    if (pills.length) {
-      tl.fromTo(
-        pills,
-        { opacity: 0, x: -16 },
-        { opacity: 1, x: 0, duration: 0.35, stagger: 0.07 },
-        0.25,
-      );
-    }
+      const tl = gsap.timeline({
+        defaults: { ease: 'power3.out', duration: 0.45 },
+      });
 
-    const stats = leftPanel.querySelectorAll('.hp-auth-stat');
-    if (stats.length) {
-      tl.fromTo(
-        stats,
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.3, stagger: 0.08 },
-        0.45,
-      );
-    }
-  }
+      // Left panel
+      const leftPanel = document.querySelector('.hp-auth-left');
+      if (leftPanel) {
+        tl.fromTo(
+          leftPanel,
+          { autoAlpha: 0, x: -36 },
+          { autoAlpha: 1, x: 0 },
+          0,
+        );
 
-  const rightCol = document.querySelector<HTMLElement>('.hp-auth-right');
-  if (rightCol) {
-    tl.fromTo(
-      rightCol,
-      { opacity: 0, y: 24 },
-      { opacity: 1, y: 0, duration: 0.45 },
-      0.1,
-    );
-  }
+        const pills = leftPanel.querySelectorAll('.hp-auth-pill');
+        if (pills.length) {
+          tl.fromTo(
+            pills,
+            { autoAlpha: 0, x: -14 },
+            { autoAlpha: 1, x: 0, duration: 0.3, stagger: 0.065 },
+            '<0.2',
+          );
+        }
 
-  // Form fields stagger up inside the visible wrapper
-  const formFields = document.querySelectorAll<HTMLElement>('.hp-auth-field');
-  if (formFields.length) {
-    tl.fromTo(
-      formFields,
-      { opacity: 0, y: 14 },
-      { opacity: 1, y: 0, duration: 0.32, stagger: 0.06 },
-      0.28,
-    );
-  }
+        const stats = leftPanel.querySelectorAll('.hp-auth-stat');
+        if (stats.length) {
+          tl.fromTo(
+            stats,
+            { autoAlpha: 0, y: 8 },
+            { autoAlpha: 1, y: 0, duration: 0.28, stagger: 0.07 },
+            '<0.1',
+          );
+        }
+      }
 
-  const submitBtn = document.querySelector<HTMLElement>('.hp-auth-submit');
-  if (submitBtn) {
-    tl.fromTo(
-      submitBtn,
-      { opacity: 0, scale: 0.96, y: 8 },
-      { opacity: 1, scale: 1, y: 0, duration: 0.28 },
-      0.52,
-    );
-  }
+      // Right column
+      const rightCol = document.querySelector('.hp-auth-right');
+      if (rightCol) {
+        tl.fromTo(
+          rightCol,
+          { autoAlpha: 0, y: 20 },
+          { autoAlpha: 1, y: 0, duration: 0.4 },
+          '<-0.3', // overlap: starts 0.3s before pills finish
+        );
+      }
+
+      // Form fields stagger
+      const fields = document.querySelectorAll('.hp-auth-field');
+      if (fields.length) {
+        tl.fromTo(
+          fields,
+          { autoAlpha: 0, y: 12 },
+          { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.055 },
+          '<0.08',
+        );
+      }
+
+      // Submit button pops in last
+      const submit = document.querySelector('.hp-auth-submit');
+      if (submit) {
+        tl.fromTo(
+          submit,
+          { autoAlpha: 0, scale: 0.95, y: 6 },
+          {
+            autoAlpha: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.26,
+            ease: 'back.out(1.4)',
+          },
+          '<0.05',
+        );
+      }
+    },
+  );
 }
 
-/* ─── Mobile hero slides down ────────────────────────────────── */
 export function mobileHeroEnter(): void {
-  if (typeof window === 'undefined' || reduced()) return;
+  if (typeof window === 'undefined') return;
 
-  const hero = document.querySelector<HTMLElement>('.hp-mobile-hero');
-  if (!hero) return;
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const hero = document.querySelector('.hp-mobile-hero');
+    if (!hero) return;
 
-  gsap.fromTo(
-    hero,
-    { opacity: 0, y: -20 },
-    { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
-  );
+    const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
-  const chips = hero.querySelectorAll<HTMLElement>('.hp-hero-chip');
-  if (chips.length) {
-    gsap.fromTo(
-      chips,
-      { opacity: 0, scale: 0.88 },
-      {
-        opacity: 1,
-        scale: 1,
-        duration: 0.28,
-        stagger: 0.055,
-        delay: 0.22,
-        ease: 'back.out(1.4)',
-      },
+    tl.fromTo(
+      hero,
+      { autoAlpha: 0, y: -18 },
+      { autoAlpha: 1, y: 0, duration: 0.38 },
     );
-  }
-}
 
-/* ─── Dashboard / feature pages: cards stagger in ────────────── */
-export function dashboardEnter(cardSelector = '.hp-card'): void {
-  if (typeof window === 'undefined' || reduced()) return;
+    const chips = hero.querySelectorAll('.hp-hero-chip');
+    if (chips.length) {
+      tl.fromTo(
+        chips,
+        { autoAlpha: 0, scale: 0.82 },
+        {
+          autoAlpha: 1,
+          scale: 1,
+          duration: 0.26,
+          stagger: 0.05,
+          ease: 'back.out(1.5)',
+        },
+        '<0.18',
+      );
+    }
+  });
 
-  const cards = document.querySelectorAll<HTMLElement>(cardSelector);
-  if (!cards.length) return;
-
-  gsap.fromTo(
-    cards,
-    { opacity: 0, y: 20 },
-    {
-      opacity: 1,
-      y: 0,
-      duration: 0.38,
-      stagger: 0.055,
-      ease: 'power2.out',
-      delay: 0.08,
-    },
-  );
-}
-
-export function sidebarEnter(itemSelector = '.hp-nav-item'): void {
-  if (typeof window === 'undefined' || reduced()) return;
-
-  const items = document.querySelectorAll<HTMLElement>(itemSelector);
-  if (!items.length) return;
-
-  gsap.fromTo(
-    items,
-    { opacity: 0, x: -12 },
-    {
-      opacity: 1,
-      x: 0,
-      duration: 0.28,
-      stagger: 0.045,
-      ease: 'power2.out',
-      delay: 0.05,
-    },
-  );
-}
-
-export function routeEnter(mainSelector = '.hp-main-content'): void {
-  if (typeof window === 'undefined' || reduced()) return;
-
-  const el = document.querySelector<HTMLElement>(mainSelector);
-  if (!el) return;
-
-  gsap.fromTo(
-    el,
-    { opacity: 0, y: 12 },
-    { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' },
-  );
+  mm.add('(prefers-reduced-motion: reduce)', () => {
+    const hero = document.querySelector('.hp-mobile-hero');
+    if (hero) gsap.set(hero, { autoAlpha: 1 });
+    gsap.set('.hp-hero-chip', { autoAlpha: 1, scale: 1 });
+  });
 }
 
 export function shakeError(selector = '.hp-error-msg'): void {
   if (typeof window === 'undefined') return;
 
-  const el = document.querySelector<HTMLElement>(selector);
-  if (!el) return;
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const el = document.querySelector<HTMLElement>(selector);
+    if (!el) return;
 
-  gsap.fromTo(
-    el,
-    { x: 0 },
+    gsap.fromTo(
+      el,
+      { x: 0 },
+      {
+        x: 7,
+        duration: 0.065,
+        repeat: 5,
+        yoyo: true,
+        ease: 'power1.inOut',
+        onComplete: () => gsap.set(el, { x: 0 }),
+      },
+    );
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SIDEBAR NAV ITEMS  (stagger trái → phải)
+══════════════════════════════════════════════════════════════════ */
+export function sidebarEnter(itemSelector = '.hp-nav-item'): void {
+  if (typeof window === 'undefined') return;
+
+  mm.add(
     {
-      x: 8,
-      duration: 0.07,
-      repeat: 5,
-      yoyo: true,
-      ease: 'power1.inOut',
-      onComplete: () => gsap.set(el, { x: 0 }),
+      motion: '(prefers-reduced-motion: no-preference)',
+      reduce: '(prefers-reduced-motion: reduce)',
+    },
+    (ctx) => {
+      const { reduce } = ctx.conditions as { motion: boolean; reduce: boolean };
+      const items = document.querySelectorAll(itemSelector);
+      if (!items.length) return;
+
+      if (reduce) {
+        gsap.set(items, { autoAlpha: 1, x: 0 });
+        return;
+      }
+
+      gsap.fromTo(
+        items,
+        { autoAlpha: 0, x: -10 },
+        {
+          autoAlpha: 1,
+          x: 0,
+          duration: 0.26,
+          stagger: { each: 0.042, from: 'start' },
+          ease: 'power2.out',
+        },
+      );
     },
   );
+}
+
+export function dashboardEnter(cardSelector = '.hp-card'): void {
+  if (typeof window === 'undefined') return;
+
+  mm.add(
+    {
+      motion: '(prefers-reduced-motion: no-preference)',
+      reduce: '(prefers-reduced-motion: reduce)',
+    },
+    (ctx) => {
+      const { reduce } = ctx.conditions as { motion: boolean; reduce: boolean };
+      const cards = document.querySelectorAll(cardSelector);
+      if (!cards.length) return;
+
+      if (reduce) {
+        gsap.set(cards, { autoAlpha: 1, y: 0 });
+        return;
+      }
+
+      gsap.fromTo(
+        cards,
+        { autoAlpha: 0, y: 16 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.35,
+          stagger: { each: 0.05, from: 'start' },
+          ease: 'power2.out',
+          delay: 0.05,
+        },
+      );
+    },
+  );
+}
+
+export function routeLeave(mainSelector = '.hp-main-content'): void {
+  if (typeof window === 'undefined') return;
+
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const el = document.querySelector<HTMLElement>(mainSelector);
+    if (!el) return;
+    gsap.killTweensOf(el);
+    gsap.to(el, { autoAlpha: 0, y: -5, duration: 0.13, ease: 'power2.in' });
+  });
+}
+
+export function routeEnter(mainSelector = '.hp-main-content'): void {
+  if (typeof window === 'undefined') return;
+
+  mm.add(
+    {
+      motion: '(prefers-reduced-motion: no-preference)',
+      reduce: '(prefers-reduced-motion: reduce)',
+    },
+    (ctx) => {
+      const { reduce } = ctx.conditions as { motion: boolean; reduce: boolean };
+      const el = document.querySelector<HTMLElement>(mainSelector);
+      if (!el) return;
+
+      gsap.killTweensOf(el);
+
+      if (reduce) {
+        gsap.set(el, { autoAlpha: 1, y: 0 });
+        return;
+      }
+
+      gsap.fromTo(
+        el,
+        { autoAlpha: 0, y: 10 },
+        { autoAlpha: 1, y: 0, duration: 0.28, ease: 'power2.out' },
+      );
+    },
+  );
+}
+
+export function heartbeatPulse(selector = '.hp-heartbeat-icon'): void {
+  if (typeof window === 'undefined') return;
+
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const el = document.querySelector(selector);
+    if (!el) return;
+
+    gsap.to(el, {
+      scale: 1.18,
+      duration: 0.22,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      repeatDelay: 0.65, // ~72bpm rhythm — tự nhiên, không loạn mắt
+    });
+  });
+}
+
+export function countUp(
+  el: HTMLElement,
+  endValue: number,
+  opts: { duration?: number; decimals?: number; suffix?: string } = {},
+): void {
+  if (typeof window === 'undefined' || !el) return;
+
+  const { duration = 0.9, decimals = 0, suffix = '' } = opts;
+
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const obj = { val: 0 };
+    gsap.to(obj, {
+      val: endValue,
+      duration,
+      ease: 'power2.out',
+      onUpdate() {
+        el.textContent = obj.val.toFixed(decimals) + suffix;
+      },
+      onComplete() {
+        el.textContent = endValue.toFixed(decimals) + suffix;
+      },
+    });
+  });
+
+  mm.add('(prefers-reduced-motion: reduce)', () => {
+    el.textContent = endValue.toFixed(decimals) + suffix;
+  });
+}
+
+export function badgePop(selector = '.hp-badge'): void {
+  if (typeof window === 'undefined') return;
+
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const el = document.querySelector(selector);
+    if (!el) return;
+
+    gsap.fromTo(
+      el,
+      { scale: 0, autoAlpha: 0 },
+      { scale: 1, autoAlpha: 1, duration: 0.22, ease: 'back.out(2)' },
+    );
+  });
 }

@@ -1,9 +1,9 @@
 import {
   Component,
   OnInit,
+  AfterViewInit,
   OnDestroy,
   signal,
-  AfterViewInit,
   NgZone,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import {
   authEnter,
-  mobileHeroEnter,
+  heartbeatPulse,
   shakeError,
 } from '../../../shared/utils/page-transition';
 
@@ -25,6 +25,18 @@ import {
 export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = signal(false);
   errorMessage = signal('');
+  genderOpen = signal(false);
+  genderLabel = signal('Chọn giới tính');
+
+  readonly steps = [
+    { n: 1, title: 'Tạo tài khoản', sub: 'Điền thông tin cơ bản' },
+    {
+      n: 2,
+      title: 'Nhập hồ sơ sức khỏe',
+      sub: 'Nhóm máu, dị ứng, tiền sử bệnh',
+    },
+    { n: 3, title: 'Bắt đầu theo dõi', sub: 'Dashboard, AI, nhắc lịch' },
+  ];
 
   form = this.fb.group({
     fullname: ['', [Validators.required, Validators.minLength(2)]],
@@ -34,10 +46,6 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     phone: [''],
   });
 
-  genderOpen = signal(false);
-  genderLabel = signal('Chọn giới tính');
-
-  private isMobile = false;
   private viewportHandler: (() => void) | null = null;
 
   constructor(
@@ -47,6 +55,53 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private ngZone: NgZone,
   ) {}
 
+  ngOnInit() {}
+
+  ngAfterViewInit() {
+    authEnter();
+    heartbeatPulse('.hp-heartbeat-icon');
+
+    if (window.innerWidth < 1024) {
+      this.ngZone.runOutsideAngular(() => {
+        document.querySelectorAll<HTMLElement>('input').forEach((input) => {
+          input.addEventListener('focus', () => {
+            setTimeout(
+              () =>
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' }),
+              320,
+            );
+          });
+        });
+
+        if (window.visualViewport) {
+          this.viewportHandler = () => {
+            const active = document.activeElement as HTMLElement;
+            if (active?.tagName === 'INPUT') {
+              setTimeout(
+                () =>
+                  active.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                  }),
+                100,
+              );
+            }
+          };
+          window.visualViewport.addEventListener(
+            'resize',
+            this.viewportHandler,
+          );
+        }
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    if (window.visualViewport && this.viewportHandler) {
+      window.visualViewport.removeEventListener('resize', this.viewportHandler);
+    }
+  }
+
   setGender(value: string, label: string) {
     this.form.get('gender')?.setValue(value);
     this.genderLabel.set(label);
@@ -54,53 +109,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toggleGender() {
-    this.genderOpen.set(!this.genderOpen());
-  }
-
-  ngOnInit() {
-    this.isMobile = window.innerWidth < 1024;
-  }
-
-  ngAfterViewInit() {
-    authEnter();
-
-    if (this.isMobile) {
-      mobileHeroEnter();
-    }
-
-    if (!this.isMobile) return;
-
-    this.ngZone.runOutsideAngular(() => {
-      const inputs = document.querySelectorAll<HTMLElement>('input, select');
-      inputs.forEach((input) => {
-        input.addEventListener('focus', () => {
-          setTimeout(() => {
-            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 350);
-        });
-      });
-
-      if (window.visualViewport) {
-        this.viewportHandler = () => {
-          const active = document.activeElement as HTMLElement;
-          if (
-            active &&
-            (active.tagName === 'INPUT' || active.tagName === 'SELECT')
-          ) {
-            setTimeout(() => {
-              active.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-          }
-        };
-        window.visualViewport.addEventListener('resize', this.viewportHandler);
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    if (window.visualViewport && this.viewportHandler) {
-      window.visualViewport.removeEventListener('resize', this.viewportHandler);
-    }
+    this.genderOpen.update((v) => !v);
   }
 
   onSubmit() {
@@ -110,9 +119,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     this.errorMessage.set('');
 
     this.authService.register(this.form.value as any).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard']);
-      },
+      next: () => this.router.navigate(['/dashboard']),
       error: (err) => {
         this.errorMessage.set(
           err.error?.message || 'Đăng ký thất bại, thử lại!',
