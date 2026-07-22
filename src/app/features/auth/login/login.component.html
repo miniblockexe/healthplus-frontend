@@ -1,12 +1,8 @@
 <div class="hp-auth-page flex flex-col lg:flex-row min-h-screen">
+  <!-- HERO PANEL -->
   <div
-    class="hp-auth-left flex flex-col justify-between relative overflow-hidden shrink-0"
+    class="hp-auth-left flex flex-col justify-between relative overflow-hidden shrink-0 lg:w-2/5 lg:h-screen lg:sticky lg:top-0"
     style="background-color: var(--hp-nav-bg); flex: 0 0 42dvh"
-    [class.lg:flex-none]="true"
-    [class.lg:w-2/5]="true"
-    [class.lg:h-screen]="true"
-    [class.lg:sticky]="true"
-    [class.lg:top-0]="true"
   >
     <div
       class="absolute -top-20 -right-20 w-64 h-64 rounded-full pointer-events-none"
@@ -50,8 +46,7 @@
         class="text-xl lg:text-2xl font-semibold text-white leading-snug mb-2"
         style="letter-spacing: -0.4px"
       >
-        Chào mừng<br />
-        <span style="color: var(--hp-nav-accent)">trở lại</span>
+        Chào mừng<br /><span style="color: var(--hp-nav-accent)">trở lại</span>
       </h2>
       <p
         class="text-xs lg:text-sm leading-relaxed"
@@ -61,7 +56,7 @@
       </p>
     </div>
 
-    <!-- Feature chips — hiện trên cả mobile lẫn desktop -->
+    <!-- Feature chips -->
     <div class="px-5 pb-6 lg:pb-0 lg:px-10 relative z-10">
       <div class="flex flex-wrap gap-1.5">
         <span
@@ -119,7 +114,7 @@
       </div>
     </div>
 
-    <!-- Desktop only: pills + stats -->
+    <!-- Desktop only pills -->
     <div class="hidden lg:flex flex-col gap-2.5 px-10 relative z-10">
       <div
         class="hp-auth-pill flex items-center gap-3 rounded-xl px-4 py-3"
@@ -153,6 +148,7 @@
       </div>
     </div>
 
+    <!-- Desktop stats -->
     <div class="hidden lg:grid grid-cols-3 gap-2 px-10 pb-12 relative z-10">
       <div
         class="hp-auth-stat rounded-xl py-3 px-2 text-center"
@@ -199,11 +195,7 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════
-       FORM PANEL
-       • Mobile:  flex-1, scroll độc lập, không card nổi
-       • Desktop: flex-1, căn giữa nội dung
-  ══════════════════════════════════════════════════════ -->
+  <!-- FORM PANEL -->
   <div
     class="hp-auth-right flex-1 flex flex-col"
     style="
@@ -212,7 +204,7 @@
       -webkit-overflow-scrolling: touch;
     "
   >
-    <!-- Divider wave mobile (optional visual connector) -->
+    <!-- Wave connector mobile -->
     <div
       class="lg:hidden h-6 shrink-0 relative"
       style="background-color: var(--hp-nav-bg)"
@@ -228,9 +220,8 @@
       </svg>
     </div>
 
-    <!-- Form wrapper -->
     <div
-      class="flex-1 flex flex-col justify-center px-6 py-8 lg:px-16 xl:px-24 max-w-md lg:max-w-none lg:mx-auto w-full"
+      class="flex-1 flex flex-col justify-center px-6 py-8 lg:px-16 xl:px-24"
       style="padding-bottom: env(safe-area-inset-bottom, 32px)"
     >
       <div class="w-full lg:max-w-md mx-auto">
@@ -252,8 +243,8 @@
               color: var(--hp-red);
             "
           >
-            <i class="fas fa-circle-exclamation shrink-0"></i>
-            {{ errorMessage() }}
+            <i class="fas fa-circle-exclamation shrink-0"></i
+            >{{ errorMessage() }}
           </div>
         }
 

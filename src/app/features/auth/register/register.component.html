@@ -1,13 +1,8 @@
 <div class="hp-auth-page flex flex-col lg:flex-row min-h-screen">
-  <!-- Hero Panel -->
+  <!-- HERO PANEL -->
   <div
-    class="hp-auth-left flex flex-col justify-between relative overflow-hidden shrink-0"
+    class="hp-auth-left flex flex-col justify-between relative overflow-hidden shrink-0 lg:w-2/5 lg:h-screen lg:sticky lg:top-0"
     style="background-color: var(--hp-nav-bg); flex: 0 0 38dvh"
-    [class.lg:flex-none]="true"
-    [class.lg:w-2/5]="true"
-    [class.lg:h-screen]="true"
-    [class.lg:sticky]="true"
-    [class.lg:top-0]="true"
   >
     <div
       class="absolute -top-20 -right-20 w-64 h-64 rounded-full pointer-events-none"
@@ -45,14 +40,13 @@
       </span>
     </div>
 
-    <!-- Copy -->
+    <!-- Hero copy -->
     <div class="px-6 lg:px-10 relative z-10">
       <h2
         class="text-xl lg:text-2xl font-semibold text-white leading-snug mb-2"
         style="letter-spacing: -0.4px"
       >
-        Bắt đầu<br />
-        <span style="color: var(--hp-nav-accent)">hành trình</span>
+        Bắt đầu<br /><span style="color: var(--hp-nav-accent)">hành trình</span>
       </h2>
       <p
         class="text-xs lg:text-sm leading-relaxed"
@@ -62,7 +56,7 @@
       </p>
     </div>
 
-    <!-- Steps chips (mobile + desktop) -->
+    <!-- Feature chips -->
     <div class="px-5 pb-6 lg:pb-0 lg:px-10 relative z-10">
       <div class="flex flex-wrap gap-1.5">
         <span
@@ -120,7 +114,7 @@
       </div>
     </div>
 
-    <!-- Desktop 3-steps -->
+    <!-- Desktop steps -->
     <div class="hidden lg:flex flex-col gap-3 px-10 relative z-10">
       @for (step of steps; track step.n) {
         <div class="hp-auth-pill flex items-start gap-3">
@@ -144,6 +138,7 @@
       }
     </div>
 
+    <!-- Desktop stats -->
     <div class="hidden lg:grid grid-cols-3 gap-2 px-10 pb-12 relative z-10">
       <div
         class="hp-auth-stat rounded-xl py-3 px-2 text-center"
@@ -190,7 +185,7 @@
     </div>
   </div>
 
-  <!-- Form Panel -->
+  <!-- FORM PANEL -->
   <div
     class="hp-auth-right flex-1 flex flex-col"
     style="
@@ -199,7 +194,7 @@
       -webkit-overflow-scrolling: touch;
     "
   >
-    <!-- Wave connector -->
+    <!-- Wave connector mobile -->
     <div
       class="lg:hidden h-6 shrink-0 relative"
       style="background-color: var(--hp-nav-bg)"
@@ -352,7 +347,7 @@
           </div>
 
           <div class="hp-auth-field grid grid-cols-2 gap-3">
-            <!-- Gender dropdown -->
+            <!-- Gender -->
             <div>
               <label
                 class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
@@ -368,7 +363,7 @@
                 <button
                   type="button"
                   (click)="toggleGender()"
-                  class="w-full rounded-xl px-4 py-3 text-sm text-left flex items-center justify-between focus:outline-none hp-input"
+                  class="hp-input w-full rounded-xl px-4 py-3 text-sm text-left flex items-center justify-between focus:outline-none"
                   style="
                     background: var(--hp-surface2);
                     border: 1px solid var(--hp-border2);
@@ -385,7 +380,7 @@
                     {{ genderLabel() }}
                   </span>
                   <i
-                    class="fas text-[10px] transition-transform duration-200"
+                    class="fas text-[10px]"
                     [class.fa-chevron-up]="genderOpen()"
                     [class.fa-chevron-down]="!genderOpen()"
                     style="color: var(--hp-text3)"
