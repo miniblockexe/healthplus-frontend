@@ -3,16 +3,28 @@
        LEFT PANEL — desktop only (lg+)
   ══════════════════════════════════════════ -->
   <div
-    class="hidden lg:flex w-2/5 xl:w-1/3 flex-col justify-between px-10 py-12 relative overflow-hidden"
+    class="hp-auth-left hidden lg:flex w-2/5 xl:w-1/3 flex-col justify-between px-10 py-12 relative overflow-hidden"
     style="background-color: var(--hp-nav-bg)"
   >
     <div
       class="absolute -top-24 -right-24 w-72 h-72 rounded-full pointer-events-none"
-      style="background: rgba(56, 189, 248, 0.06)"
+      style="
+        background: radial-gradient(
+          circle,
+          rgba(56, 189, 248, 0.1) 0%,
+          transparent 70%
+        );
+      "
     ></div>
     <div
       class="absolute -bottom-20 -left-20 w-64 h-64 rounded-full pointer-events-none"
-      style="background: rgba(56, 189, 248, 0.04)"
+      style="
+        background: radial-gradient(
+          circle,
+          rgba(56, 189, 248, 0.07) 0%,
+          transparent 70%
+        );
+      "
     ></div>
 
     <!-- Brand -->
@@ -28,7 +40,7 @@
       </span>
     </div>
 
-    <!-- Hero -->
+    <!-- Hero copy -->
     <div class="relative z-10">
       <h2
         class="text-2xl font-semibold text-white leading-snug mb-3"
@@ -52,7 +64,7 @@
       >
         Chỉ 3 bước đơn giản
       </p>
-      <div class="flex items-start gap-3">
+      <div class="hp-auth-pill flex items-start gap-3">
         <div
           class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-semibold"
           style="
@@ -70,7 +82,7 @@
           </p>
         </div>
       </div>
-      <div class="flex items-start gap-3">
+      <div class="hp-auth-pill flex items-start gap-3">
         <div
           class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-semibold"
           style="
@@ -88,7 +100,7 @@
           </p>
         </div>
       </div>
-      <div class="flex items-start gap-3">
+      <div class="hp-auth-pill flex items-start gap-3">
         <div
           class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-semibold"
           style="
@@ -100,61 +112,56 @@
           3
         </div>
         <div>
-          <p class="text-sm font-medium text-white">
-            Theo dõi & nhận tư vấn AI
-          </p>
+          <p class="text-sm font-medium text-white">Bắt đầu theo dõi</p>
           <p class="text-xs mt-0.5" style="color: var(--hp-nav-text)">
-            Phân tích chỉ số sinh tồn hàng ngày
+            Dashboard, AI, nhắc lịch
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Badges -->
+    <!-- Stats -->
     <div class="grid grid-cols-3 gap-2 relative z-10">
       <div
-        class="rounded-xl py-3 px-2 text-center"
+        class="hp-auth-stat rounded-xl py-3 px-2 text-center"
         style="
           background: rgba(255, 255, 255, 0.06);
           border: 1px solid var(--hp-nav-border);
         "
       >
-        <p class="text-sm" style="color: var(--hp-nav-accent)">
-          <i class="fas fa-shield-halved"></i>
+        <p class="text-sm font-semibold" style="color: var(--hp-nav-accent)">
+          <i class="fas fa-shield-halved text-xs mr-1"></i>E2E
         </p>
-        <p class="text-[10px] mt-1.5 font-medium text-white">Bảo mật</p>
-        <p class="text-[9px]" style="color: rgba(255, 255, 255, 0.38)">
-          Mã hoá E2E
+        <p class="text-[10px] mt-1" style="color: rgba(255, 255, 255, 0.38)">
+          Mã hóa
         </p>
       </div>
       <div
-        class="rounded-xl py-3 px-2 text-center"
+        class="hp-auth-stat rounded-xl py-3 px-2 text-center"
         style="
           background: rgba(255, 255, 255, 0.06);
           border: 1px solid var(--hp-nav-border);
         "
       >
-        <p class="text-sm" style="color: var(--hp-nav-accent)">
-          <i class="fas fa-robot"></i>
+        <p class="text-sm font-semibold" style="color: var(--hp-nav-accent)">
+          <i class="fas fa-cloud text-xs mr-1"></i>PWA
         </p>
-        <p class="text-[10px] mt-1.5 font-medium text-white">AI Health</p>
-        <p class="text-[9px]" style="color: rgba(255, 255, 255, 0.38)">
-          Tư vấn 24/7
+        <p class="text-[10px] mt-1" style="color: rgba(255, 255, 255, 0.38)">
+          Offline
         </p>
       </div>
       <div
-        class="rounded-xl py-3 px-2 text-center"
+        class="hp-auth-stat rounded-xl py-3 px-2 text-center"
         style="
           background: rgba(255, 255, 255, 0.06);
           border: 1px solid var(--hp-nav-border);
         "
       >
-        <p class="text-sm" style="color: var(--hp-nav-accent)">
-          <i class="fas fa-file-pdf"></i>
+        <p class="text-sm font-semibold" style="color: var(--hp-nav-accent)">
+          <i class="fas fa-user-doctor text-xs mr-1"></i>BS
         </p>
-        <p class="text-[10px] mt-1.5 font-medium text-white">Xuất PDF</p>
-        <p class="text-[9px]" style="color: rgba(255, 255, 255, 0.38)">
-          Báo cáo đẹp
+        <p class="text-[10px] mt-1" style="color: rgba(255, 255, 255, 0.38)">
+          Bác sĩ
         </p>
       </div>
     </div>
@@ -164,22 +171,35 @@
        RIGHT COLUMN
   ══════════════════════════════════════════ -->
   <div
-    class="flex-1 flex flex-col"
+    class="hp-auth-right flex-1 flex flex-col"
     style="overflow-y: auto; -webkit-overflow-scrolling: touch"
   >
-    <!-- ── MOBILE HERO (ẩn trên desktop) ── -->
+    <!-- MOBILE HERO -->
     <div
-      class="lg:hidden relative overflow-hidden px-6 pt-12 pb-8 shrink-0"
+      class="hp-mobile-hero lg:hidden relative overflow-hidden px-6 pt-12 pb-8 shrink-0"
       style="background-color: var(--hp-nav-bg)"
     >
       <div
         class="absolute -top-16 -right-16 w-48 h-48 rounded-full pointer-events-none"
-        style="background: rgba(56, 189, 248, 0.08)"
+        style="
+          background: radial-gradient(
+            circle,
+            rgba(56, 189, 248, 0.1) 0%,
+            transparent 70%
+          );
+        "
       ></div>
       <div
         class="absolute -bottom-10 -left-10 w-36 h-36 rounded-full pointer-events-none"
-        style="background: rgba(56, 189, 248, 0.05)"
+        style="
+          background: radial-gradient(
+            circle,
+            rgba(56, 189, 248, 0.07) 0%,
+            transparent 70%
+          );
+        "
       ></div>
+
       <div class="flex items-center gap-2.5 mb-6 relative z-10">
         <div
           class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
@@ -191,21 +211,22 @@
           Health<span style="color: var(--hp-nav-accent)">+</span>
         </span>
       </div>
+
       <div class="relative z-10">
         <h1
           class="text-2xl font-semibold text-white leading-snug mb-2"
           style="letter-spacing: -0.3px"
         >
-          Tạo tài khoản<br />miễn phí ✨
+          Bắt đầu hành trình sức khỏe
         </h1>
         <p class="text-sm" style="color: var(--hp-nav-text)">
           Chỉ mất 30 giây để bắt đầu hành trình sức khỏe
         </p>
       </div>
-      <!-- Chips 2x2 -->
+
       <div class="grid grid-cols-2 gap-1.5 mt-4 relative z-10">
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
+          class="hp-hero-chip flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.8);
@@ -218,7 +239,7 @@
           >Tạo tài khoản
         </span>
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
+          class="hp-hero-chip flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.8);
@@ -231,7 +252,7 @@
           >Hồ sơ sức khỏe
         </span>
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
+          class="hp-hero-chip flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.8);
@@ -244,7 +265,7 @@
           >AI tư vấn
         </span>
         <span
-          class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
+          class="hp-hero-chip flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
           style="
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.8);
@@ -265,18 +286,18 @@
       style="background-color: var(--hp-bg)"
     >
       <div class="w-full max-w-md">
-        <div class="mb-6">
+        <div class="hp-auth-field mb-6">
           <h1 class="text-xl font-semibold mb-1" style="color: var(--hp-text)">
-            Tạo tài khoản mới ✨
+            Tạo tài khoản mới
           </h1>
           <p class="text-sm" style="color: var(--hp-text3)">
-            Miễn phí — chỉ mất 30 giây để bắt đầu
+            Miễn phí, chỉ mất 30 giây để bắt đầu
           </p>
         </div>
 
         @if (errorMessage()) {
           <div
-            class="animate-fade-in flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-5"
+            class="hp-error-msg flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-5"
             style="
               background: #fef2f2;
               border: 1px solid #fecaca;
@@ -289,7 +310,7 @@
         }
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-          <div>
+          <div class="hp-auth-field">
             <label
               class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
               style="color: var(--hp-text2)"
@@ -304,14 +325,12 @@
               formControlName="fullname"
               type="text"
               placeholder="Nguyễn Văn A"
-              class="w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all duration-150"
+              class="hp-input w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none"
               style="
                 background: var(--hp-surface2);
                 border: 1px solid var(--hp-border2);
                 color: var(--hp-text);
               "
-              onfocus="this.style.borderColor = 'var(--hp-primary)'"
-              onblur="this.style.borderColor = 'var(--hp-border2)'"
             />
             @if (
               form.get("fullname")?.invalid && form.get("fullname")?.touched
@@ -325,7 +344,8 @@
               </p>
             }
           </div>
-          <div>
+
+          <div class="hp-auth-field">
             <label
               class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
               style="color: var(--hp-text2)"
@@ -340,14 +360,12 @@
               formControlName="email"
               type="email"
               placeholder="you@example.com"
-              class="w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all duration-150"
+              class="hp-input w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none"
               style="
                 background: var(--hp-surface2);
                 border: 1px solid var(--hp-border2);
                 color: var(--hp-text);
               "
-              onfocus="this.style.borderColor = 'var(--hp-primary)'"
-              onblur="this.style.borderColor = 'var(--hp-border2)'"
             />
             @if (form.get("email")?.invalid && form.get("email")?.touched) {
               <p
@@ -359,7 +377,8 @@
               </p>
             }
           </div>
-          <div>
+
+          <div class="hp-auth-field">
             <label
               class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
               style="color: var(--hp-text2)"
@@ -374,14 +393,12 @@
               formControlName="password"
               type="password"
               placeholder="Tối thiểu 6 ký tự"
-              class="w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all duration-150"
+              class="hp-input w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none"
               style="
                 background: var(--hp-surface2);
                 border: 1px solid var(--hp-border2);
                 color: var(--hp-text);
               "
-              onfocus="this.style.borderColor = 'var(--hp-primary)'"
-              onblur="this.style.borderColor = 'var(--hp-border2)'"
             />
             @if (
               form.get("password")?.invalid && form.get("password")?.touched
@@ -395,7 +412,9 @@
               </p>
             }
           </div>
-          <div class="grid grid-cols-2 gap-3">
+
+          <div class="hp-auth-field grid grid-cols-2 gap-3">
+            <!-- Gender dropdown -->
             <div>
               <label
                 class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
@@ -411,7 +430,7 @@
                 <button
                   type="button"
                   (click)="toggleGender()"
-                  class="w-full rounded-xl px-3.5 py-2.5 text-sm text-left flex items-center justify-between focus:outline-none transition-all duration-150"
+                  class="w-full rounded-xl px-3.5 py-2.5 text-sm text-left flex items-center justify-between focus:outline-none"
                   style="
                     background: var(--hp-surface2);
                     border: 1px solid var(--hp-border2);
@@ -436,7 +455,7 @@
                 </button>
                 @if (genderOpen()) {
                   <div
-                    class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden"
+                    class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden animate-slide-down"
                     style="
                       background: var(--hp-surface);
                       border: 1px solid var(--hp-border2);
@@ -446,12 +465,8 @@
                     <button
                       type="button"
                       (click)="setGender('male', 'Nam')"
-                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      class="hp-dropdown-item w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5"
                       style="color: var(--hp-text)"
-                      onmouseenter="
-                        this.style.background = 'var(--hp-surface2)'
-                      "
-                      onmouseleave="this.style.background = 'transparent'"
                     >
                       <i
                         class="fas fa-mars text-[11px]"
@@ -462,12 +477,8 @@
                     <button
                       type="button"
                       (click)="setGender('female', 'Nữ')"
-                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      class="hp-dropdown-item w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5"
                       style="color: var(--hp-text)"
-                      onmouseenter="
-                        this.style.background = 'var(--hp-surface2)'
-                      "
-                      onmouseleave="this.style.background = 'transparent'"
                     >
                       <i
                         class="fas fa-venus text-[11px]"
@@ -478,12 +489,8 @@
                     <button
                       type="button"
                       (click)="setGender('other', 'Khác')"
-                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      class="hp-dropdown-item w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5"
                       style="color: var(--hp-text)"
-                      onmouseenter="
-                        this.style.background = 'var(--hp-surface2)'
-                      "
-                      onmouseleave="this.style.background = 'transparent'"
                     >
                       <i
                         class="fas fa-genderless text-[11px]"
@@ -495,6 +502,8 @@
                 }
               </div>
             </div>
+
+            <!-- Phone -->
             <div>
               <label
                 class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
@@ -510,26 +519,20 @@
                 formControlName="phone"
                 type="tel"
                 placeholder="0901234567"
-                class="w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all duration-150"
+                class="hp-input w-full rounded-xl px-3.5 py-2.5 text-sm focus:outline-none"
                 style="
                   background: var(--hp-surface2);
                   border: 1px solid var(--hp-border2);
                   color: var(--hp-text);
                 "
-                onfocus="this.style.borderColor = 'var(--hp-primary)'"
-                onblur="this.style.borderColor = 'var(--hp-border2)'"
               />
             </div>
           </div>
+
           <button
             type="submit"
             [disabled]="isLoading()"
-            class="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-white rounded-xl transition-all duration-150 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
-            style="background: var(--hp-nav-bg)"
-            onmouseenter="
-              if (!this.disabled) this.style.background = 'var(--hp-nav-bg2)';
-            "
-            onmouseleave="this.style.background = 'var(--hp-nav-bg)'"
+            class="hp-auth-submit hp-btn-primary w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             @if (isLoading()) {
               <i class="fas fa-circle-notch fa-spin text-sm"></i>Đang xử lý...
@@ -545,8 +548,6 @@
             routerLink="/auth/login"
             class="font-medium transition-colors"
             style="color: var(--hp-primary2)"
-            onmouseenter="this.style.color = 'var(--hp-nav-accent)'"
-            onmouseleave="this.style.color = 'var(--hp-primary2)'"
           >
             <i class="fas fa-arrow-left text-[10px] mr-0.5"></i>Đăng nhập
           </a>
@@ -571,7 +572,7 @@
       >
         @if (errorMessage()) {
           <div
-            class="animate-fade-in flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-5"
+            class="hp-error-msg flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-5"
             style="
               background: #fef2f2;
               border: 1px solid #fecaca;
@@ -584,7 +585,7 @@
         }
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-          <div>
+          <div class="hp-auth-field">
             <label
               class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
               style="color: var(--hp-text2)"
@@ -599,14 +600,12 @@
               formControlName="fullname"
               type="text"
               placeholder="Nguyễn Văn A"
-              class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
+              class="hp-input w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none"
               style="
                 background: var(--hp-surface2);
                 border: 1px solid var(--hp-border2);
                 color: var(--hp-text);
               "
-              onfocus="this.style.borderColor = 'var(--hp-primary)'"
-              onblur="this.style.borderColor = 'var(--hp-border2)'"
             />
             @if (
               form.get("fullname")?.invalid && form.get("fullname")?.touched
@@ -620,7 +619,8 @@
               </p>
             }
           </div>
-          <div>
+
+          <div class="hp-auth-field">
             <label
               class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
               style="color: var(--hp-text2)"
@@ -635,14 +635,12 @@
               formControlName="email"
               type="email"
               placeholder="you@example.com"
-              class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
+              class="hp-input w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none"
               style="
                 background: var(--hp-surface2);
                 border: 1px solid var(--hp-border2);
                 color: var(--hp-text);
               "
-              onfocus="this.style.borderColor = 'var(--hp-primary)'"
-              onblur="this.style.borderColor = 'var(--hp-border2)'"
             />
             @if (form.get("email")?.invalid && form.get("email")?.touched) {
               <p
@@ -654,7 +652,8 @@
               </p>
             }
           </div>
-          <div>
+
+          <div class="hp-auth-field">
             <label
               class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
               style="color: var(--hp-text2)"
@@ -669,14 +668,12 @@
               formControlName="password"
               type="password"
               placeholder="Tối thiểu 6 ký tự"
-              class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
+              class="hp-input w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none"
               style="
                 background: var(--hp-surface2);
                 border: 1px solid var(--hp-border2);
                 color: var(--hp-text);
               "
-              onfocus="this.style.borderColor = 'var(--hp-primary)'"
-              onblur="this.style.borderColor = 'var(--hp-border2)'"
             />
             @if (
               form.get("password")?.invalid && form.get("password")?.touched
@@ -690,7 +687,8 @@
               </p>
             }
           </div>
-          <div class="grid grid-cols-2 gap-3">
+
+          <div class="hp-auth-field grid grid-cols-2 gap-3">
             <div>
               <label
                 class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
@@ -706,7 +704,7 @@
                 <button
                   type="button"
                   (click)="toggleGender()"
-                  class="w-full rounded-xl px-3.5 py-3 text-sm text-left flex items-center justify-between focus:outline-none transition-all duration-150"
+                  class="w-full rounded-xl px-3.5 py-3 text-sm text-left flex items-center justify-between focus:outline-none"
                   style="
                     background: var(--hp-surface2);
                     border: 1px solid var(--hp-border2);
@@ -731,7 +729,7 @@
                 </button>
                 @if (genderOpen()) {
                   <div
-                    class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden"
+                    class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden animate-slide-down"
                     style="
                       background: var(--hp-surface);
                       border: 1px solid var(--hp-border2);
@@ -741,12 +739,8 @@
                     <button
                       type="button"
                       (click)="setGender('male', 'Nam')"
-                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      class="hp-dropdown-item w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5"
                       style="color: var(--hp-text)"
-                      onmouseenter="
-                        this.style.background = 'var(--hp-surface2)'
-                      "
-                      onmouseleave="this.style.background = 'transparent'"
                     >
                       <i
                         class="fas fa-mars text-[11px]"
@@ -757,12 +751,8 @@
                     <button
                       type="button"
                       (click)="setGender('female', 'Nữ')"
-                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      class="hp-dropdown-item w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5"
                       style="color: var(--hp-text)"
-                      onmouseenter="
-                        this.style.background = 'var(--hp-surface2)'
-                      "
-                      onmouseleave="this.style.background = 'transparent'"
                     >
                       <i
                         class="fas fa-venus text-[11px]"
@@ -773,12 +763,8 @@
                     <button
                       type="button"
                       (click)="setGender('other', 'Khác')"
-                      class="w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5 transition-colors duration-150"
+                      class="hp-dropdown-item w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5"
                       style="color: var(--hp-text)"
-                      onmouseenter="
-                        this.style.background = 'var(--hp-surface2)'
-                      "
-                      onmouseleave="this.style.background = 'transparent'"
                     >
                       <i
                         class="fas fa-genderless text-[11px]"
@@ -790,6 +776,7 @@
                 }
               </div>
             </div>
+
             <div>
               <label
                 class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
@@ -805,26 +792,20 @@
                 formControlName="phone"
                 type="tel"
                 placeholder="0901234567"
-                class="w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none transition-all duration-150"
+                class="hp-input w-full rounded-xl px-3.5 py-3 text-sm focus:outline-none"
                 style="
                   background: var(--hp-surface2);
                   border: 1px solid var(--hp-border2);
                   color: var(--hp-text);
                 "
-                onfocus="this.style.borderColor = 'var(--hp-primary)'"
-                onblur="this.style.borderColor = 'var(--hp-border2)'"
               />
             </div>
           </div>
+
           <button
             type="submit"
             [disabled]="isLoading()"
-            class="w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-white rounded-xl transition-all duration-150 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
-            style="background: var(--hp-nav-bg)"
-            onmouseenter="
-              if (!this.disabled) this.style.background = 'var(--hp-nav-bg2)';
-            "
-            onmouseleave="this.style.background = 'var(--hp-nav-bg)'"
+            class="hp-auth-submit hp-btn-primary w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             @if (isLoading()) {
               <i class="fas fa-circle-notch fa-spin text-sm"></i>Đang xử lý...

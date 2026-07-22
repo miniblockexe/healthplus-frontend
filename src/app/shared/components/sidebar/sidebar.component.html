@@ -1,18 +1,20 @@
 <div class="flex h-screen bg-[var(--hp-bg)]">
-  <!-- Sidebar -->
+  <!-- ══════════════════════════════════════════
+       DESKTOP SIDEBAR
+  ══════════════════════════════════════════ -->
   <aside
     class="hidden sm:flex flex-col transition-all duration-300 relative shrink-0"
     style="background-color: var(--hp-nav-bg)"
     [class.w-[220px]]="!isCollapsed()"
     [class.w-[56px]]="isCollapsed()"
   >
-    <!-- Header: logo + user — nền đậm hơn để phân tầng rõ ràng -->
+    <!-- Header: logo + user -->
     <div
+      class="shrink-0"
       style="
         background-color: var(--hp-nav-bg2);
         border-bottom: 1px solid var(--hp-nav-border);
       "
-      class="shrink-0"
     >
       <!-- Logo row -->
       <div
@@ -34,16 +36,8 @@
         }
         <button
           (click)="toggle()"
-          class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0 transition-colors"
+          class="hp-icon-btn w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
           style="color: var(--hp-nav-text)"
-          onmouseenter="
-            this.style.background = 'rgba(255,255,255,0.1)';
-            this.style.color = '#fff';
-          "
-          onmouseleave="
-            this.style.background = 'transparent';
-            this.style.color = 'rgba(255,255,255,0.72)';
-          "
         >
           <i
             class="fas text-xs"
@@ -59,13 +53,11 @@
           <div class="flex items-center gap-2.5">
             <div
               class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 text-white"
-              style="ring: 2px solid rgba(255, 255, 255, 0.3)"
               [style.background]="
-                authService.currentUser()?.role === 'admin'
+                authService.currentUser()?.role === 'admin' ||
+                authService.currentUser()?.role === 'doctor'
                   ? '#1d6fa4'
-                  : authService.currentUser()?.role === 'doctor'
-                    ? '#1d6fa4'
-                    : 'var(--hp-teal)'
+                  : 'var(--hp-teal)'
               "
             >
               {{
@@ -87,13 +79,11 @@
                 {{ authService.currentUser()?.role }}
               </span>
             </div>
-            <!-- Bell — chỉ hiện khi sidebar mở rộng -->
+            <!-- Bell -->
             <button
               (click)="toggleNotifications()"
-              class="relative shrink-0 transition-colors"
+              class="hp-icon-btn relative shrink-0"
               style="color: var(--hp-nav-text)"
-              onmouseenter="this.style.color = '#fff'"
-              onmouseleave="this.style.color = 'rgba(255,255,255,0.72)'"
             >
               <i class="fas fa-bell text-sm"></i>
               @if (notificationService.unreadCount() > 0) {
@@ -113,21 +103,29 @@
       }
     </div>
 
-    <!-- Notification Dropdown — chỉ hiện khi sidebar KHÔNG collapsed -->
+    <!-- Notification Dropdown (desktop sidebar) -->
     @if (showNotifications() && !isCollapsed()) {
       <div
-        class="animate-slide-down absolute top-[108px] left-3 right-3 z-50 bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius)] shadow-2xl shadow-black/40 max-h-72 overflow-y-auto"
+        class="animate-slide-down absolute top-[108px] left-3 right-3 z-50 max-h-72 overflow-y-auto"
+        style="
+          background: var(--hp-surface);
+          border: 1px solid var(--hp-border2);
+          border-radius: var(--hp-radius);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        "
       >
         <div
-          class="flex items-center justify-between px-4 py-3 border-b border-[var(--hp-border)]"
+          class="flex items-center justify-between px-4 py-3"
+          style="border-bottom: 1px solid var(--hp-border)"
         >
-          <span class="text-sm font-medium text-[var(--hp-text)]"
+          <span class="text-sm font-medium" style="color: var(--hp-text)"
             >Thông báo</span
           >
           @if (notificationService.unreadCount() > 0) {
             <button
               (click)="notificationService.markAllAsRead()"
-              class="text-xs text-[var(--hp-primary2)] hover:text-[var(--hp-primary)]"
+              class="text-xs"
+              style="color: var(--hp-primary2)"
             >
               Đọc tất cả
             </button>
@@ -135,7 +133,8 @@
         </div>
         @if (notificationService.notifications().length === 0) {
           <div
-            class="flex flex-col items-center justify-center py-8 text-[var(--hp-text3)] text-sm"
+            class="flex flex-col items-center justify-center py-8 text-sm"
+            style="color: var(--hp-text3)"
           >
             <i class="fas fa-bell-slash text-2xl mb-2"></i>
             Không có thông báo
@@ -144,8 +143,11 @@
           @for (n of notificationService.notifications(); track n.id) {
             <div
               (click)="onNotificationClick(n)"
-              class="px-4 py-3 border-b border-[var(--hp-border)] cursor-pointer hover:bg-[var(--hp-surface2)] transition-colors"
-              [ngClass]="!n.isRead ? 'bg-blue-50' : ''"
+              class="px-4 py-3 cursor-pointer hp-notif-item"
+              style="border-bottom: 1px solid var(--hp-border)"
+              [style.background]="
+                !n.isRead ? 'rgba(59,130,246,0.06)' : 'transparent'
+              "
             >
               <div class="flex items-start gap-2">
                 <div
@@ -154,13 +156,13 @@
                   [class.bg-gray-400]="n.isRead"
                 ></div>
                 <div class="flex-1 min-w-0">
-                  <p class="text-sm font-medium text-[var(--hp-text)]">
+                  <p class="text-sm font-medium" style="color: var(--hp-text)">
                     {{ n.title }}
                   </p>
-                  <p class="text-xs text-[var(--hp-text2)] mt-0.5">
+                  <p class="text-xs mt-0.5" style="color: var(--hp-text2)">
                     {{ n.message }}
                   </p>
-                  <p class="text-xs text-[var(--hp-text3)] mt-1">
+                  <p class="text-xs mt-1" style="color: var(--hp-text3)">
                     {{ n.createdAt | date: "dd/MM HH:mm" }}
                   </p>
                 </div>
@@ -168,7 +170,8 @@
                   (click)="
                     $event.stopPropagation(); notificationService.delete(n.id)
                   "
-                  class="text-[var(--hp-text3)] hover:text-red-500 transition-colors text-xs"
+                  class="hp-del-btn text-xs"
+                  style="color: var(--hp-text3)"
                 >
                   <i class="fas fa-xmark"></i>
                 </button>
@@ -187,28 +190,13 @@
           routerLinkActive
           #rla="routerLinkActive"
           [routerLinkActiveOptions]="{ exact: item.path === '/dashboard' }"
-          [style.background]="
-            rla.isActive ? 'var(--hp-nav-active)' : 'transparent'
-          "
-          [style.color]="rla.isActive ? 'white' : 'var(--hp-nav-text)'"
-          class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-[var(--hp-radius-sm)] transition-colors relative overflow-hidden"
+          class="hp-nav-item flex items-center gap-3 px-3 py-2.5 text-sm rounded-[var(--hp-radius-sm)] relative overflow-hidden"
+          [class.hp-nav-active]="rla.isActive"
           [class.border-l-2]="rla.isActive && !isCollapsed()"
           [style.borderLeftColor]="
             rla.isActive ? 'var(--hp-nav-accent)' : 'transparent'
           "
           [title]="isCollapsed() ? item.label : ''"
-          onmouseenter="
-            if (!this.dataset.active) {
-              this.style.background = 'rgba(255,255,255,0.07)';
-              this.style.color = '#fff';
-            }
-          "
-          onmouseleave="
-            if (!this.dataset.active) {
-              this.style.background = 'transparent';
-              this.style.color = 'rgba(255,255,255,0.72)';
-            }
-          "
         >
           <i
             class="fas w-4 text-center shrink-0 text-sm"
@@ -222,7 +210,7 @@
       }
     </nav>
 
-    <!-- Push notification utilities -->
+    <!-- Push utilities -->
     @if (!isCollapsed()) {
       <div
         class="px-2 pb-1 pt-2 space-y-0.5"
@@ -230,32 +218,16 @@
       >
         <button
           (click)="subscribePush()"
-          class="flex items-center gap-3 px-3 py-2 rounded-[var(--hp-radius-sm)] text-xs transition-colors w-full text-left"
+          class="hp-util-btn flex items-center gap-3 px-3 py-2 rounded-[var(--hp-radius-sm)] text-xs w-full text-left"
           style="color: var(--hp-nav-text)"
-          onmouseenter="
-            this.style.background = 'rgba(255,255,255,0.07)';
-            this.style.color = '#fff';
-          "
-          onmouseleave="
-            this.style.background = 'transparent';
-            this.style.color = 'rgba(255,255,255,0.72)';
-          "
         >
           <i class="fas fa-bell w-4 text-center shrink-0"></i>
           <span>Bật thông báo</span>
         </button>
         <button
           (click)="testPush()"
-          class="flex items-center gap-3 px-3 py-2 rounded-[var(--hp-radius-sm)] text-xs transition-colors w-full text-left"
+          class="hp-util-btn flex items-center gap-3 px-3 py-2 rounded-[var(--hp-radius-sm)] text-xs w-full text-left"
           style="color: var(--hp-nav-text)"
-          onmouseenter="
-            this.style.background = 'rgba(255,255,255,0.07)';
-            this.style.color = '#fff';
-          "
-          onmouseleave="
-            this.style.background = 'transparent';
-            this.style.color = 'rgba(255,255,255,0.72)';
-          "
         >
           <i class="fas fa-paper-plane w-4 text-center shrink-0"></i>
           <span>Test Push</span>
@@ -270,16 +242,8 @@
     >
       <button
         (click)="logout()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-[var(--hp-radius-sm)] text-sm transition-colors w-full text-left"
+        class="hp-logout-btn flex items-center gap-3 px-3 py-2.5 rounded-[var(--hp-radius-sm)] text-sm w-full text-left"
         style="color: var(--hp-nav-text)"
-        onmouseenter="
-          this.style.background = 'rgba(220,38,38,0.15)';
-          this.style.color = '#fca5a5';
-        "
-        onmouseleave="
-          this.style.background = 'transparent';
-          this.style.color = 'rgba(255,255,255,0.72)';
-        "
       >
         <i class="fas fa-right-from-bracket w-4 text-center shrink-0"></i>
         @if (!isCollapsed()) {
@@ -289,41 +253,37 @@
     </div>
   </aside>
 
-  <!-- Main content — class hp-main-content dùng để GSAP target khi chuyển trang -->
+  <!-- Main content -->
   <main class="hp-main-content flex-1 min-h-0 overflow-y-auto pb-16 sm:pb-0">
     <ng-content></ng-content>
   </main>
 </div>
 
-<!-- ===== MOBILE NOTIFICATION PANEL (chỉ hiện trên mobile) ===== -->
+<!-- ══════════════════════════════════════════
+     MOBILE NOTIFICATION PANEL
+══════════════════════════════════════════ -->
 @if (showNotifications() && isMobileView()) {
-  <!-- Backdrop -->
   <div
     class="fixed inset-0 z-40"
     style="background: rgba(0, 0, 0, 0.45)"
     (click)="closeNotifications()"
   ></div>
 
-  <!-- Panel slide-down from top -->
   <div
-    class="fixed top-0 left-0 right-0 z-50 animate-slide-down"
+    class="fixed top-0 left-0 right-0 z-50 animate-slide-down flex flex-col"
     style="
       background: var(--hp-surface);
       border-bottom: 1px solid var(--hp-border2);
       border-radius: 0 0 var(--hp-radius) var(--hp-radius);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
       max-height: 80vh;
-      display: flex;
-      flex-direction: column;
     "
   >
-    <!-- Panel header -->
     <div
       class="flex items-center justify-between px-4 py-3 shrink-0"
       style="
         border-bottom: 1px solid var(--hp-border);
         background: var(--hp-nav-bg2);
-        border-radius: 0;
       "
     >
       <div class="flex items-center gap-2">
@@ -358,23 +318,14 @@
         }
         <button
           (click)="closeNotifications()"
-          class="w-7 h-7 flex items-center justify-center rounded-[var(--hp-radius-sm)] transition-colors"
+          class="hp-icon-btn w-7 h-7 flex items-center justify-center rounded-[var(--hp-radius-sm)]"
           style="color: rgba(255, 255, 255, 0.72)"
-          onmouseenter="
-            this.style.color = '#fff';
-            this.style.background = 'rgba(255,255,255,0.1)';
-          "
-          onmouseleave="
-            this.style.color = 'rgba(255,255,255,0.72)';
-            this.style.background = 'transparent';
-          "
         >
           <i class="fas fa-xmark text-sm"></i>
         </button>
       </div>
     </div>
 
-    <!-- Notification list -->
     <div class="overflow-y-auto flex-1">
       @if (notificationService.notifications().length === 0) {
         <div
@@ -388,14 +339,13 @@
         @for (n of notificationService.notifications(); track n.id) {
           <div
             (click)="onNotificationClick(n)"
-            class="px-4 py-3 cursor-pointer transition-colors"
+            class="px-4 py-3 cursor-pointer hp-notif-item"
             style="border-bottom: 1px solid var(--hp-border)"
             [style.background]="
               !n.isRead ? 'rgba(59,130,246,0.07)' : 'transparent'
             "
           >
             <div class="flex items-start gap-3">
-              <!-- icon by type -->
               <div
                 class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5"
                 [style.background]="
@@ -417,13 +367,13 @@
                   "
                 ></i>
               </div>
-
               <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between gap-2">
                   <p
-                    class="text-sm font-medium leading-snug"
+                    class="text-sm leading-snug"
                     style="color: var(--hp-text)"
                     [class.font-semibold]="!n.isRead"
+                    [class.font-medium]="n.isRead"
                   >
                     {{ n.title }}
                   </p>
@@ -431,10 +381,8 @@
                     (click)="
                       $event.stopPropagation(); notificationService.delete(n.id)
                     "
-                    class="shrink-0 text-xs transition-colors mt-0.5"
+                    class="hp-del-btn shrink-0 text-xs mt-0.5"
                     style="color: var(--hp-text3)"
-                    onmouseenter="this.style.color = '#ef4444'"
-                    onmouseleave="this.style.color = 'var(--hp-text3)'"
                   >
                     <i class="fas fa-xmark"></i>
                   </button>
@@ -446,8 +394,6 @@
                   {{ n.createdAt | date: "dd/MM HH:mm" }}
                 </p>
               </div>
-
-              <!-- unread dot -->
               @if (!n.isRead) {
                 <span
                   class="w-2 h-2 rounded-full shrink-0 mt-1.5"
@@ -461,9 +407,10 @@
     </div>
   </div>
 }
-<!-- ===== END MOBILE NOTIFICATION PANEL ===== -->
 
-<!-- Bottom nav: mobile only -->
+<!-- ══════════════════════════════════════════
+     MOBILE BOTTOM NAV
+══════════════════════════════════════════ -->
 <nav
   class="fixed bottom-0 left-0 right-0 z-50 flex sm:hidden"
   style="
@@ -478,12 +425,11 @@
       routerLinkActive
       #rla="routerLinkActive"
       [routerLinkActiveOptions]="{ exact: item.path === '/dashboard' }"
-      class="flex-1 flex flex-col items-center justify-center py-2 gap-1 relative transition-colors"
+      class="hp-bottom-tab flex-1 flex flex-col items-center justify-center py-2 gap-1 relative"
       [style.color]="
         rla.isActive ? 'var(--hp-nav-accent)' : 'rgba(255,255,255,0.5)'
       "
     >
-      <!-- active dot -->
       <span
         class="absolute top-1 w-5 h-0.5 rounded-full transition-opacity"
         style="background: var(--hp-nav-accent)"

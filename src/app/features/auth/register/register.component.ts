@@ -10,7 +10,11 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
-import { pageEnter } from '../../../shared/utils/page-transition';
+import {
+  authEnter,
+  mobileHeroEnter,
+  shakeError,
+} from '../../../shared/utils/page-transition';
 
 @Component({
   selector: 'app-register',
@@ -58,13 +62,15 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    // Animate toàn bộ trang vào — GSAP thay cho animate-fade-in CSS
-    pageEnter('.hp-auth-page');
+    authEnter();
+
+    if (this.isMobile) {
+      mobileHeroEnter();
+    }
 
     if (!this.isMobile) return;
 
     this.ngZone.runOutsideAngular(() => {
-      // scrollIntoView khi focus vào input/select
       const inputs = document.querySelectorAll<HTMLElement>('input, select');
       inputs.forEach((input) => {
         input.addEventListener('focus', () => {
@@ -74,7 +80,6 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       });
 
-      // visualViewport API cho iOS Safari
       if (window.visualViewport) {
         this.viewportHandler = () => {
           const active = document.activeElement as HTMLElement;
@@ -113,6 +118,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
           err.error?.message || 'Đăng ký thất bại, thử lại!',
         );
         this.isLoading.set(false);
+        setTimeout(() => shakeError('.hp-error-msg'), 50);
       },
     });
   }

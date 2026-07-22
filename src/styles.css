@@ -176,3 +176,234 @@ textarea:focus,
 select:focus {
   box-shadow: 0 0 0 3px rgba(29, 111, 164, 0.15);
 }
+
+.hp-input {
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.hp-input:focus {
+  border-color: var(--hp-primary) !important;
+  box-shadow: 0 0 0 3px rgba(29, 111, 164, 0.14);
+}
+.hp-input:not(:focus) {
+  border-color: var(--hp-border2);
+}
+
+.hp-btn-primary {
+  background: var(--hp-nav-bg);
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease,
+    opacity 0.15s ease;
+}
+.hp-btn-primary:hover:not(:disabled) {
+  background: var(--hp-nav-bg2);
+}
+.hp-btn-primary:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.hp-btn-google {
+  transition: background-color 0.15s ease;
+}
+.hp-btn-google:hover {
+  background: var(--hp-bg) !important;
+}
+
+.hp-dropdown-item {
+  transition: background-color 0.12s ease;
+}
+.hp-dropdown-item:hover {
+  background: var(--hp-surface2);
+}
+
+.hp-nav-item {
+  color: var(--hp-nav-text);
+  background: transparent;
+  transition:
+    background-color 0.14s ease,
+    color 0.14s ease;
+  opacity: 0;
+}
+.hp-nav-item:hover:not(.hp-nav-active) {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+.hp-nav-active {
+  background: var(--hp-nav-active) !important;
+  color: #fff !important;
+}
+
+.hp-util-btn {
+  transition:
+    background-color 0.14s ease,
+    color 0.14s ease;
+}
+.hp-util-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.hp-logout-btn {
+  transition:
+    background-color 0.14s ease,
+    color 0.14s ease;
+}
+.hp-logout-btn:hover {
+  background: rgba(220, 38, 38, 0.15);
+  color: #fca5a5;
+}
+
+.hp-icon-btn {
+  transition:
+    background-color 0.14s ease,
+    color 0.14s ease;
+}
+.hp-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.hp-notif-item {
+  transition: background-color 0.12s ease;
+}
+.hp-notif-item:hover {
+  filter: brightness(0.97);
+}
+
+.hp-del-btn {
+  transition: color 0.12s ease;
+}
+.hp-del-btn:hover {
+  color: #ef4444;
+}
+
+.hp-bottom-tab {
+  transition: color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.hp-bottom-tab:active {
+  opacity: 0.7;
+}
+
+.hp-auth-left {
+  opacity: 0;
+}
+.hp-auth-right {
+  opacity: 0;
+}
+.hp-auth-pill {
+  opacity: 0;
+}
+.hp-auth-stat {
+  opacity: 0;
+}
+.hp-auth-field {
+  opacity: 0;
+}
+.hp-auth-submit {
+  opacity: 0;
+}
+.hp-mobile-hero {
+  opacity: 0;
+}
+.hp-hero-chip {
+  opacity: 0;
+}
+.hp-card {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hp-auth-left,
+  .hp-auth-right,
+  .hp-auth-pill,
+  .hp-auth-stat,
+  .hp-auth-field,
+  .hp-auth-submit,
+  .hp-mobile-hero,
+  .hp-hero-chip,
+  .hp-nav-item,
+  .hp-card {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hp-input,
+  .hp-btn-primary,
+  .hp-btn-google,
+  .hp-dropdown-item,
+  .hp-nav-item,
+  .hp-util-btn,
+  .hp-logout-btn,
+  .hp-icon-btn,
+  .hp-notif-item,
+  .hp-del-btn,
+  .hp-bottom-tab {
+    transition: none !important;
+  }
+}
+
+a,
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.hp-bottom-tab {
+  min-height: 48px;
+}
+.hp-nav-item {
+  min-height: 44px;
+}
+.hp-btn-primary,
+.hp-btn-google {
+  min-height: 44px;
+}
+.hp-input {
+  min-height: 44px;
+}
+
+.hp-auth-page {
+  min-height: 100dvh;
+}
+
+input,
+select,
+textarea {
+  font-size: max(16px, 1em);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.hp-btn-primary,
+.hp-bottom-tab {
+  position: relative;
+  overflow: hidden;
+}
+.hp-btn-primary::after,
+.hp-bottom-tab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.12);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.hp-btn-primary:active::after,
+.hp-bottom-tab:active::after {
+  opacity: 1;
+}
+
+.hp-main-content::-webkit-scrollbar {
+  width: 3px;
+}
+nav.overflow-y-auto::-webkit-scrollbar {
+  width: 2px;
+}

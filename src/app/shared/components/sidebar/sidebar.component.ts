@@ -20,6 +20,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { PushNotificationService } from '../../../core/services/push-notification.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Notification } from '../../../core/services/notification.service';
+import { sidebarEnter } from '../../utils/page-transition';
 
 interface MenuItem {
   path: string;
@@ -51,8 +52,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Bỏ qua nếu user đã bật prefers-reduced-motion
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Stagger nav items in on load
+    setTimeout(() => sidebarEnter('.hp-nav-item'), 80);
 
     this.routerSub = this.router.events
       .pipe(
@@ -65,7 +68,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
         if (!el) return;
 
         if (event instanceof NavigationStart) {
-          // Fade-out + slide lên nhẹ trước khi Angular swap component
           gsap.killTweensOf(el);
           gsap.to(el, {
             opacity: 0,
@@ -74,7 +76,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
             ease: 'power2.in',
           });
         } else {
-          // Đợi Angular render xong rồi mới fade-in
+          // Re-stagger nav items after route change (active item changes)
+          setTimeout(() => sidebarEnter('.hp-nav-item'), 50);
+
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               const fresh = document.querySelector<HTMLElement>(this.MAIN_SEL);
@@ -93,7 +97,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.routerSub?.unsubscribe();
-    // Reset transform nếu component bị destroy giữa chừng
     const el = document.querySelector<HTMLElement>(this.MAIN_SEL);
     if (el) gsap.set(el, { clearProps: 'opacity,transform' });
   }
@@ -121,7 +124,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     {
       path: '/ai-health',
       icon: 'fa-robot',
-      label: 'AI Suc Khoe',
+      label: 'AI Sức Khỏe',
       roles: ['user', 'doctor', 'admin'],
     },
     {
@@ -197,6 +200,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   async testPush() {
     await this.pushService.testPush();
-    alert('📬 Đã gửi push notification test!');
+    alert('Đã gửi push notification test!');
   }
 }
