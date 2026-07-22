@@ -277,7 +277,7 @@
                     <div class="flex flex-wrap gap-2">
                       @for (att of visit.attachments; track att.id) {
                         <div class="relative group">
-                          @if (att.fileType?.startsWith("image/")) {
+                          @if (att.fileType.startsWith("image/")) {
                             <!-- Thumbnail ảnh -->
                             <a
                               [href]="att.fileUrl"
