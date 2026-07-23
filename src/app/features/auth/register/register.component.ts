@@ -21,6 +21,7 @@ import {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
+  styleUrl: '../auth.styles.scss',
 })
 export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = signal(false);

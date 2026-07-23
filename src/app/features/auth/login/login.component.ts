@@ -22,6 +22,7 @@ import {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
+  styleUrl: '../auth.styles.scss'
 })
 export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = signal(false);

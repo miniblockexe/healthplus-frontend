@@ -1,0 +1,741 @@
+// ═════════════════════════════════════════════════════════════════════════════
+// Health+ Auth Pages — Redesigned styles
+// Drop into: src/app/features/auth/auth.styles.scss  (or inline in global styles)
+// Uses the existing CSS custom properties from the project (--hp-nav-bg, etc.)
+// Bootstrap 5 + FontAwesome 6 are already loaded.
+// ═════════════════════════════════════════════════════════════════════════════
+
+// ─── Layout shell ─────────────────────────────────────────────────────────────
+.hp-auth-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+  }
+}
+
+// ─── Hero (sidebar) ───────────────────────────────────────────────────────────
+.hp-hero {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--hp-nav-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  // Mobile: fixed height header strip
+  flex: 0 0 auto;
+  padding: 2rem 1.5rem 1.75rem;
+
+  @media (min-width: 1024px) {
+    flex: 0 0 420px;
+    width: 420px;
+    min-height: 100dvh;
+    position: sticky;
+    top: 0;
+    padding: 2.5rem 2.5rem 2.5rem;
+    gap: 2.25rem;
+    justify-content: space-between;
+  }
+
+  @media (min-width: 1280px) {
+    flex: 0 0 460px;
+    width: 460px;
+  }
+}
+
+// Background decorative layers
+.hp-hero__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hp-hero__orb {
+  position: absolute;
+  border-radius: 50%;
+
+  &--1 {
+    width: 340px;
+    height: 340px;
+    top: -80px;
+    right: -80px;
+    background: radial-gradient(
+      circle,
+      rgba(56, 189, 248, 0.13) 0%,
+      transparent 65%
+    );
+  }
+
+  &--2 {
+    width: 260px;
+    height: 260px;
+    bottom: -60px;
+    left: -60px;
+    background: radial-gradient(
+      circle,
+      rgba(56, 189, 248, 0.07) 0%,
+      transparent 70%
+    );
+  }
+}
+
+// Subtle dot-grid texture
+.hp-hero__grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+}
+
+// Brand strip
+.hp-hero__brand {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.hp-logo {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.625rem;
+  background: var(--hp-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  i {
+    color: #fff;
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: 1024px) {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.hp-logo-text {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.01em;
+
+  @media (min-width: 1024px) {
+    font-size: 1.125rem;
+  }
+}
+
+.hp-accent {
+  color: var(--hp-nav-accent);
+}
+
+// Copy block — hidden on mobile (show only brand + wave)
+.hp-hero__copy {
+  position: relative;
+  z-index: 1;
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: block;
+  }
+}
+
+.hp-hero__eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hp-nav-accent);
+  margin: 0 0 0.5rem;
+}
+
+.hp-hero__headline {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.75rem;
+
+  @media (min-width: 1280px) {
+    font-size: 2.25rem;
+  }
+}
+
+.hp-hero__headline-accent {
+  color: var(--hp-nav-accent);
+}
+
+.hp-hero__sub {
+  font-size: 0.875rem;
+  color: var(--hp-nav-text);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 28ch;
+}
+
+// Feature list (desktop only)
+.hp-feature-list {
+  display: none;
+  flex-direction: column;
+  gap: 0.875rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+}
+
+.hp-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--hp-nav-border);
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  > div {
+    strong {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.3;
+    }
+
+    p {
+      font-size: 0.75rem;
+      color: var(--hp-nav-text);
+      margin: 0.2rem 0 0;
+      line-height: 1.4;
+    }
+  }
+}
+
+.hp-feature-icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: rgba(56, 189, 248, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 0.8125rem;
+    color: var(--hp-nav-accent);
+  }
+}
+
+// Steps list (register desktop only)
+.hp-step-list {
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+}
+
+.hp-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.hp-step-num {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.13);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--hp-nav-accent);
+  line-height: 1;
+}
+
+.hp-step-body {
+  strong {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  p {
+    font-size: 0.75rem;
+    color: var(--hp-nav-text);
+    margin: 0.2rem 0 0;
+    line-height: 1.4;
+  }
+}
+
+// Stat strip (desktop only)
+.hp-stat-strip {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0.875rem 1rem;
+  border-radius: 0.875rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--hp-nav-border);
+  position: relative;
+  z-index: 1;
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+}
+
+.hp-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  flex: 1;
+
+  i {
+    font-size: 0.875rem;
+    color: var(--hp-nav-accent);
+  }
+
+  span {
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.42);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+}
+
+.hp-stat-divider {
+  width: 1px;
+  height: 2rem;
+  background: var(--hp-nav-border);
+  flex-shrink: 0;
+}
+
+// ─── Wave connector (mobile only) ─────────────────────────────────────────────
+.hp-wave-connector {
+  display: block;
+  line-height: 0;
+  flex-shrink: 0;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 32px;
+  }
+
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+// ─── Form panel ───────────────────────────────────────────────────────────────
+.hp-form-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--hp-bg);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hp-form-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+
+  @media (min-width: 1024px) {
+    padding: 3rem 3.5rem;
+  }
+
+  @media (min-width: 1280px) {
+    padding: 3rem 4.5rem;
+  }
+}
+
+// Form header
+.hp-form-header {
+  margin-bottom: 1.75rem;
+}
+
+.hp-form-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--hp-text);
+  letter-spacing: -0.025em;
+  margin: 0 0 0.25rem;
+}
+
+.hp-form-sub {
+  font-size: 0.875rem;
+  color: var(--hp-text3);
+  margin: 0;
+}
+
+// Error banner
+.hp-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: var(--hp-red);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1.25rem;
+
+  i {
+    flex-shrink: 0;
+    font-size: 0.9375rem;
+  }
+}
+
+// ─── Fields ───────────────────────────────────────────────────────────────────
+.hp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.hp-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+
+  .hp-field {
+    margin-bottom: 0;
+  }
+}
+
+.hp-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--hp-text2);
+  cursor: pointer;
+
+  i {
+    font-size: 0.6875rem;
+    color: var(--hp-text3);
+    width: 12px;
+    text-align: center;
+  }
+}
+
+.hp-input-wrap {
+  position: relative;
+}
+
+.hp-input {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--hp-text);
+  background: var(--hp-surface2);
+  border: 1.5px solid var(--hp-border2);
+  border-radius: 0.75rem;
+  outline: none;
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s,
+    background 0.18s;
+  -webkit-appearance: none;
+  touch-action: manipulation;
+  cursor: text;
+
+  &::placeholder {
+    color: var(--hp-text3);
+    opacity: 0.7;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: rgba(56, 189, 248, 0.38);
+  }
+
+  &:focus {
+    border-color: var(--hp-primary2, #38bdf8);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.14);
+    background: var(--hp-surface);
+  }
+
+  &--error {
+    border-color: var(--hp-red) !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+  }
+
+  // Select-style button
+  &--select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+
+    i {
+      font-size: 0.6875rem;
+      color: var(--hp-text3);
+      transition: transform 0.2s;
+    }
+  }
+}
+
+.hp-placeholder {
+  color: var(--hp-text3);
+  opacity: 0.7;
+}
+
+.hp-field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.3125rem;
+  font-size: 0.75rem;
+  color: var(--hp-red);
+  margin: 0;
+  font-weight: 500;
+
+  i {
+    font-size: 0.625rem;
+  }
+}
+
+// ─── Dropdown ─────────────────────────────────────────────────────────────────
+.hp-dropdown-wrap {
+  position: relative;
+}
+
+.hp-dropdown {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--hp-surface);
+  border: 1.5px solid var(--hp-border2);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  list-style: none;
+  padding: 0.25rem 0;
+  margin: 0;
+  box-shadow: 0 8px 28px rgba(15, 40, 80, 0.15);
+}
+
+.hp-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  color: var(--hp-text);
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--hp-surface2);
+  }
+
+  &[aria-selected="true"] {
+    background: rgba(56, 189, 248, 0.08);
+    font-weight: 500;
+  }
+
+  i {
+    width: 14px;
+    text-align: center;
+  }
+}
+
+// ─── Buttons ──────────────────────────────────────────────────────────────────
+.hp-btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.8125rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--hp-gradient, linear-gradient(135deg, #0ea5e9, #0284c7));
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition:
+    opacity 0.18s,
+    transform 0.14s,
+    box-shadow 0.18s;
+  touch-action: manipulation;
+  min-height: 48px;
+  letter-spacing: 0.01em;
+  margin-top: 0.25rem;
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+
+  &:hover:not(:disabled) {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.38);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--hp-primary2, #38bdf8);
+    outline-offset: 3px;
+  }
+
+  i {
+    font-size: 0.9375rem;
+  }
+}
+
+.hp-btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--hp-text);
+  background: var(--hp-surface2);
+  border: 1.5px solid var(--hp-border2);
+  border-radius: 0.75rem;
+  text-decoration: none;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    transform 0.14s;
+  touch-action: manipulation;
+  min-height: 48px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--hp-surface);
+    border-color: rgba(56, 189, 248, 0.3);
+    color: var(--hp-text);
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--hp-primary2, #38bdf8);
+    outline-offset: 3px;
+  }
+}
+
+// ─── Divider ──────────────────────────────────────────────────────────────────
+.hp-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--hp-border);
+  }
+
+  span {
+    font-size: 0.75rem;
+    color: var(--hp-text3);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+}
+
+// ─── Footer link ──────────────────────────────────────────────────────────────
+.hp-form-footer {
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--hp-text3);
+  margin: 1.25rem 0 0;
+}
+
+.hp-link {
+  font-weight: 600;
+  color: var(--hp-primary2, #38bdf8);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.8;
+    text-decoration: none;
+  }
+
+  i {
+    font-size: 0.625rem;
+  }
+}
+
+// ─── Heartbeat animation on logo ──────────────────────────────────────────────
+// GSAP controls the actual tween; this is just transform-origin setup
+.hp-logo {
+  transform-origin: center;
+  will-change: transform;
+}

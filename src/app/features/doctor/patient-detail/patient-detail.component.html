@@ -631,3 +631,636 @@
   <!-- /inner content -->
 </div>
 <!-- /min-h-screen wrapper -->
+<div class="min-h-screen bg-[var(--hp-bg)]">
+  <!-- Header -->
+  <header
+    style="
+      background-color: var(--hp-nav-bg);
+      border-bottom: 1px solid var(--hp-nav-border);
+    "
+  >
+    <div class="px-4 lg:px-6 py-4 flex items-center gap-3">
+      <a
+        routerLink="/doctor"
+        class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center transition-colors shrink-0"
+        style="color: rgba(255, 255, 255, 0.6)"
+        onmouseenter="
+          this.style.background = 'rgba(255,255,255,0.1)';
+          this.style.color = '#fff';
+        "
+        onmouseleave="
+          this.style.background = 'transparent';
+          this.style.color = 'rgba(255,255,255,0.6)';
+        "
+      >
+        <i class="fas fa-arrow-left text-sm"></i>
+      </a>
+      <div
+        class="w-px h-4 shrink-0"
+        style="background: rgba(255, 255, 255, 0.15)"
+      ></div>
+      <span
+        class="w-7 h-7 rounded-[var(--hp-radius-sm)] flex items-center justify-center shrink-0"
+        style="background: rgba(255, 255, 255, 0.1)"
+      >
+        <i
+          class="fas fa-user-injured text-xs"
+          style="color: var(--hp-nav-accent)"
+        ></i>
+      </span>
+      <div>
+        <h1 class="text-sm font-semibold text-white">Hồ sơ bệnh nhân</h1>
+        <p class="text-xs" style="color: rgba(255, 255, 255, 0.55)">
+          Thông tin chi tiết bệnh nhân
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <div class="p-4 lg:p-6">
+    @if (successMessage()) {
+      <div
+        class="animate-fade-in bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-[var(--hp-radius-sm)] px-4 py-3 mb-4 text-sm"
+      >
+        {{ successMessage() }}
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="space-y-4">
+        <div class="hp-skeleton h-28 rounded-[var(--hp-radius)]"></div>
+        <div class="hp-skeleton h-10 w-64 rounded-[var(--hp-radius-sm)]"></div>
+        <div class="hp-skeleton h-40 rounded-[var(--hp-radius)]"></div>
+      </div>
+    }
+
+    @if (patient()) {
+      <!-- Patient Header -->
+      <div
+        class="rounded-[var(--hp-radius)] p-6 text-white mb-6"
+        style="background-color: var(--hp-nav-bg2)"
+      >
+        <div class="flex items-center gap-4">
+          <div
+            class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center text-2xl font-medium shrink-0"
+          >
+            {{ patient()!.fullname.charAt(0).toUpperCase() }}
+          </div>
+          <div>
+            <h1 class="text-lg font-medium">{{ patient()!.fullname }}</h1>
+            <p class="text-sm" style="color: rgba(255, 255, 255, 0.6)">
+              {{ patient()!.email }}
+            </p>
+            <div
+              class="flex gap-4 mt-2 text-sm"
+              style="color: rgba(255, 255, 255, 0.55)"
+            >
+              @if (patient()!.gender) {
+                <span>{{ patient()!.gender === "male" ? "Nam" : "Nữ" }}</span>
+              }
+              @if (patient()!.phone) {
+                <span>{{ patient()!.phone }}</span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs: overflow-x-auto để scroll ngang trên mobile -->
+      <div
+        class="flex gap-2 mb-6 border-b border-[var(--hp-border)] overflow-x-auto"
+      >
+        <button
+          (click)="activeTab.set('vitals')"
+          class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap"
+          [ngClass]="
+            activeTab() === 'vitals'
+              ? 'border-cyan-400 text-cyan-700'
+              : 'border-transparent text-[var(--hp-text3)]'
+          "
+        >
+          Chỉ số ({{ vitalSigns().length }})
+        </button>
+        <button
+          (click)="activeTab.set('visits')"
+          class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap"
+          [ngClass]="
+            activeTab() === 'visits'
+              ? 'border-cyan-400 text-cyan-700'
+              : 'border-transparent text-[var(--hp-text3)]'
+          "
+        >
+          Lịch sử khám ({{ medicalVisits().length }})
+        </button>
+        <button
+          (click)="activeTab.set('vaccines')"
+          class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap"
+          [ngClass]="
+            activeTab() === 'vaccines'
+              ? 'border-cyan-400 text-cyan-700'
+              : 'border-transparent text-[var(--hp-text3)]'
+          "
+        >
+          Vaccine ({{ vaccines().length }})
+        </button>
+        <button
+          (click)="activeTab.set('diagnosis')"
+          class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap"
+          [ngClass]="
+            activeTab() === 'diagnosis'
+              ? 'border-emerald-400 text-emerald-600'
+              : 'border-transparent text-[var(--hp-text3)]'
+          "
+        >
+          Thêm chẩn đoán
+        </button>
+      </div>
+
+      <!-- Vitals Tab (read-only, accent cyan) -->
+      @if (activeTab() === "vitals") {
+        @if (vitalSigns().length === 0) {
+          <div
+            class="flex flex-col items-center justify-center py-16 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]"
+          >
+            <i
+              class="fas fa-heart-pulse text-3xl text-[var(--hp-text3)] mb-3"
+            ></i>
+            <p class="text-[var(--hp-text2)] text-sm">
+              Chưa có chỉ số sinh tồn
+            </p>
+          </div>
+        } @else {
+          <div class="space-y-3">
+            @for (vital of vitalSigns(); track vital.id) {
+              <div
+                class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)] p-4"
+              >
+                <p class="text-xs text-[var(--hp-text3)] mb-3">
+                  {{ vital.recordedAt | date: "dd/MM/yyyy HH:mm" }}
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  @if (vital.bmi) {
+                    <div
+                      class="bg-cyan-50 rounded-[var(--hp-radius-sm)] p-3 text-center"
+                    >
+                      <p class="text-xs text-cyan-400/60">BMI</p>
+                      <p class="text-lg font-medium text-cyan-700">
+                        {{ vital.bmi }}
+                      </p>
+                      <p
+                        class="text-xs"
+                        [class]="getBmiStatus(vital.bmi).color"
+                      >
+                        {{ getBmiStatus(vital.bmi).label }}
+                      </p>
+                    </div>
+                  }
+                  @if (vital.weightKg) {
+                    <div
+                      class="bg-[var(--hp-surface2)] rounded-[var(--hp-radius-sm)] p-3 text-center"
+                    >
+                      <p class="text-xs text-[var(--hp-text2)]">Cân nặng</p>
+                      <p class="text-lg font-medium text-[var(--hp-text)]">
+                        {{ vital.weightKg }} kg
+                      </p>
+                    </div>
+                  }
+                  @if (vital.systolicBp) {
+                    <div
+                      class="bg-[var(--hp-surface2)] rounded-[var(--hp-radius-sm)] p-3 text-center"
+                    >
+                      <p class="text-xs text-[var(--hp-text2)]">Huyết áp</p>
+                      <p class="text-lg font-medium text-[var(--hp-text)]">
+                        {{ vital.systolicBp }}/{{ vital.diastolicBp }}
+                      </p>
+                    </div>
+                  }
+                  @if (vital.heartRate) {
+                    <div
+                      class="bg-[var(--hp-surface2)] rounded-[var(--hp-radius-sm)] p-3 text-center"
+                    >
+                      <p class="text-xs text-[var(--hp-text2)]">Nhịp tim</p>
+                      <p class="text-lg font-medium text-[var(--hp-text)]">
+                        {{ vital.heartRate }} bpm
+                      </p>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+
+      <!-- Visits Tab -->
+      @if (activeTab() === "visits") {
+        @if (medicalVisits().length === 0) {
+          <div
+            class="flex flex-col items-center justify-center py-16 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]"
+          >
+            <i
+              class="fas fa-notes-medical text-4xl text-[var(--hp-text3)] mb-3"
+            ></i>
+            <p class="text-[var(--hp-text2)] text-sm">Chưa có lịch sử khám</p>
+          </div>
+        } @else {
+          <div class="space-y-3">
+            @for (visit of medicalVisits(); track visit.id) {
+              <div
+                class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)] p-4"
+              >
+                <h3 class="text-sm font-medium text-[var(--hp-text)] mb-1">
+                  {{ visit.hospitalName }}
+                </h3>
+                <p class="text-sm text-[var(--hp-text3)] mb-3">
+                  {{ visit.visitDate | date: "dd/MM/yyyy" }}
+                  @if (visit.doctorName) {
+                    <span class="ml-3">{{ visit.doctorName }}</span>
+                  }
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  @if (visit.diagnosis) {
+                    <div
+                      class="bg-red-50 border border-red-100 rounded-[var(--hp-radius-sm)] p-3"
+                    >
+                      <p class="text-xs text-red-600 mb-1">Chẩn đoán</p>
+                      <p class="text-sm text-[var(--hp-text2)]">
+                        {{ visit.diagnosis }}
+                      </p>
+                    </div>
+                  }
+                  @if (visit.treatment) {
+                    <div
+                      class="bg-blue-50 border border-blue-200 rounded-[var(--hp-radius-sm)] p-3"
+                    >
+                      <p class="text-xs text-blue-700 mb-1">Điều trị</p>
+                      <p class="text-sm text-[var(--hp-text2)]">
+                        {{ visit.treatment }}
+                      </p>
+                    </div>
+                  }
+                </div>
+                @if (visit.attachments && visit.attachments.length > 0) {
+                  <div class="mt-3 pt-3 border-t border-[var(--hp-border)]">
+                    <p class="text-xs text-[var(--hp-text3)] mb-2">
+                      <i class="fas fa-paperclip mr-1"></i>Tài liệu đính kèm ({{
+                        visit.attachments.length
+                      }})
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                      @for (att of visit.attachments; track att.id) {
+                        <div class="relative group">
+                          @if (att.fileType?.startsWith("image/")) {
+                            <!-- Thumbnail ảnh -->
+                            <a
+                              [href]="att.fileUrl"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                [src]="att.fileUrl"
+                                [alt]="att.fileName"
+                                class="w-20 h-20 object-cover rounded-[var(--hp-radius-sm)] border border-[var(--hp-border)] hover:opacity-90 transition-opacity"
+                              />
+                            </a>
+                          } @else {
+                            <!-- File chip cho PDF/DOC -->
+                            <a
+                              [href]="att.fileUrl"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="inline-flex items-center gap-1.5 text-xs bg-[var(--hp-surface2)] hover:bg-[var(--hp-border2)] text-[var(--hp-text2)] px-3 py-1.5 rounded-full transition-colors border border-[var(--hp-border)]"
+                              [title]="att.fileName"
+                            >
+                              @if (att.fileType === "application/pdf") {
+                                <i class="fas fa-file-pdf text-red-500"></i>
+                              } @else {
+                                <i class="fas fa-file-word text-blue-500"></i>
+                              }
+                              <span class="max-w-[140px] truncate">{{
+                                att.fileName
+                              }}</span>
+                            </a>
+                          }
+                          <!-- Nút xóa -->
+                          <button
+                            (click)="deleteAttachment(visit.id, att.id)"
+                            class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full text-[10px] items-center justify-center hidden group-hover:flex transition-all shadow"
+                            title="Xóa file"
+                          >
+                            <i class="fas fa-xmark"></i>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+                <!-- Action bar -->
+                <div
+                  class="mt-3 pt-3 border-t border-[var(--hp-border)] flex items-center justify-between"
+                >
+                  @if (visit.diagnosis) {
+                    <span class="text-xs text-emerald-600">
+                      <i class="fas fa-circle-check mr-1"></i>Đã có chẩn đoán
+                    </span>
+                  } @else {
+                    <span class="text-xs text-amber-500">
+                      <i class="fas fa-clock mr-1"></i>Chưa có chẩn đoán
+                    </span>
+                  }
+                  <button
+                    (click)="
+                      selectedVisitId.set(visit.id); activeTab.set('diagnosis')
+                    "
+                    class="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-[var(--hp-radius-sm)] transition-colors"
+                    [class]="
+                      visit.diagnosis
+                        ? 'bg-[var(--hp-surface2)] hover:bg-[var(--hp-border2)] text-[var(--hp-text2)]'
+                        : 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                    "
+                  >
+                    <i class="fas fa-stethoscope"></i>
+                    {{ visit.diagnosis ? "Sửa chẩn đoán" : "Điền chẩn đoán" }}
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+
+      <!-- Vaccines Tab -->
+      @if (activeTab() === "vaccines") {
+        @if (vaccines().length === 0) {
+          <div
+            class="flex flex-col items-center justify-center py-16 bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)]"
+          >
+            <i class="fas fa-syringe text-4xl text-[var(--hp-text3)] mb-3"></i>
+            <p class="text-[var(--hp-text2)] text-sm">
+              Chưa có thông tin vaccine
+            </p>
+          </div>
+        } @else {
+          <div class="space-y-3">
+            @for (vaccine of vaccines(); track vaccine.id) {
+              <div
+                class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-[var(--hp-border)] p-4"
+              >
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-sm font-medium text-[var(--hp-text)]">
+                    {{
+                      vaccine.vaccine
+                        ? vaccine.vaccine.vaccineName
+                        : "Vaccine #" + vaccine.vaccineId
+                    }}
+                  </h3>
+                  <span
+                    class="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-full border"
+                    [ngClass]="{
+                      'bg-emerald-50 text-emerald-700 border-emerald-200':
+                        vaccine.status === 'done',
+                      'bg-amber-50 text-amber-700 border-amber-200':
+                        vaccine.status === 'pending',
+                      'bg-red-50 text-red-700 border-red-200':
+                        vaccine.status === 'overdue',
+                    }"
+                  >
+                    <span
+                      class="w-1.5 h-1.5 rounded-full"
+                      [ngClass]="{
+                        'bg-emerald-400': vaccine.status === 'done',
+                        'bg-amber-400': vaccine.status === 'pending',
+                        'bg-red-400': vaccine.status === 'overdue',
+                      }"
+                    ></span>
+                    {{ (vaccine.status | vaccineStatus).label }}
+                  </span>
+                  <span
+                    class="text-xs bg-cyan-50 text-cyan-700 px-2 py-1 rounded-full"
+                  >
+                    Mũi {{ vaccine.doseNumber }}
+                  </span>
+                </div>
+                <div
+                  class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[var(--hp-text3)] mt-2"
+                >
+                  @if (vaccine.vaccinatedDate) {
+                    <span>{{
+                      vaccine.vaccinatedDate | date: "dd/MM/yyyy"
+                    }}</span>
+                  }
+                  @if (vaccine.nextDueDate) {
+                    <span
+                      >Hẹn: {{ vaccine.nextDueDate | date: "dd/MM/yyyy" }}</span
+                    >
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+
+      <!-- Diagnosis Tab -->
+      @if (activeTab() === "diagnosis") {
+        <div
+          class="bg-[var(--hp-surface)] rounded-[var(--hp-radius)] border border-emerald-200 p-6"
+        >
+          <h3 class="text-sm font-medium text-[var(--hp-text)] mb-4">
+            Điền chẩn đoán cho {{ patient()!.fullname }}
+          </h3>
+
+          <!-- Chọn visit có sẵn hoặc tạo mới -->
+          <div class="mb-5">
+            <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
+              Gắn vào lần khám nào?
+            </label>
+            <select
+              class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-emerald-500"
+              [value]="selectedVisitId() ?? ''"
+              (change)="
+                selectedVisitId.set(
+                  $any($event.target).value ? +$any($event.target).value : null
+                )
+              "
+            >
+              <option value="">-- Tạo lần khám mới --</option>
+              @for (v of medicalVisits(); track v.id) {
+                <option [value]="v.id">
+                  {{ v.visitDate | date: "dd/MM/yyyy" }} — {{ v.hospitalName }}
+                  @if (v.attachments.length) {
+                    ({{ v.attachments.length }} file)
+                  }
+                  @if (v.diagnosis) {
+                    ✓
+                  }
+                </option>
+              }
+            </select>
+            @if (selectedVisitId()) {
+              <p class="text-xs text-emerald-600 mt-1.5">
+                <i class="fas fa-circle-check mr-1"></i>Sẽ cập nhật vào lần khám
+                đã chọn
+              </p>
+            } @else {
+              <p class="text-xs text-[var(--hp-text3)] mt-1.5">
+                Tạo bản ghi khám mới độc lập
+              </p>
+            }
+          </div>
+
+          <form [formGroup]="diagnosisForm" (ngSubmit)="submitDiagnosis()">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              @if (!selectedVisitId()) {
+                <div class="md:col-span-2">
+                  <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
+                    Tên bệnh viện / Cơ sở y tế
+                    <span class="text-red-600">*</span>
+                  </label>
+                  <div class="relative">
+                    <button
+                      type="button"
+                      (click)="hospitalOpen.set(!hospitalOpen())"
+                      class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-[var(--hp-radius-sm)] transition-all focus:outline-none text-left"
+                      style="
+                        background: var(--hp-surface2);
+                        border: 1px solid var(--hp-border2);
+                        color: var(--hp-text);
+                      "
+                    >
+                      <span
+                        [style.color]="
+                          diagnosisForm.get('hospitalName')?.value
+                            ? 'var(--hp-text)'
+                            : 'var(--hp-text3)'
+                        "
+                      >
+                        {{ hospitalLabel() }}
+                      </span>
+                      <i
+                        class="fas text-[9px]"
+                        style="color: var(--hp-text3)"
+                        [class.fa-chevron-up]="hospitalOpen()"
+                        [class.fa-chevron-down]="!hospitalOpen()"
+                      ></i>
+                    </button>
+                    @if (hospitalOpen()) {
+                      <div
+                        class="absolute z-50 w-full mt-1 rounded-[var(--hp-radius-sm)] overflow-y-auto"
+                        style="
+                          max-height: 200px;
+                          background: var(--hp-surface);
+                          border: 1px solid var(--hp-border2);
+                          box-shadow: 0 8px 24px rgba(30, 64, 120, 0.12);
+                        "
+                      >
+                        @for (h of hospitals(); track h.id) {
+                          <button
+                            type="button"
+                            (click)="selectHospital(h.name, h.name)"
+                            class="w-full px-4 py-2.5 text-sm text-left flex items-center justify-between transition-colors"
+                            style="color: var(--hp-text)"
+                            onmouseenter="
+                              this.style.background = 'var(--hp-surface2)'
+                            "
+                            onmouseleave="this.style.background = 'transparent'"
+                          >
+                            <span>{{ h.name }}</span>
+                            @if (
+                              diagnosisForm.get("hospitalName")?.value ===
+                              h.name
+                            ) {
+                              <i
+                                class="fas fa-check text-[10px]"
+                                style="color: #10b981"
+                              ></i>
+                            }
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+              <div>
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Chuyên khoa</label
+                >
+                <input
+                  type="text"
+                  formControlName="specialty"
+                  readonly
+                  placeholder="Chưa được gán chuyên khoa"
+                  class="w-full bg-[var(--hp-surface)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none cursor-default opacity-75"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
+                  Ngày khám <span class="text-red-600">*</span>
+                </label>
+                <input
+                  type="date"
+                  formControlName="visitDate"
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20"
+                />
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5">
+                  Chẩn đoán <span class="text-red-600">*</span>
+                </label>
+                <textarea
+                  formControlName="diagnosis"
+                  rows="3"
+                  placeholder="Nhập chẩn đoán chi tiết..."
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)] focus:outline-none resize-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20"
+                ></textarea>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Phương pháp điều trị</label
+                >
+                <textarea
+                  formControlName="treatment"
+                  rows="2"
+                  placeholder="Thuốc, liệu trình điều trị..."
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] placeholder:text-[var(--hp-text3)] focus:outline-none resize-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20"
+                ></textarea>
+              </div>
+
+              <div>
+                <label class="block text-xs text-[var(--hp-text2)] mb-1.5"
+                  >Ngày tái khám</label
+                >
+                <input
+                  type="date"
+                  formControlName="followUpDate"
+                  class="w-full bg-[var(--hp-surface2)] border border-[var(--hp-border2)] rounded-[var(--hp-radius-sm)] px-3 py-2 text-sm text-[var(--hp-text)] focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              [disabled]="isSubmitting() || diagnosisForm.invalid"
+              class="w-full bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white font-medium py-2.5 rounded-[var(--hp-radius-sm)] text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              @if (isSubmitting()) {
+                Đang lưu...
+              } @else if (selectedVisitId()) {
+                Cập nhật chẩn đoán vào lần khám đã chọn
+              } @else {
+                Tạo lần khám mới với chẩn đoán
+              }
+            </button>
+          </form>
+        </div>
+      }
+    }
+  </div>
+  <!-- /inner content -->
+</div>
+<!-- /min-h-screen wrapper -->

@@ -1,6 +1,10 @@
 import gsap from 'gsap';
 
 const mm = gsap.matchMedia();
+
+/* ══════════════════════════════════════════════════════════════════
+   AUTH ENTER  —  redesigned cho layout mới (hp-hero / hp-form-panel)
+══════════════════════════════════════════════════════════════════ */
 export function authEnter(): void {
   if (typeof window === 'undefined') return;
 
@@ -13,98 +17,99 @@ export function authEnter(): void {
       const { reduce } = ctx.conditions as { motion: boolean; reduce: boolean };
 
       if (reduce) {
-        // Show everything instantly — GSAP still sets them so CSS opacity:0 is cleared
         gsap.set(
           [
-            '.hp-auth-left',
-            '.hp-auth-right',
-            '.hp-auth-pill',
-            '.hp-auth-stat',
-            '.hp-auth-field',
-            '.hp-auth-submit',
+            '.hp-anim-brand',
+            '.hp-anim-copy',
+            '.hp-anim-features > *',
+            '.hp-anim-stats',
+            '.hp-form-panel',
+            '.hp-anim-form-head',
+            '.hp-anim-fields .hp-field',
+            '.hp-anim-fields .hp-field-row',
+            '.hp-btn-primary',
+            '.hp-divider',
+            '.hp-btn-google',
+            '.hp-form-footer',
           ],
-          { autoAlpha: 1, y: 0, x: 0, scale: 1 },
+          { autoAlpha: 1, x: 0, y: 0, scale: 1 },
         );
         return;
       }
 
-      const tl = gsap.timeline({
-        defaults: { ease: 'power3.out', duration: 0.45 },
+      // ── FORM TIMELINE — chạy ngay, user có thể nhập liền ──────────────────
+      // Toàn bộ form vào trong ~0.5s, không chờ hero
+      const formTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+
+      formTl.from('.hp-form-panel', {
+        x: 28,
+        autoAlpha: 0,
+        duration: 0.35,
       });
 
-      // Left panel
-      const leftPanel = document.querySelector('.hp-auth-left');
-      if (leftPanel) {
-        tl.fromTo(
-          leftPanel,
-          { autoAlpha: 0, x: -36 },
-          { autoAlpha: 1, x: 0 },
-          0,
-        );
+      formTl.from(
+        '.hp-anim-form-head',
+        { y: 10, autoAlpha: 0, duration: 0.28 },
+        '-=0.18',
+      );
 
-        const pills = leftPanel.querySelectorAll('.hp-auth-pill');
-        if (pills.length) {
-          tl.fromTo(
-            pills,
-            { autoAlpha: 0, x: -14 },
-            { autoAlpha: 1, x: 0, duration: 0.3, stagger: 0.065 },
-            '<0.2',
-          );
-        }
+      formTl.from(
+        '.hp-anim-fields .hp-field, .hp-anim-fields .hp-field-row',
+        { y: 10, autoAlpha: 0, duration: 0.28, stagger: 0.045 },
+        '-=0.18',
+      );
 
-        const stats = leftPanel.querySelectorAll('.hp-auth-stat');
-        if (stats.length) {
-          tl.fromTo(
-            stats,
-            { autoAlpha: 0, y: 8 },
-            { autoAlpha: 1, y: 0, duration: 0.28, stagger: 0.07 },
-            '<0.1',
-          );
-        }
-      }
+      formTl.from(
+        ['.hp-btn-primary', '.hp-divider', '.hp-btn-google', '.hp-form-footer'],
+        { y: 8, autoAlpha: 0, duration: 0.24, stagger: 0.04 },
+        '-=0.15',
+      );
 
-      // Right column
-      const rightCol = document.querySelector('.hp-auth-right');
-      if (rightCol) {
-        tl.fromTo(
-          rightCol,
-          { autoAlpha: 0, y: 20 },
-          { autoAlpha: 1, y: 0, duration: 0.4 },
-          '<-0.3', // overlap: starts 0.3s before pills finish
-        );
-      }
+      // ── HERO TIMELINE — song song, decorative, không block form ───────────
+      // delay 0.05s để form render trước, hero chạy phía sau
+      const heroTl = gsap.timeline({
+        defaults: { ease: 'power2.out' },
+        delay: 0.05,
+      });
 
-      // Form fields stagger
-      const fields = document.querySelectorAll('.hp-auth-field');
-      if (fields.length) {
-        tl.fromTo(
-          fields,
-          { autoAlpha: 0, y: 12 },
-          { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.055 },
-          '<0.08',
-        );
-      }
+      heroTl.from('.hp-hero__orb', {
+        scale: 0.5,
+        autoAlpha: 0,
+        duration: 0.8,
+        stagger: 0.12,
+        ease: 'power1.out',
+      });
 
-      // Submit button pops in last
-      const submit = document.querySelector('.hp-auth-submit');
-      if (submit) {
-        tl.fromTo(
-          submit,
-          { autoAlpha: 0, scale: 0.95, y: 6 },
-          {
-            autoAlpha: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.26,
-            ease: 'back.out(1.4)',
-          },
-          '<0.05',
-        );
-      }
+      heroTl.from(
+        '.hp-anim-brand',
+        { y: -12, autoAlpha: 0, duration: 0.4 },
+        '-=0.55',
+      );
+
+      heroTl.from(
+        '.hp-anim-copy',
+        { y: 16, autoAlpha: 0, duration: 0.38, stagger: 0.08 },
+        '-=0.28',
+      );
+
+      heroTl.from(
+        '.hp-anim-features > *',
+        { x: -14, autoAlpha: 0, duration: 0.35, stagger: 0.07 },
+        '-=0.2',
+      );
+
+      heroTl.from(
+        '.hp-anim-stats',
+        { y: 8, autoAlpha: 0, duration: 0.3 },
+        '-=0.15',
+      );
     },
   );
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE HERO ENTER  (giữ nguyên)
+══════════════════════════════════════════════════════════════════ */
 export function mobileHeroEnter(): void {
   if (typeof window === 'undefined') return;
 
@@ -144,6 +149,9 @@ export function mobileHeroEnter(): void {
   });
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   SHAKE ERROR  (giữ nguyên)
+══════════════════════════════════════════════════════════════════ */
 export function shakeError(selector = '.hp-error-msg'): void {
   if (typeof window === 'undefined') return;
 
@@ -167,7 +175,7 @@ export function shakeError(selector = '.hp-error-msg'): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   SIDEBAR NAV ITEMS  (stagger trái → phải)
+   SIDEBAR NAV ITEMS  (giữ nguyên)
 ══════════════════════════════════════════════════════════════════ */
 export function sidebarEnter(itemSelector = '.hp-nav-item'): void {
   if (typeof window === 'undefined') return;
@@ -202,6 +210,9 @@ export function sidebarEnter(itemSelector = '.hp-nav-item'): void {
   );
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   DASHBOARD CARDS  (giữ nguyên)
+══════════════════════════════════════════════════════════════════ */
 export function dashboardEnter(cardSelector = '.hp-card'): void {
   if (typeof window === 'undefined') return;
 
@@ -236,6 +247,9 @@ export function dashboardEnter(cardSelector = '.hp-card'): void {
   );
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   ROUTE TRANSITIONS  (giữ nguyên)
+══════════════════════════════════════════════════════════════════ */
 export function routeLeave(mainSelector = '.hp-main-content'): void {
   if (typeof window === 'undefined') return;
 
@@ -276,7 +290,10 @@ export function routeEnter(mainSelector = '.hp-main-content'): void {
   );
 }
 
-export function heartbeatPulse(selector = '.hp-heartbeat-icon'): void {
+/* ══════════════════════════════════════════════════════════════════
+   HEARTBEAT PULSE  —  cập nhật selector mặc định cho logo mới
+══════════════════════════════════════════════════════════════════ */
+export function heartbeatPulse(selector = '.hp-logo'): void {
   if (typeof window === 'undefined') return;
 
   mm.add('(prefers-reduced-motion: no-preference)', () => {
@@ -289,11 +306,14 @@ export function heartbeatPulse(selector = '.hp-heartbeat-icon'): void {
       repeat: -1,
       yoyo: true,
       ease: 'sine.inOut',
-      repeatDelay: 0.65, // ~72bpm rhythm — tự nhiên, không loạn mắt
+      repeatDelay: 0.65,
     });
   });
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   COUNT UP  (giữ nguyên)
+══════════════════════════════════════════════════════════════════ */
 export function countUp(
   el: HTMLElement,
   endValue: number,
@@ -323,6 +343,9 @@ export function countUp(
   });
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   BADGE POP  (giữ nguyên)
+══════════════════════════════════════════════════════════════════ */
 export function badgePop(selector = '.hp-badge'): void {
   if (typeof window === 'undefined') return;
 

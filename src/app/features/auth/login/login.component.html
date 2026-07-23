@@ -1,385 +1,254 @@
-<div class="hp-auth-page flex flex-col lg:flex-row min-h-screen">
-  <!-- HERO PANEL -->
-  <div
-    class="hp-auth-left flex flex-col justify-between relative overflow-hidden shrink-0 lg:w-2/5 lg:h-screen lg:sticky lg:top-0"
-    style="background-color: var(--hp-nav-bg); flex: 0 0 42dvh"
-  >
-    <div
-      class="absolute -top-20 -right-20 w-64 h-64 rounded-full pointer-events-none"
-      style="
-        background: radial-gradient(
-          circle,
-          rgba(56, 189, 248, 0.12) 0%,
-          transparent 68%
-        );
-      "
-    ></div>
-    <div
-      class="absolute -bottom-16 -left-16 w-52 h-52 rounded-full pointer-events-none"
-      style="
-        background: radial-gradient(
-          circle,
-          rgba(56, 189, 248, 0.07) 0%,
-          transparent 70%
-        );
-      "
-    ></div>
-
-    <!-- Brand -->
-    <div
-      class="flex items-center gap-2.5 px-6 pt-10 lg:px-10 lg:pt-12 relative z-10"
-    >
-      <div
-        class="hp-heartbeat-icon w-8 h-8 lg:w-9 lg:h-9 rounded-xl flex items-center justify-center shrink-0"
-        style="background: var(--hp-gradient)"
-      >
-        <i class="fas fa-heart-pulse text-white text-xs lg:text-sm"></i>
-      </div>
-      <span class="text-base lg:text-lg font-semibold text-white tracking-wide">
-        Health<span style="color: var(--hp-nav-accent)">+</span>
-      </span>
+<div class="hp-auth-page">
+  <aside class="hp-hero" aria-hidden="true">
+    <!-- Background layers -->
+    <div class="hp-hero__bg">
+      <div class="hp-hero__orb hp-hero__orb--1"></div>
+      <div class="hp-hero__orb hp-hero__orb--2"></div>
+      <div class="hp-hero__grid"></div>
     </div>
 
-    <!-- Hero copy -->
-    <div class="px-6 lg:px-10 relative z-10">
-      <h2
-        class="text-xl lg:text-2xl font-semibold text-white leading-snug mb-2"
-        style="letter-spacing: -0.4px"
-      >
-        Chào mừng<br /><span style="color: var(--hp-nav-accent)">trở lại</span>
+    <!-- Brand -->
+    <div class="hp-hero__brand hp-anim-brand">
+      <div class="hp-logo">
+        <i class="fas fa-heart-pulse"></i>
+      </div>
+      <span class="hp-logo-text">Health<span class="hp-accent">+</span></span>
+    </div>
+
+    <!-- Headline block -->
+    <div class="hp-hero__copy">
+      <p class="hp-hero__eyebrow hp-anim-copy">Theo dõi sức khỏe</p>
+      <h2 class="hp-hero__headline hp-anim-copy">
+        Chào mừng<br />
+        <span class="hp-hero__headline-accent">trở lại</span>
       </h2>
-      <p
-        class="text-xs lg:text-sm leading-relaxed"
-        style="color: var(--hp-nav-text)"
-      >
-        Đăng nhập để tiếp tục theo dõi sức khỏe
+      <p class="hp-hero__sub hp-anim-copy">
+        Đăng nhập để tiếp tục hành trình sức khỏe của bạn
       </p>
     </div>
 
-    <!-- Feature chips -->
-    <div class="px-5 pb-6 lg:pb-0 lg:px-10 relative z-10">
-      <div class="flex flex-wrap gap-1.5">
-        <span
-          class="hp-auth-pill flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
-          style="
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-          "
-        >
-          <i
-            class="fas fa-chart-line text-[10px] shrink-0"
-            style="color: var(--hp-nav-accent)"
-          ></i
-          >Dashboard
+    <!-- Feature list — desktop only -->
+    <ul class="hp-feature-list hp-anim-features" role="list">
+      <li class="hp-feature-item">
+        <span class="hp-feature-icon">
+          <i class="fas fa-chart-line"></i>
         </span>
-        <span
-          class="hp-auth-pill flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
-          style="
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-          "
-        >
-          <i
-            class="fas fa-robot text-[10px] shrink-0"
-            style="color: var(--hp-nav-accent)"
-          ></i
-          >AI Sức khỏe
+        <div>
+          <strong>Dashboard thông minh</strong>
+          <p>Theo dõi chỉ số thời gian thực</p>
+        </div>
+      </li>
+      <li class="hp-feature-item">
+        <span class="hp-feature-icon">
+          <i class="fas fa-robot"></i>
         </span>
-        <span
-          class="hp-auth-pill flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
-          style="
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-          "
-        >
-          <i
-            class="fas fa-syringe text-[10px] shrink-0"
-            style="color: var(--hp-nav-accent)"
-          ></i
-          >Vaccine
+        <div>
+          <strong>AI sức khỏe</strong>
+          <p>Tư vấn cá nhân hóa từ Gemini</p>
+        </div>
+      </li>
+      <li class="hp-feature-item">
+        <span class="hp-feature-icon">
+          <i class="fas fa-syringe"></i>
         </span>
-        <span
-          class="hp-auth-pill flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
-          style="
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-          "
-        >
-          <i
-            class="fas fa-shield-halved text-[10px] shrink-0"
-            style="color: var(--hp-nav-accent)"
-          ></i
-          >Bảo mật
-        </span>
+        <div>
+          <strong>Nhắc lịch vaccine</strong>
+          <p>Không bỏ lỡ mũi tiêm quan trọng</p>
+        </div>
+      </li>
+    </ul>
+
+    <!-- Stat strip — desktop only -->
+    <div class="hp-stat-strip hp-anim-stats">
+      <div class="hp-stat">
+        <i class="fas fa-shield-halved"></i>
+        <span>E2E Encryption</span>
+      </div>
+      <div class="hp-stat-divider"></div>
+      <div class="hp-stat">
+        <i class="fas fa-wifi"></i>
+        <span>PWA Offline</span>
+      </div>
+      <div class="hp-stat-divider"></div>
+      <div class="hp-stat">
+        <i class="fas fa-user-doctor"></i>
+        <span>AI Advisor</span>
       </div>
     </div>
+  </aside>
 
-    <!-- Desktop only pills -->
-    <div class="hidden lg:flex flex-col gap-2.5 px-10 relative z-10">
-      <div
-        class="hp-auth-pill flex items-center gap-3 rounded-xl px-4 py-3"
-        style="
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid var(--hp-nav-border);
-        "
-      >
-        <i
-          class="fas fa-file-pdf text-sm w-4 text-center shrink-0"
-          style="color: var(--hp-nav-accent)"
-        ></i>
-        <span class="text-xs" style="color: var(--hp-nav-text)"
-          >Xuất báo cáo sức khỏe PDF</span
-        >
-      </div>
-      <div
-        class="hp-auth-pill flex items-center gap-3 rounded-xl px-4 py-3"
-        style="
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid var(--hp-nav-border);
-        "
-      >
-        <i
-          class="fas fa-notes-medical text-sm w-4 text-center shrink-0"
-          style="color: var(--hp-nav-accent)"
-        ></i>
-        <span class="text-xs" style="color: var(--hp-nav-text)"
-          >Lưu trữ hồ sơ y tế cá nhân</span
-        >
-      </div>
-    </div>
-
-    <!-- Desktop stats -->
-    <div class="hidden lg:grid grid-cols-3 gap-2 px-10 pb-12 relative z-10">
-      <div
-        class="hp-auth-stat rounded-xl py-3 px-2 text-center"
-        style="
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid var(--hp-nav-border);
-        "
-      >
-        <p class="text-sm font-semibold" style="color: var(--hp-nav-accent)">
-          <i class="fas fa-shield-halved text-xs mr-1"></i>E2E
-        </p>
-        <p class="text-[10px] mt-1" style="color: rgba(255, 255, 255, 0.38)">
-          Mã hóa
-        </p>
-      </div>
-      <div
-        class="hp-auth-stat rounded-xl py-3 px-2 text-center"
-        style="
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid var(--hp-nav-border);
-        "
-      >
-        <p class="text-sm font-semibold" style="color: var(--hp-nav-accent)">
-          <i class="fas fa-cloud text-xs mr-1"></i>PWA
-        </p>
-        <p class="text-[10px] mt-1" style="color: rgba(255, 255, 255, 0.38)">
-          Offline
-        </p>
-      </div>
-      <div
-        class="hp-auth-stat rounded-xl py-3 px-2 text-center"
-        style="
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid var(--hp-nav-border);
-        "
-      >
-        <p class="text-sm font-semibold" style="color: var(--hp-nav-accent)">
-          <i class="fas fa-user-doctor text-xs mr-1"></i>BS
-        </p>
-        <p class="text-[10px] mt-1" style="color: rgba(255, 255, 255, 0.38)">
-          Tư vấn
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- FORM PANEL -->
-  <div
-    class="hp-auth-right flex-1 flex flex-col"
-    style="
-      background-color: var(--hp-bg);
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    "
-  >
-    <!-- Wave connector mobile -->
-    <div
-      class="lg:hidden h-6 shrink-0 relative"
-      style="background-color: var(--hp-nav-bg)"
-    >
+  <main class="hp-form-panel">
+    <!-- Mobile wave -->
+    <div class="hp-wave-connector" aria-hidden="true">
       <svg
-        viewBox="0 0 375 24"
+        viewBox="0 0 375 32"
         preserveAspectRatio="none"
-        class="absolute bottom-0 left-0 right-0 w-full h-6"
-        style="fill: var(--hp-bg)"
-        aria-hidden="true"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M0,24 Q187.5,0 375,24 L375,24 L0,24 Z" />
+        <path
+          d="M0 0 L375 0 L375 10 Q187.5 32 0 10 Z"
+          fill="var(--hp-nav-bg)"
+        />
+        <path
+          d="M0 10 Q187.5 32 375 10"
+          stroke="rgba(56,189,248,0.18)"
+          stroke-width="1"
+          fill="none"
+        />
       </svg>
     </div>
 
-    <div
-      class="flex-1 flex flex-col justify-center px-6 py-8 lg:px-16 xl:px-24"
-      style="padding-bottom: env(safe-area-inset-bottom, 32px)"
-    >
-      <div class="w-full lg:max-w-md mx-auto">
-        <div class="hp-auth-field mb-6">
-          <h1 class="text-xl font-semibold mb-1" style="color: var(--hp-text)">
-            Đăng nhập
-          </h1>
-          <p class="text-sm" style="color: var(--hp-text3)">
-            Nhập email và mật khẩu của bạn
-          </p>
+    <div class="hp-form-inner">
+      <!-- Form header -->
+      <div class="hp-form-header hp-anim-form-head">
+        <h1 class="hp-form-title">Đăng nhập</h1>
+        <p class="hp-form-sub">Nhập thông tin tài khoản của bạn</p>
+      </div>
+
+      <!-- Error banner -->
+      @if (errorMessage()) {
+        <div class="hp-error-msg hp-anim-error" role="alert" aria-live="polite">
+          <i class="fas fa-circle-exclamation" aria-hidden="true"></i>
+          <span>{{ errorMessage() }}</span>
         </div>
+      }
 
-        @if (errorMessage()) {
-          <div
-            class="hp-error-msg flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-5"
-            style="
-              background: #fef2f2;
-              border: 1px solid #fecaca;
-              color: var(--hp-red);
-            "
-          >
-            <i class="fas fa-circle-exclamation shrink-0"></i
-            >{{ errorMessage() }}
-          </div>
-        }
-
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-          <div class="hp-auth-field">
-            <label
-              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-              style="color: var(--hp-text2)"
-            >
-              <i
-                class="fas fa-envelope text-[11px]"
-                style="color: var(--hp-text3)"
-              ></i
-              >Email
-            </label>
+      <!-- Form -->
+      <form
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+        class="hp-anim-fields"
+        novalidate
+      >
+        <!-- Email field -->
+        <div class="hp-field">
+          <label class="hp-label" for="login-email">
+            <i class="fas fa-envelope" aria-hidden="true"></i>
+            Email
+          </label>
+          <div class="hp-input-wrap">
             <input
+              id="login-email"
               formControlName="email"
               type="email"
               inputmode="email"
               autocomplete="email"
               placeholder="you@example.com"
-              class="hp-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none"
-              style="
-                background: var(--hp-surface2);
-                border: 1px solid var(--hp-border2);
-                color: var(--hp-text);
+              class="hp-input"
+              [class.hp-input--error]="
+                form.get('email')?.invalid && form.get('email')?.touched
               "
+              aria-required="true"
+              [attr.aria-invalid]="
+                form.get('email')?.invalid && form.get('email')?.touched
+              "
+              aria-describedby="login-email-err"
             />
-            @if (form.get("email")?.invalid && form.get("email")?.touched) {
-              <p
-                class="flex items-center gap-1 text-xs mt-1.5"
-                style="color: var(--hp-red)"
-              >
-                <i class="fas fa-triangle-exclamation text-[10px]"></i>Email
-                không đúng định dạng
-              </p>
-            }
           </div>
+          @if (form.get("email")?.invalid && form.get("email")?.touched) {
+            <p id="login-email-err" class="hp-field-error" role="alert">
+              <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+              Email không đúng định dạng
+            </p>
+          }
+        </div>
 
-          <div class="hp-auth-field">
-            <label
-              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-              style="color: var(--hp-text2)"
-            >
-              <i
-                class="fas fa-lock text-[11px]"
-                style="color: var(--hp-text3)"
-              ></i
-              >Mật khẩu
-            </label>
+        <!-- Password field -->
+        <div class="hp-field">
+          <label class="hp-label" for="login-password">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            Mật khẩu
+          </label>
+          <div class="hp-input-wrap">
             <input
+              id="login-password"
               formControlName="password"
               type="password"
               autocomplete="current-password"
               placeholder="••••••••"
-              class="hp-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none"
-              style="
-                background: var(--hp-surface2);
-                border: 1px solid var(--hp-border2);
-                color: var(--hp-text);
+              class="hp-input"
+              [class.hp-input--error]="
+                form.get('password')?.invalid && form.get('password')?.touched
               "
+              aria-required="true"
+              [attr.aria-invalid]="
+                form.get('password')?.invalid && form.get('password')?.touched
+              "
+              aria-describedby="login-pw-err"
             />
-            @if (
-              form.get("password")?.invalid && form.get("password")?.touched
-            ) {
-              <p
-                class="flex items-center gap-1 text-xs mt-1.5"
-                style="color: var(--hp-red)"
-              >
-                <i class="fas fa-triangle-exclamation text-[10px]"></i>Mật khẩu
-                tối thiểu 6 ký tự
-              </p>
-            }
           </div>
-
-          <button
-            type="submit"
-            [disabled]="isLoading()"
-            class="hp-auth-submit hp-btn-primary w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            @if (isLoading()) {
-              <i class="fas fa-circle-notch fa-spin text-sm"></i>Đang xử lý...
-            } @else {
-              <i class="fas fa-right-to-bracket text-sm"></i>Đăng nhập
-            }
-          </button>
-        </form>
-
-        <div class="flex items-center gap-3 my-5">
-          <hr class="flex-1" style="border-color: var(--hp-border)" />
-          <span class="text-xs" style="color: var(--hp-text3)">hoặc</span>
-          <hr class="flex-1" style="border-color: var(--hp-border)" />
+          @if (form.get("password")?.invalid && form.get("password")?.touched) {
+            <p id="login-pw-err" class="hp-field-error" role="alert">
+              <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+              Mật khẩu tối thiểu 6 ký tự
+            </p>
+          }
         </div>
 
-        <a
-          [href]="googleAuthUrl"
-          class="hp-btn-google flex items-center justify-center gap-2.5 w-full rounded-xl py-3 text-sm"
-          style="
-            border: 1px solid var(--hp-border2);
-            background: var(--hp-surface2);
-            color: var(--hp-text);
-          "
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="hp-btn-primary"
+          [disabled]="isLoading()"
+          [attr.aria-busy]="isLoading()"
         >
-          <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
-            <path
-              fill="#EA4335"
-              d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-            />
-            <path
-              fill="#4285F4"
-              d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-            />
-            <path
-              fill="#34A853"
-              d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-            />
-          </svg>
-          Tiếp tục với Google
-        </a>
+          @if (isLoading()) {
+            <i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>
+            <span>Đang xử lý...</span>
+          } @else {
+            <i class="fas fa-right-to-bracket" aria-hidden="true"></i>
+            <span>Đăng nhập</span>
+          }
+        </button>
+      </form>
 
-        <p class="text-center text-xs mt-6" style="color: var(--hp-text3)">
-          Chưa có tài khoản?
-          <a
-            routerLink="/auth/register"
-            class="font-medium"
-            style="color: var(--hp-primary2)"
-          >
-            Đăng ký ngay <i class="fas fa-arrow-right text-[10px] ml-0.5"></i>
-          </a>
-        </p>
+      <!-- Divider -->
+      <div class="hp-divider" aria-hidden="true">
+        <span>hoặc</span>
       </div>
+
+      <!-- Google OAuth -->
+      <a
+        [href]="googleAuthUrl"
+        class="hp-btn-google"
+        aria-label="Tiếp tục đăng nhập bằng tài khoản Google"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 48 48"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            fill="#EA4335"
+            d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+          />
+          <path
+            fill="#4285F4"
+            d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+          />
+          <path
+            fill="#FBBC05"
+            d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+          />
+          <path
+            fill="#34A853"
+            d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+          />
+        </svg>
+        <span>Tiếp tục với Google</span>
+      </a>
+
+      <!-- Footer link -->
+      <p class="hp-form-footer">
+        Chưa có tài khoản?
+        <a routerLink="/auth/register" class="hp-link">
+          Đăng ký miễn phí
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        </a>
+      </p>
     </div>
-  </div>
+  </main>
 </div>

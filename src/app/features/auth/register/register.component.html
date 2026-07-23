@@ -1,493 +1,329 @@
-<div class="hp-auth-page flex flex-col lg:flex-row min-h-screen">
-  <!-- HERO PANEL -->
-  <div
-    class="hp-auth-left flex flex-col justify-between relative overflow-hidden shrink-0 lg:w-2/5 lg:h-screen lg:sticky lg:top-0"
-    style="background-color: var(--hp-nav-bg); flex: 0 0 38dvh"
-  >
-    <div
-      class="absolute -top-20 -right-20 w-64 h-64 rounded-full pointer-events-none"
-      style="
-        background: radial-gradient(
-          circle,
-          rgba(56, 189, 248, 0.12) 0%,
-          transparent 68%
-        );
-      "
-    ></div>
-    <div
-      class="absolute -bottom-16 -left-16 w-52 h-52 rounded-full pointer-events-none"
-      style="
-        background: radial-gradient(
-          circle,
-          rgba(56, 189, 248, 0.07) 0%,
-          transparent 70%
-        );
-      "
-    ></div>
-
-    <!-- Brand -->
-    <div
-      class="flex items-center gap-2.5 px-6 pt-10 lg:px-10 lg:pt-12 relative z-10"
-    >
-      <div
-        class="hp-heartbeat-icon w-8 h-8 lg:w-9 lg:h-9 rounded-xl flex items-center justify-center shrink-0"
-        style="background: var(--hp-gradient)"
-      >
-        <i class="fas fa-heart-pulse text-white text-xs lg:text-sm"></i>
-      </div>
-      <span class="text-base lg:text-lg font-semibold text-white tracking-wide">
-        Health<span style="color: var(--hp-nav-accent)">+</span>
-      </span>
+<div class="hp-auth-page">
+  <aside class="hp-hero" aria-hidden="true">
+    <!-- Background layers -->
+    <div class="hp-hero__bg">
+      <div class="hp-hero__orb hp-hero__orb--1"></div>
+      <div class="hp-hero__orb hp-hero__orb--2"></div>
+      <div class="hp-hero__grid"></div>
     </div>
 
-    <!-- Hero copy -->
-    <div class="px-6 lg:px-10 relative z-10">
-      <h2
-        class="text-xl lg:text-2xl font-semibold text-white leading-snug mb-2"
-        style="letter-spacing: -0.4px"
-      >
-        Bắt đầu<br /><span style="color: var(--hp-nav-accent)">hành trình</span>
+    <!-- Brand -->
+    <div class="hp-hero__brand hp-anim-brand">
+      <div class="hp-logo">
+        <i class="fas fa-heart-pulse"></i>
+      </div>
+      <span class="hp-logo-text">Health<span class="hp-accent">+</span></span>
+    </div>
+
+    <!-- Headline block -->
+    <div class="hp-hero__copy">
+      <p class="hp-hero__eyebrow hp-anim-copy">Bắt đầu ngay hôm nay</p>
+      <h2 class="hp-hero__headline hp-anim-copy">
+        Hành trình<br />
+        <span class="hp-hero__headline-accent">sức khỏe</span>
       </h2>
-      <p
-        class="text-xs lg:text-sm leading-relaxed"
-        style="color: var(--hp-nav-text)"
-      >
-        Tạo tài khoản miễn phí — chỉ mất 30 giây
+      <p class="hp-hero__sub hp-anim-copy">
+        Tạo tài khoản miễn phí trong 30 giây
       </p>
     </div>
 
-    <!-- Feature chips -->
-    <div class="px-5 pb-6 lg:pb-0 lg:px-10 relative z-10">
-      <div class="flex flex-wrap gap-1.5">
-        <span
-          class="hp-auth-pill flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
-          style="
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-          "
-        >
-          <i
-            class="fas fa-user-plus text-[10px] shrink-0"
-            style="color: var(--hp-nav-accent)"
-          ></i
-          >Đăng ký
-        </span>
-        <span
-          class="hp-auth-pill flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
-          style="
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-          "
-        >
-          <i
-            class="fas fa-notes-medical text-[10px] shrink-0"
-            style="color: var(--hp-nav-accent)"
-          ></i
-          >Hồ sơ
-        </span>
-        <span
-          class="hp-auth-pill flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
-          style="
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-          "
-        >
-          <i
-            class="fas fa-robot text-[10px] shrink-0"
-            style="color: var(--hp-nav-accent)"
-          ></i
-          >AI tư vấn
-        </span>
-        <span
-          class="hp-auth-pill flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full"
-          style="
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-          "
-        >
-          <i
-            class="fas fa-shield-halved text-[10px] shrink-0"
-            style="color: var(--hp-nav-accent)"
-          ></i
-          >Bảo mật
-        </span>
-      </div>
-    </div>
-
-    <!-- Desktop steps -->
-    <div class="hidden lg:flex flex-col gap-3 px-10 relative z-10">
+    <!-- Steps list — desktop only -->
+    <ol class="hp-step-list hp-anim-features" role="list">
       @for (step of steps; track step.n) {
-        <div class="hp-auth-pill flex items-start gap-3">
-          <div
-            class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-semibold"
-            style="
-              background: rgba(56, 189, 248, 0.15);
-              border: 1px solid rgba(56, 189, 248, 0.3);
-              color: var(--hp-nav-accent);
-            "
-          >
-            {{ step.n }}
+        <li class="hp-step-item">
+          <span class="hp-step-num" [attr.aria-label]="'Bước ' + step.n">{{
+            step.n
+          }}</span>
+          <div class="hp-step-body">
+            <strong>{{ step.title }}</strong>
+            <p>{{ step.sub }}</p>
           </div>
-          <div>
-            <p class="text-sm font-medium text-white">{{ step.title }}</p>
-            <p class="text-xs mt-0.5" style="color: var(--hp-nav-text)">
-              {{ step.sub }}
-            </p>
-          </div>
-        </div>
+        </li>
       }
-    </div>
+    </ol>
 
-    <!-- Desktop stats -->
-    <div class="hidden lg:grid grid-cols-3 gap-2 px-10 pb-12 relative z-10">
-      <div
-        class="hp-auth-stat rounded-xl py-3 px-2 text-center"
-        style="
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid var(--hp-nav-border);
-        "
-      >
-        <p class="text-sm font-semibold" style="color: var(--hp-nav-accent)">
-          <i class="fas fa-shield-halved text-xs mr-1"></i>E2E
-        </p>
-        <p class="text-[10px] mt-1" style="color: rgba(255, 255, 255, 0.38)">
-          Mã hóa
-        </p>
+    <!-- Stat strip — desktop only -->
+    <div class="hp-stat-strip hp-anim-stats">
+      <div class="hp-stat">
+        <i class="fas fa-shield-halved"></i>
+        <span>E2E Encryption</span>
       </div>
-      <div
-        class="hp-auth-stat rounded-xl py-3 px-2 text-center"
-        style="
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid var(--hp-nav-border);
-        "
-      >
-        <p class="text-sm font-semibold" style="color: var(--hp-nav-accent)">
-          <i class="fas fa-cloud text-xs mr-1"></i>PWA
-        </p>
-        <p class="text-[10px] mt-1" style="color: rgba(255, 255, 255, 0.38)">
-          Offline
-        </p>
+      <div class="hp-stat-divider"></div>
+      <div class="hp-stat">
+        <i class="fas fa-wifi"></i>
+        <span>PWA Offline</span>
       </div>
-      <div
-        class="hp-auth-stat rounded-xl py-3 px-2 text-center"
-        style="
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid var(--hp-nav-border);
-        "
-      >
-        <p class="text-sm font-semibold" style="color: var(--hp-nav-accent)">
-          <i class="fas fa-user-doctor text-xs mr-1"></i>BS
-        </p>
-        <p class="text-[10px] mt-1" style="color: rgba(255, 255, 255, 0.38)">
-          Tư vấn
-        </p>
+      <div class="hp-stat-divider"></div>
+      <div class="hp-stat">
+        <i class="fas fa-user-doctor"></i>
+        <span>AI Advisor</span>
       </div>
     </div>
-  </div>
+  </aside>
 
-  <!-- FORM PANEL -->
-  <div
-    class="hp-auth-right flex-1 flex flex-col"
-    style="
-      background-color: var(--hp-bg);
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    "
-  >
-    <!-- Wave connector mobile -->
-    <div
-      class="lg:hidden h-6 shrink-0 relative"
-      style="background-color: var(--hp-nav-bg)"
-    >
+  <main class="hp-form-panel">
+    <!-- Mobile wave -->
+    <div class="hp-wave-connector" aria-hidden="true">
       <svg
-        viewBox="0 0 375 24"
+        viewBox="0 0 375 32"
         preserveAspectRatio="none"
-        class="absolute bottom-0 left-0 right-0 w-full h-6"
-        style="fill: var(--hp-bg)"
-        aria-hidden="true"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M0,24 Q187.5,0 375,24 L375,24 L0,24 Z" />
+        <path
+          d="M0 0 L375 0 L375 10 Q187.5 32 0 10 Z"
+          fill="var(--hp-nav-bg)"
+        />
+        <path
+          d="M0 10 Q187.5 32 375 10"
+          stroke="rgba(56,189,248,0.18)"
+          stroke-width="1"
+          fill="none"
+        />
       </svg>
     </div>
 
-    <div
-      class="flex-1 flex flex-col justify-center px-6 py-8 lg:px-16 xl:px-24"
-      style="padding-bottom: env(safe-area-inset-bottom, 32px)"
-    >
-      <div class="w-full lg:max-w-md mx-auto">
-        <div class="hp-auth-field mb-6">
-          <h1 class="text-xl font-semibold mb-1" style="color: var(--hp-text)">
-            Tạo tài khoản
-          </h1>
-          <p class="text-sm" style="color: var(--hp-text3)">
-            Miễn phí, không cần thẻ tín dụng
-          </p>
+    <div class="hp-form-inner">
+      <!-- Form header -->
+      <div class="hp-form-header hp-anim-form-head">
+        <h1 class="hp-form-title">Tạo tài khoản</h1>
+        <p class="hp-form-sub">Miễn phí, không cần thẻ tín dụng</p>
+      </div>
+
+      <!-- Error banner -->
+      @if (errorMessage()) {
+        <div class="hp-error-msg hp-anim-error" role="alert" aria-live="polite">
+          <i class="fas fa-circle-exclamation" aria-hidden="true"></i>
+          <span>{{ errorMessage() }}</span>
         </div>
+      }
 
-        @if (errorMessage()) {
-          <div
-            class="hp-error-msg flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-5"
-            style="
-              background: #fef2f2;
-              border: 1px solid #fecaca;
-              color: var(--hp-red);
-            "
-          >
-            <i class="fas fa-circle-exclamation shrink-0"></i
-            >{{ errorMessage() }}
-          </div>
-        }
-
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-          <div class="hp-auth-field">
-            <label
-              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-              style="color: var(--hp-text2)"
-            >
-              <i
-                class="fas fa-user text-[11px]"
-                style="color: var(--hp-text3)"
-              ></i
-              >Họ và tên
-            </label>
+      <!-- Form -->
+      <form
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+        class="hp-anim-fields"
+        novalidate
+      >
+        <!-- Full name -->
+        <div class="hp-field">
+          <label class="hp-label" for="reg-fullname">
+            <i class="fas fa-user" aria-hidden="true"></i>
+            Họ và tên
+          </label>
+          <div class="hp-input-wrap">
             <input
+              id="reg-fullname"
               formControlName="fullname"
               type="text"
               autocomplete="name"
               placeholder="Nguyễn Văn A"
-              class="hp-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none"
-              style="
-                background: var(--hp-surface2);
-                border: 1px solid var(--hp-border2);
-                color: var(--hp-text);
+              class="hp-input"
+              [class.hp-input--error]="
+                form.get('fullname')?.invalid && form.get('fullname')?.touched
               "
+              aria-required="true"
+              [attr.aria-invalid]="
+                form.get('fullname')?.invalid && form.get('fullname')?.touched
+              "
+              aria-describedby="reg-name-err"
             />
-            @if (
-              form.get("fullname")?.invalid && form.get("fullname")?.touched
-            ) {
-              <p
-                class="flex items-center gap-1 text-xs mt-1.5"
-                style="color: var(--hp-red)"
-              >
-                <i class="fas fa-triangle-exclamation text-[10px]"></i>Họ tên
-                tối thiểu 2 ký tự
-              </p>
-            }
           </div>
+          @if (form.get("fullname")?.invalid && form.get("fullname")?.touched) {
+            <p id="reg-name-err" class="hp-field-error" role="alert">
+              <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+              Họ tên tối thiểu 2 ký tự
+            </p>
+          }
+        </div>
 
-          <div class="hp-auth-field">
-            <label
-              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-              style="color: var(--hp-text2)"
-            >
-              <i
-                class="fas fa-envelope text-[11px]"
-                style="color: var(--hp-text3)"
-              ></i
-              >Email
-            </label>
+        <!-- Email -->
+        <div class="hp-field">
+          <label class="hp-label" for="reg-email">
+            <i class="fas fa-envelope" aria-hidden="true"></i>
+            Email
+          </label>
+          <div class="hp-input-wrap">
             <input
+              id="reg-email"
               formControlName="email"
               type="email"
               inputmode="email"
               autocomplete="email"
               placeholder="you@example.com"
-              class="hp-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none"
-              style="
-                background: var(--hp-surface2);
-                border: 1px solid var(--hp-border2);
-                color: var(--hp-text);
+              class="hp-input"
+              [class.hp-input--error]="
+                form.get('email')?.invalid && form.get('email')?.touched
               "
+              aria-required="true"
+              [attr.aria-invalid]="
+                form.get('email')?.invalid && form.get('email')?.touched
+              "
+              aria-describedby="reg-email-err"
             />
-            @if (form.get("email")?.invalid && form.get("email")?.touched) {
-              <p
-                class="flex items-center gap-1 text-xs mt-1.5"
-                style="color: var(--hp-red)"
-              >
-                <i class="fas fa-triangle-exclamation text-[10px]"></i>Email
-                không đúng định dạng
-              </p>
-            }
           </div>
+          @if (form.get("email")?.invalid && form.get("email")?.touched) {
+            <p id="reg-email-err" class="hp-field-error" role="alert">
+              <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+              Email không đúng định dạng
+            </p>
+          }
+        </div>
 
-          <div class="hp-auth-field">
-            <label
-              class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-              style="color: var(--hp-text2)"
-            >
-              <i
-                class="fas fa-lock text-[11px]"
-                style="color: var(--hp-text3)"
-              ></i
-              >Mật khẩu
-            </label>
+        <!-- Password -->
+        <div class="hp-field">
+          <label class="hp-label" for="reg-password">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            Mật khẩu
+          </label>
+          <div class="hp-input-wrap">
             <input
+              id="reg-password"
               formControlName="password"
               type="password"
               autocomplete="new-password"
               placeholder="Tối thiểu 6 ký tự"
-              class="hp-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none"
-              style="
-                background: var(--hp-surface2);
-                border: 1px solid var(--hp-border2);
-                color: var(--hp-text);
+              class="hp-input"
+              [class.hp-input--error]="
+                form.get('password')?.invalid && form.get('password')?.touched
               "
+              aria-required="true"
+              [attr.aria-invalid]="
+                form.get('password')?.invalid && form.get('password')?.touched
+              "
+              aria-describedby="reg-pw-err"
             />
-            @if (
-              form.get("password")?.invalid && form.get("password")?.touched
-            ) {
-              <p
-                class="flex items-center gap-1 text-xs mt-1.5"
-                style="color: var(--hp-red)"
+          </div>
+          @if (form.get("password")?.invalid && form.get("password")?.touched) {
+            <p id="reg-pw-err" class="hp-field-error" role="alert">
+              <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+              Mật khẩu tối thiểu 6 ký tự
+            </p>
+          }
+        </div>
+
+        <!-- Gender + Phone — 2-col -->
+        <div class="hp-field-row">
+          <!-- Gender dropdown -->
+          <div class="hp-field">
+            <label class="hp-label" for="reg-gender-btn">
+              <i class="fas fa-venus-mars" aria-hidden="true"></i>
+              Giới tính
+            </label>
+            <div class="hp-input-wrap hp-dropdown-wrap">
+              <button
+                id="reg-gender-btn"
+                type="button"
+                class="hp-input hp-input--select"
+                (click)="toggleGender()"
+                [attr.aria-expanded]="genderOpen()"
+                aria-haspopup="listbox"
+                [attr.aria-label]="'Chọn giới tính: ' + genderLabel()"
               >
-                <i class="fas fa-triangle-exclamation text-[10px]"></i>Mật khẩu
-                tối thiểu 6 ký tự
-              </p>
-            }
+                <span [class.hp-placeholder]="!form.get('gender')?.value">
+                  {{ genderLabel() }}
+                </span>
+                <i
+                  class="fas"
+                  [class.fa-chevron-up]="genderOpen()"
+                  [class.fa-chevron-down]="!genderOpen()"
+                  aria-hidden="true"
+                ></i>
+              </button>
+
+              @if (genderOpen()) {
+                <ul class="hp-dropdown" role="listbox" aria-label="Giới tính">
+                  <li
+                    role="option"
+                    class="hp-dropdown__item"
+                    (click)="setGender('male', 'Nam')"
+                    [attr.aria-selected]="form.get('gender')?.value === 'male'"
+                  >
+                    <i
+                      class="fas fa-mars"
+                      style="color: #3b82f6"
+                      aria-hidden="true"
+                    ></i>
+                    Nam
+                  </li>
+                  <li
+                    role="option"
+                    class="hp-dropdown__item"
+                    (click)="setGender('female', 'Nữ')"
+                    [attr.aria-selected]="
+                      form.get('gender')?.value === 'female'
+                    "
+                  >
+                    <i
+                      class="fas fa-venus"
+                      style="color: #ec4899"
+                      aria-hidden="true"
+                    ></i>
+                    Nữ
+                  </li>
+                  <li
+                    role="option"
+                    class="hp-dropdown__item"
+                    (click)="setGender('other', 'Khác')"
+                    [attr.aria-selected]="form.get('gender')?.value === 'other'"
+                  >
+                    <i
+                      class="fas fa-genderless"
+                      style="color: #8b5cf6"
+                      aria-hidden="true"
+                    ></i>
+                    Khác
+                  </li>
+                </ul>
+              }
+            </div>
           </div>
 
-          <div class="hp-auth-field grid grid-cols-2 gap-3">
-            <!-- Gender -->
-            <div>
-              <label
-                class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-                style="color: var(--hp-text2)"
-              >
-                <i
-                  class="fas fa-venus-mars text-[11px]"
-                  style="color: var(--hp-text3)"
-                ></i
-                >Giới tính
-              </label>
-              <div class="relative">
-                <button
-                  type="button"
-                  (click)="toggleGender()"
-                  class="hp-input w-full rounded-xl px-4 py-3 text-sm text-left flex items-center justify-between focus:outline-none"
-                  style="
-                    background: var(--hp-surface2);
-                    border: 1px solid var(--hp-border2);
-                    color: var(--hp-text);
-                  "
-                >
-                  <span
-                    [style.color]="
-                      form.get('gender')?.value
-                        ? 'var(--hp-text)'
-                        : 'var(--hp-text3)'
-                    "
-                  >
-                    {{ genderLabel() }}
-                  </span>
-                  <i
-                    class="fas text-[10px]"
-                    [class.fa-chevron-up]="genderOpen()"
-                    [class.fa-chevron-down]="!genderOpen()"
-                    style="color: var(--hp-text3)"
-                  ></i>
-                </button>
-                @if (genderOpen()) {
-                  <div
-                    class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden"
-                    style="
-                      background: var(--hp-surface);
-                      border: 1px solid var(--hp-border2);
-                      box-shadow: 0 8px 24px rgba(30, 64, 120, 0.12);
-                    "
-                  >
-                    <button
-                      type="button"
-                      (click)="setGender('male', 'Nam')"
-                      class="hp-dropdown-item w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5"
-                      style="color: var(--hp-text)"
-                    >
-                      <i
-                        class="fas fa-mars text-[11px]"
-                        style="color: #3b82f6; width: 14px"
-                      ></i
-                      >Nam
-                    </button>
-                    <button
-                      type="button"
-                      (click)="setGender('female', 'Nữ')"
-                      class="hp-dropdown-item w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5"
-                      style="color: var(--hp-text)"
-                    >
-                      <i
-                        class="fas fa-venus text-[11px]"
-                        style="color: #ec4899; width: 14px"
-                      ></i
-                      >Nữ
-                    </button>
-                    <button
-                      type="button"
-                      (click)="setGender('other', 'Khác')"
-                      class="hp-dropdown-item w-full px-4 py-2.5 text-sm text-left flex items-center gap-2.5"
-                      style="color: var(--hp-text)"
-                    >
-                      <i
-                        class="fas fa-genderless text-[11px]"
-                        style="color: #8b5cf6; width: 14px"
-                      ></i
-                      >Khác
-                    </button>
-                  </div>
-                }
-              </div>
-            </div>
-
-            <!-- Phone -->
-            <div>
-              <label
-                class="flex items-center gap-1.5 text-xs font-medium mb-1.5"
-                style="color: var(--hp-text2)"
-              >
-                <i
-                  class="fas fa-phone text-[11px]"
-                  style="color: var(--hp-text3)"
-                ></i
-                >Điện thoại
-              </label>
+          <!-- Phone -->
+          <div class="hp-field">
+            <label class="hp-label" for="reg-phone">
+              <i class="fas fa-phone" aria-hidden="true"></i>
+              Điện thoại
+            </label>
+            <div class="hp-input-wrap">
               <input
+                id="reg-phone"
                 formControlName="phone"
                 type="tel"
                 inputmode="tel"
                 autocomplete="tel"
-                placeholder="0901234567"
-                class="hp-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none"
-                style="
-                  background: var(--hp-surface2);
-                  border: 1px solid var(--hp-border2);
-                  color: var(--hp-text);
-                "
+                placeholder="0901 234 567"
+                class="hp-input"
               />
             </div>
           </div>
+        </div>
 
-          <button
-            type="submit"
-            [disabled]="isLoading()"
-            class="hp-auth-submit hp-btn-primary w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            @if (isLoading()) {
-              <i class="fas fa-circle-notch fa-spin text-sm"></i>Đang xử lý...
-            } @else {
-              <i class="fas fa-user-plus text-sm"></i>Tạo tài khoản
-            }
-          </button>
-        </form>
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="hp-btn-primary"
+          [disabled]="isLoading()"
+          [attr.aria-busy]="isLoading()"
+        >
+          @if (isLoading()) {
+            <i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>
+            <span>Đang xử lý...</span>
+          } @else {
+            <i class="fas fa-user-plus" aria-hidden="true"></i>
+            <span>Tạo tài khoản</span>
+          }
+        </button>
+      </form>
 
-        <p class="text-center text-xs mt-6" style="color: var(--hp-text3)">
-          Đã có tài khoản?
-          <a
-            routerLink="/auth/login"
-            class="font-medium"
-            style="color: var(--hp-primary2)"
-          >
-            <i class="fas fa-arrow-left text-[10px] mr-0.5"></i>Đăng nhập
-          </a>
-        </p>
-      </div>
+      <!-- Footer link -->
+      <p class="hp-form-footer">
+        Đã có tài khoản?
+        <a routerLink="/auth/login" class="hp-link">
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          Đăng nhập
+        </a>
+      </p>
     </div>
-  </div>
+  </main>
 </div>
