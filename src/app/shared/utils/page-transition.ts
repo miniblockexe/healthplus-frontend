@@ -3,7 +3,7 @@ import gsap from 'gsap';
 const mm = gsap.matchMedia();
 
 /* ══════════════════════════════════════════════════════════════════
-   AUTH ENTER  —  redesigned cho layout mới (hp-hero / hp-form-panel)
+   AUTH ENTER 
 ══════════════════════════════════════════════════════════════════ */
 export function authEnter(): void {
   if (typeof window === 'undefined') return;
@@ -37,9 +37,33 @@ export function authEnter(): void {
         return;
       }
 
-      // ── FORM TIMELINE — chạy ngay, user có thể nhập liền ──────────────────
-      // Toàn bộ form vào trong ~0.5s, không chờ hero
-      const formTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+      // ── MOBILE HERO — brand + headline + chips vào trước form ────────────
+      const mobileHero = document.querySelector('.hp-hero__mobile');
+      if (mobileHero) {
+        gsap.from(
+          '.hp-anim-mobile-hero .hp-hero__mobile-headline, .hp-anim-mobile-hero .hp-hero__mobile-sub',
+          {
+            y: 10,
+            autoAlpha: 0,
+            duration: 0.32,
+            stagger: 0.08,
+            ease: 'power2.out',
+          },
+        );
+        gsap.from('.hp-anim-mobile-hero .hp-chip', {
+          scale: 0.85,
+          autoAlpha: 0,
+          duration: 0.24,
+          stagger: 0.05,
+          ease: 'back.out(1.4)',
+          delay: 0.18,
+        });
+      }
+
+      const formTl = gsap.timeline({
+        defaults: { ease: 'power2.out' },
+        delay: 0.1,
+      });
 
       formTl.from('.hp-form-panel', {
         x: 28,
@@ -64,9 +88,6 @@ export function authEnter(): void {
         { y: 8, autoAlpha: 0, duration: 0.24, stagger: 0.04 },
         '-=0.15',
       );
-
-      // ── HERO TIMELINE — song song, decorative, không block form ───────────
-      // delay 0.05s để form render trước, hero chạy phía sau
       const heroTl = gsap.timeline({
         defaults: { ease: 'power2.out' },
         delay: 0.05,
@@ -108,7 +129,7 @@ export function authEnter(): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   MOBILE HERO ENTER  (giữ nguyên)
+   MOBILE HERO ENTER  
 ══════════════════════════════════════════════════════════════════ */
 export function mobileHeroEnter(): void {
   if (typeof window === 'undefined') return;
@@ -150,7 +171,7 @@ export function mobileHeroEnter(): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   SHAKE ERROR  (giữ nguyên)
+   SHAKE ERROR  
 ══════════════════════════════════════════════════════════════════ */
 export function shakeError(selector = '.hp-error-msg'): void {
   if (typeof window === 'undefined') return;
@@ -175,7 +196,7 @@ export function shakeError(selector = '.hp-error-msg'): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   SIDEBAR NAV ITEMS  (giữ nguyên)
+   SIDEBAR NAV ITEMS  
 ══════════════════════════════════════════════════════════════════ */
 export function sidebarEnter(itemSelector = '.hp-nav-item'): void {
   if (typeof window === 'undefined') return;
@@ -211,7 +232,7 @@ export function sidebarEnter(itemSelector = '.hp-nav-item'): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   DASHBOARD CARDS  (giữ nguyên)
+   DASHBOARD CARDS  
 ══════════════════════════════════════════════════════════════════ */
 export function dashboardEnter(cardSelector = '.hp-card'): void {
   if (typeof window === 'undefined') return;
@@ -248,7 +269,7 @@ export function dashboardEnter(cardSelector = '.hp-card'): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   ROUTE TRANSITIONS  (giữ nguyên)
+   ROUTE TRANSITIONS  
 ══════════════════════════════════════════════════════════════════ */
 export function routeLeave(mainSelector = '.hp-main-content'): void {
   if (typeof window === 'undefined') return;
@@ -312,7 +333,7 @@ export function heartbeatPulse(selector = '.hp-logo'): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   COUNT UP  (giữ nguyên)
+   COUNT UP  
 ══════════════════════════════════════════════════════════════════ */
 export function countUp(
   el: HTMLElement,
@@ -344,7 +365,7 @@ export function countUp(
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   BADGE POP  (giữ nguyên)
+   BADGE POP  
 ══════════════════════════════════════════════════════════════════ */
 export function badgePop(selector = '.hp-badge'): void {
   if (typeof window === 'undefined') return;

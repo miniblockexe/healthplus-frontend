@@ -1,6 +1,6 @@
 <div class="hp-auth-page">
+  <!-- ═══════════════════════ HERO PANEL ═══════════════════════ -->
   <aside class="hp-hero" aria-hidden="true">
-    <!-- Background layers -->
     <div class="hp-hero__bg">
       <div class="hp-hero__orb hp-hero__orb--1"></div>
       <div class="hp-hero__orb hp-hero__orb--2"></div>
@@ -15,7 +15,29 @@
       <span class="hp-logo-text">Health<span class="hp-accent">+</span></span>
     </div>
 
-    <!-- Headline block -->
+    <!-- Mobile hero block -->
+    <div class="hp-hero__mobile hp-anim-mobile-hero">
+      <div class="hp-hero__mobile-copy">
+        <p class="hp-hero__mobile-headline">
+          Chào mừng <span class="hp-accent">trở lại</span>
+        </p>
+        <p class="hp-hero__mobile-sub">
+          Đăng nhập để tiếp tục theo dõi sức khỏe
+        </p>
+      </div>
+      <div class="hp-hero__chips">
+        <span class="hp-chip">
+          <i class="fas fa-chart-line"></i>Dashboard
+        </span>
+        <span class="hp-chip"> <i class="fas fa-robot"></i>AI Sức khỏe </span>
+        <span class="hp-chip"> <i class="fas fa-syringe"></i>Vaccine </span>
+        <span class="hp-chip">
+          <i class="fas fa-shield-halved"></i>Bảo mật
+        </span>
+      </div>
+    </div>
+
+    <!-- Headline block — desktop only -->
     <div class="hp-hero__copy">
       <p class="hp-hero__eyebrow hp-anim-copy">Theo dõi sức khỏe</p>
       <h2 class="hp-hero__headline hp-anim-copy">
@@ -30,27 +52,21 @@
     <!-- Feature list — desktop only -->
     <ul class="hp-feature-list hp-anim-features" role="list">
       <li class="hp-feature-item">
-        <span class="hp-feature-icon">
-          <i class="fas fa-chart-line"></i>
-        </span>
+        <span class="hp-feature-icon"><i class="fas fa-chart-line"></i></span>
         <div>
           <strong>Dashboard thông minh</strong>
           <p>Theo dõi chỉ số thời gian thực</p>
         </div>
       </li>
       <li class="hp-feature-item">
-        <span class="hp-feature-icon">
-          <i class="fas fa-robot"></i>
-        </span>
+        <span class="hp-feature-icon"><i class="fas fa-robot"></i></span>
         <div>
           <strong>AI sức khỏe</strong>
           <p>Tư vấn cá nhân hóa từ Gemini</p>
         </div>
       </li>
       <li class="hp-feature-item">
-        <span class="hp-feature-icon">
-          <i class="fas fa-syringe"></i>
-        </span>
+        <span class="hp-feature-icon"><i class="fas fa-syringe"></i></span>
         <div>
           <strong>Nhắc lịch vaccine</strong>
           <p>Không bỏ lỡ mũi tiêm quan trọng</p>
@@ -77,6 +93,7 @@
     </div>
   </aside>
 
+  <!-- ═══════════════════════ FORM PANEL ═══════════════════════ -->
   <main class="hp-form-panel">
     <!-- Mobile wave -->
     <div class="hp-wave-connector" aria-hidden="true">
@@ -100,13 +117,11 @@
     </div>
 
     <div class="hp-form-inner">
-      <!-- Form header -->
       <div class="hp-form-header hp-anim-form-head">
         <h1 class="hp-form-title">Đăng nhập</h1>
         <p class="hp-form-sub">Nhập thông tin tài khoản của bạn</p>
       </div>
 
-      <!-- Error banner -->
       @if (errorMessage()) {
         <div class="hp-error-msg hp-anim-error" role="alert" aria-live="polite">
           <i class="fas fa-circle-exclamation" aria-hidden="true"></i>
@@ -114,18 +129,15 @@
         </div>
       }
 
-      <!-- Form -->
       <form
         [formGroup]="form"
         (ngSubmit)="onSubmit()"
         class="hp-anim-fields"
         novalidate
       >
-        <!-- Email field -->
         <div class="hp-field">
           <label class="hp-label" for="login-email">
-            <i class="fas fa-envelope" aria-hidden="true"></i>
-            Email
+            <i class="fas fa-envelope" aria-hidden="true"></i>Email
           </label>
           <div class="hp-input-wrap">
             <input
@@ -154,11 +166,9 @@
           }
         </div>
 
-        <!-- Password field -->
         <div class="hp-field">
           <label class="hp-label" for="login-password">
-            <i class="fas fa-lock" aria-hidden="true"></i>
-            Mật khẩu
+            <i class="fas fa-lock" aria-hidden="true"></i>Mật khẩu
           </label>
           <div class="hp-input-wrap">
             <input
@@ -186,7 +196,6 @@
           }
         </div>
 
-        <!-- Submit -->
         <button
           type="submit"
           class="hp-btn-primary"
@@ -203,12 +212,10 @@
         </button>
       </form>
 
-      <!-- Divider -->
       <div class="hp-divider" aria-hidden="true">
         <span>hoặc</span>
       </div>
 
-      <!-- Google OAuth -->
       <a
         [href]="googleAuthUrl"
         class="hp-btn-google"
@@ -241,12 +248,10 @@
         <span>Tiếp tục với Google</span>
       </a>
 
-      <!-- Footer link -->
       <p class="hp-form-footer">
         Chưa có tài khoản?
         <a routerLink="/auth/register" class="hp-link">
-          Đăng ký miễn phí
-          <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          Đăng ký miễn phí<i class="fas fa-arrow-right" aria-hidden="true"></i>
         </a>
       </p>
     </div>

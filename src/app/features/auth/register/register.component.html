@@ -1,6 +1,6 @@
 <div class="hp-auth-page">
+  <!-- ═══════════════════════ HERO PANEL ═══════════════════════ -->
   <aside class="hp-hero" aria-hidden="true">
-    <!-- Background layers -->
     <div class="hp-hero__bg">
       <div class="hp-hero__orb hp-hero__orb--1"></div>
       <div class="hp-hero__orb hp-hero__orb--2"></div>
@@ -15,7 +15,27 @@
       <span class="hp-logo-text">Health<span class="hp-accent">+</span></span>
     </div>
 
-    <!-- Headline block -->
+    <!-- Mobile hero block — chỉ hiện trên mobile -->
+    <div class="hp-hero__mobile hp-anim-mobile-hero">
+      <div class="hp-hero__mobile-copy">
+        <p class="hp-hero__mobile-headline">
+          Hành trình <span class="hp-accent">sức khỏe</span> của bạn
+        </p>
+        <p class="hp-hero__mobile-sub">Miễn phí · Không cần thẻ tín dụng</p>
+      </div>
+      <div class="hp-hero__chips">
+        <span class="hp-chip">
+          <i class="fas fa-chart-line"></i>Dashboard
+        </span>
+        <span class="hp-chip"> <i class="fas fa-robot"></i>AI tư vấn </span>
+        <span class="hp-chip"> <i class="fas fa-syringe"></i>Vaccine </span>
+        <span class="hp-chip">
+          <i class="fas fa-shield-halved"></i>Bảo mật
+        </span>
+      </div>
+    </div>
+
+    <!-- Headline block — chỉ hiện trên desktop -->
     <div class="hp-hero__copy">
       <p class="hp-hero__eyebrow hp-anim-copy">Bắt đầu ngay hôm nay</p>
       <h2 class="hp-hero__headline hp-anim-copy">
@@ -61,6 +81,7 @@
     </div>
   </aside>
 
+  <!-- ═══════════════════════ FORM PANEL ═══════════════════════ -->
   <main class="hp-form-panel">
     <!-- Mobile wave -->
     <div class="hp-wave-connector" aria-hidden="true">
@@ -84,13 +105,11 @@
     </div>
 
     <div class="hp-form-inner">
-      <!-- Form header -->
       <div class="hp-form-header hp-anim-form-head">
         <h1 class="hp-form-title">Tạo tài khoản</h1>
-        <p class="hp-form-sub">Miễn phí, không cần thẻ tín dụng</p>
+        <p class="hp-form-sub">Điền thông tin bên dưới để bắt đầu</p>
       </div>
 
-      <!-- Error banner -->
       @if (errorMessage()) {
         <div class="hp-error-msg hp-anim-error" role="alert" aria-live="polite">
           <i class="fas fa-circle-exclamation" aria-hidden="true"></i>
@@ -98,18 +117,15 @@
         </div>
       }
 
-      <!-- Form -->
       <form
         [formGroup]="form"
         (ngSubmit)="onSubmit()"
         class="hp-anim-fields"
         novalidate
       >
-        <!-- Full name -->
         <div class="hp-field">
           <label class="hp-label" for="reg-fullname">
-            <i class="fas fa-user" aria-hidden="true"></i>
-            Họ và tên
+            <i class="fas fa-user" aria-hidden="true"></i>Họ và tên
           </label>
           <div class="hp-input-wrap">
             <input
@@ -137,11 +153,9 @@
           }
         </div>
 
-        <!-- Email -->
         <div class="hp-field">
           <label class="hp-label" for="reg-email">
-            <i class="fas fa-envelope" aria-hidden="true"></i>
-            Email
+            <i class="fas fa-envelope" aria-hidden="true"></i>Email
           </label>
           <div class="hp-input-wrap">
             <input
@@ -170,11 +184,9 @@
           }
         </div>
 
-        <!-- Password -->
         <div class="hp-field">
           <label class="hp-label" for="reg-password">
-            <i class="fas fa-lock" aria-hidden="true"></i>
-            Mật khẩu
+            <i class="fas fa-lock" aria-hidden="true"></i>Mật khẩu
           </label>
           <div class="hp-input-wrap">
             <input
@@ -204,11 +216,9 @@
 
         <!-- Gender + Phone — 2-col -->
         <div class="hp-field-row">
-          <!-- Gender dropdown -->
           <div class="hp-field">
             <label class="hp-label" for="reg-gender-btn">
-              <i class="fas fa-venus-mars" aria-hidden="true"></i>
-              Giới tính
+              <i class="fas fa-venus-mars" aria-hidden="true"></i>Giới tính
             </label>
             <div class="hp-input-wrap hp-dropdown-wrap">
               <button
@@ -243,8 +253,8 @@
                       class="fas fa-mars"
                       style="color: #3b82f6"
                       aria-hidden="true"
-                    ></i>
-                    Nam
+                    ></i
+                    >Nam
                   </li>
                   <li
                     role="option"
@@ -258,8 +268,8 @@
                       class="fas fa-venus"
                       style="color: #ec4899"
                       aria-hidden="true"
-                    ></i>
-                    Nữ
+                    ></i
+                    >Nữ
                   </li>
                   <li
                     role="option"
@@ -271,19 +281,17 @@
                       class="fas fa-genderless"
                       style="color: #8b5cf6"
                       aria-hidden="true"
-                    ></i>
-                    Khác
+                    ></i
+                    >Khác
                   </li>
                 </ul>
               }
             </div>
           </div>
 
-          <!-- Phone -->
           <div class="hp-field">
             <label class="hp-label" for="reg-phone">
-              <i class="fas fa-phone" aria-hidden="true"></i>
-              Điện thoại
+              <i class="fas fa-phone" aria-hidden="true"></i>Điện thoại
             </label>
             <div class="hp-input-wrap">
               <input
@@ -299,7 +307,6 @@
           </div>
         </div>
 
-        <!-- Submit -->
         <button
           type="submit"
           class="hp-btn-primary"
@@ -316,12 +323,10 @@
         </button>
       </form>
 
-      <!-- Footer link -->
       <p class="hp-form-footer">
         Đã có tài khoản?
         <a routerLink="/auth/login" class="hp-link">
-          <i class="fas fa-arrow-left" aria-hidden="true"></i>
-          Đăng nhập
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>Đăng nhập
         </a>
       </p>
     </div>
