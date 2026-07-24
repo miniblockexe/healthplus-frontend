@@ -1,3 +1,10 @@
+// ═════════════════════════════════════════════════════════════════════════════
+// Health+ Auth Pages — Redesigned styles
+// Drop into: src/app/features/auth/auth.styles.scss  (or inline in global styles)
+// Uses the existing CSS custom properties from the project (--hp-nav-bg, etc.)
+// Bootstrap 5 + FontAwesome 6 are already loaded.
+// ═════════════════════════════════════════════════════════════════════════════
+
 // ─── Layout shell ─────────────────────────────────────────────────────────────
 .hp-auth-page {
   display: flex;
@@ -392,7 +399,6 @@
   color: rgba(255, 255, 255, 0.85);
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(4px);
   transition: background 0.15s;
 
   i {
@@ -401,17 +407,18 @@
   }
 }
 
-// ─── Wave connector (mobile only) ─────────────────────────────────────────────
-.hp-wave-connector {
-  display: block;
-  line-height: 0;
-  flex-shrink: 0;
+// force line break sau mỗi 2 chips → layout 2+2
+.hp-chip-break {
+  flex-basis: 100%;
+  height: 0;
+}
 
-  svg {
-    display: block;
-    width: 100%;
-    height: 32px;
-  }
+// ─── Panel separator (thay wave — mobile only) ────────────────────────────────
+.hp-panel-sep {
+  display: block;
+  flex-shrink: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
 
   @media (min-width: 1024px) {
     display: none;

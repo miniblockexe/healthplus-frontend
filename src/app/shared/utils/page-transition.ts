@@ -3,7 +3,7 @@ import gsap from 'gsap';
 const mm = gsap.matchMedia();
 
 /* ══════════════════════════════════════════════════════════════════
-   AUTH ENTER 
+   AUTH ENTER  —  redesigned cho layout mới (hp-hero / hp-form-panel)
 ══════════════════════════════════════════════════════════════════ */
 export function authEnter(): void {
   if (typeof window === 'undefined') return;
@@ -17,9 +17,13 @@ export function authEnter(): void {
       const { reduce } = ctx.conditions as { motion: boolean; reduce: boolean };
 
       if (reduce) {
+        // reduce: hiện tất cả ngay lập tức
         gsap.set(
           [
             '.hp-anim-brand',
+            '.hp-hero__mobile-headline',
+            '.hp-hero__mobile-sub',
+            '.hp-chip',
             '.hp-anim-copy',
             '.hp-anim-features > *',
             '.hp-anim-stats',
@@ -37,99 +41,189 @@ export function authEnter(): void {
         return;
       }
 
-      // ── MOBILE HERO — brand + headline + chips vào trước form ────────────
-      const mobileHero = document.querySelector('.hp-hero__mobile');
-      if (mobileHero) {
-        gsap.from(
-          '.hp-anim-mobile-hero .hp-hero__mobile-headline, .hp-anim-mobile-hero .hp-hero__mobile-sub',
-          {
-            y: 10,
-            autoAlpha: 0,
-            duration: 0.32,
-            stagger: 0.08,
-            ease: 'power2.out',
-          },
-        );
-        gsap.from('.hp-anim-mobile-hero .hp-chip', {
-          scale: 0.85,
-          autoAlpha: 0,
-          duration: 0.24,
-          stagger: 0.05,
-          ease: 'back.out(1.4)',
-          delay: 0.18,
+      const isMobile = window.innerWidth < 1024;
+
+      if (isMobile) {
+        // Mobile: chỉ set invisible những gì sẽ animate trên mobile
+        const mobileAnimEls = [
+          '.hp-anim-brand',
+          '.hp-hero__mobile-headline',
+          '.hp-hero__mobile-sub',
+          '.hp-chip',
+          '.hp-form-panel',
+          '.hp-anim-form-head',
+          '.hp-anim-fields .hp-field',
+          '.hp-anim-fields .hp-field-row',
+          '.hp-btn-primary',
+          '.hp-divider',
+          '.hp-btn-google',
+          '.hp-form-footer',
+        ];
+        gsap.set(mobileAnimEls, { autoAlpha: 0 });
+
+        // ── MOBILE: hero slide từ trên xuống ─────────────────────────────────
+        const mobileTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+
+        mobileTl
+          .fromTo(
+            '.hp-anim-brand',
+            { autoAlpha: 0, y: -16 },
+            { autoAlpha: 1, y: 0, duration: 0.3 },
+          )
+          .fromTo(
+            '.hp-hero__mobile-headline',
+            { autoAlpha: 0, y: -10 },
+            { autoAlpha: 1, y: 0, duration: 0.28 },
+            '-=0.1',
+          )
+          .fromTo(
+            '.hp-hero__mobile-sub',
+            { autoAlpha: 0, y: -8 },
+            { autoAlpha: 1, y: 0, duration: 0.25 },
+            '-=0.12',
+          )
+          .fromTo(
+            '.hp-chip',
+            { autoAlpha: 0, y: -6 },
+            { autoAlpha: 1, y: 0, duration: 0.22, stagger: 0.05 },
+            '-=0.1',
+          );
+
+        // Form panel vào ngay, song song với hero
+        const formTl = gsap.timeline({
+          defaults: { ease: 'power2.out' },
+          delay: 0.15,
         });
+
+        formTl
+          .fromTo(
+            '.hp-form-panel',
+            { autoAlpha: 0, y: 16 },
+            { autoAlpha: 1, y: 0, duration: 0.32 },
+          )
+          .fromTo(
+            '.hp-anim-form-head',
+            { autoAlpha: 0, y: 10 },
+            { autoAlpha: 1, y: 0, duration: 0.26 },
+            '-=0.15',
+          )
+          .fromTo(
+            '.hp-anim-fields .hp-field, .hp-anim-fields .hp-field-row',
+            { autoAlpha: 0, y: 8 },
+            { autoAlpha: 1, y: 0, duration: 0.24, stagger: 0.04 },
+            '-=0.12',
+          )
+          .fromTo(
+            [
+              '.hp-btn-primary',
+              '.hp-divider',
+              '.hp-btn-google',
+              '.hp-form-footer',
+            ],
+            { autoAlpha: 0, y: 6 },
+            { autoAlpha: 1, y: 0, duration: 0.2, stagger: 0.035 },
+            '-=0.1',
+          );
+      } else {
+        // Desktop: set invisible chỉ những gì desktop sẽ animate
+        const desktopAnimEls = [
+          '.hp-anim-brand',
+          '.hp-anim-copy',
+          '.hp-anim-features > *',
+          '.hp-anim-stats',
+          '.hp-form-panel',
+          '.hp-anim-form-head',
+          '.hp-anim-fields .hp-field',
+          '.hp-anim-fields .hp-field-row',
+          '.hp-btn-primary',
+          '.hp-divider',
+          '.hp-btn-google',
+          '.hp-form-footer',
+        ];
+        gsap.set(desktopAnimEls, { autoAlpha: 0 });
+        // ── DESKTOP: hero sidebar + form panel song song ──────────────────────
+        // Form vào trước — user nhập được ngay
+        const formTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+
+        formTl
+          .fromTo(
+            '.hp-form-panel',
+            { autoAlpha: 0, x: 28 },
+            { autoAlpha: 1, x: 0, duration: 0.35 },
+          )
+          .fromTo(
+            '.hp-anim-form-head',
+            { autoAlpha: 0, y: 10 },
+            { autoAlpha: 1, y: 0, duration: 0.28 },
+            '-=0.18',
+          )
+          .fromTo(
+            '.hp-anim-fields .hp-field, .hp-anim-fields .hp-field-row',
+            { autoAlpha: 0, y: 10 },
+            { autoAlpha: 1, y: 0, duration: 0.28, stagger: 0.045 },
+            '-=0.18',
+          )
+          .fromTo(
+            [
+              '.hp-btn-primary',
+              '.hp-divider',
+              '.hp-btn-google',
+              '.hp-form-footer',
+            ],
+            { autoAlpha: 0, y: 8 },
+            { autoAlpha: 1, y: 0, duration: 0.24, stagger: 0.04 },
+            '-=0.15',
+          );
+
+        // Hero sidebar chạy song song, decorative
+        const heroTl = gsap.timeline({
+          defaults: { ease: 'power2.out' },
+          delay: 0.05,
+        });
+
+        heroTl
+          .fromTo(
+            '.hp-hero__orb',
+            { autoAlpha: 0, scale: 0.5 },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              duration: 0.8,
+              stagger: 0.12,
+              ease: 'power1.out',
+            },
+          )
+          .fromTo(
+            '.hp-anim-brand',
+            { autoAlpha: 0, y: -12 },
+            { autoAlpha: 1, y: 0, duration: 0.4 },
+            '-=0.55',
+          )
+          .fromTo(
+            '.hp-anim-copy',
+            { autoAlpha: 0, y: 16 },
+            { autoAlpha: 1, y: 0, duration: 0.38, stagger: 0.08 },
+            '-=0.28',
+          )
+          .fromTo(
+            '.hp-anim-features > *',
+            { autoAlpha: 0, x: -14 },
+            { autoAlpha: 1, x: 0, duration: 0.35, stagger: 0.07 },
+            '-=0.2',
+          )
+          .fromTo(
+            '.hp-anim-stats',
+            { autoAlpha: 0, y: 8 },
+            { autoAlpha: 1, y: 0, duration: 0.3 },
+            '-=0.15',
+          );
       }
-
-      const formTl = gsap.timeline({
-        defaults: { ease: 'power2.out' },
-        delay: 0.1,
-      });
-
-      formTl.from('.hp-form-panel', {
-        x: 28,
-        autoAlpha: 0,
-        duration: 0.35,
-      });
-
-      formTl.from(
-        '.hp-anim-form-head',
-        { y: 10, autoAlpha: 0, duration: 0.28 },
-        '-=0.18',
-      );
-
-      formTl.from(
-        '.hp-anim-fields .hp-field, .hp-anim-fields .hp-field-row',
-        { y: 10, autoAlpha: 0, duration: 0.28, stagger: 0.045 },
-        '-=0.18',
-      );
-
-      formTl.from(
-        ['.hp-btn-primary', '.hp-divider', '.hp-btn-google', '.hp-form-footer'],
-        { y: 8, autoAlpha: 0, duration: 0.24, stagger: 0.04 },
-        '-=0.15',
-      );
-      const heroTl = gsap.timeline({
-        defaults: { ease: 'power2.out' },
-        delay: 0.05,
-      });
-
-      heroTl.from('.hp-hero__orb', {
-        scale: 0.5,
-        autoAlpha: 0,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: 'power1.out',
-      });
-
-      heroTl.from(
-        '.hp-anim-brand',
-        { y: -12, autoAlpha: 0, duration: 0.4 },
-        '-=0.55',
-      );
-
-      heroTl.from(
-        '.hp-anim-copy',
-        { y: 16, autoAlpha: 0, duration: 0.38, stagger: 0.08 },
-        '-=0.28',
-      );
-
-      heroTl.from(
-        '.hp-anim-features > *',
-        { x: -14, autoAlpha: 0, duration: 0.35, stagger: 0.07 },
-        '-=0.2',
-      );
-
-      heroTl.from(
-        '.hp-anim-stats',
-        { y: 8, autoAlpha: 0, duration: 0.3 },
-        '-=0.15',
-      );
     },
   );
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   MOBILE HERO ENTER  
+   MOBILE HERO ENTER  (giữ nguyên)
 ══════════════════════════════════════════════════════════════════ */
 export function mobileHeroEnter(): void {
   if (typeof window === 'undefined') return;
@@ -171,7 +265,7 @@ export function mobileHeroEnter(): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   SHAKE ERROR  
+   SHAKE ERROR  (giữ nguyên)
 ══════════════════════════════════════════════════════════════════ */
 export function shakeError(selector = '.hp-error-msg'): void {
   if (typeof window === 'undefined') return;
@@ -196,7 +290,7 @@ export function shakeError(selector = '.hp-error-msg'): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   SIDEBAR NAV ITEMS  
+   SIDEBAR NAV ITEMS  (giữ nguyên)
 ══════════════════════════════════════════════════════════════════ */
 export function sidebarEnter(itemSelector = '.hp-nav-item'): void {
   if (typeof window === 'undefined') return;
@@ -232,7 +326,7 @@ export function sidebarEnter(itemSelector = '.hp-nav-item'): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   DASHBOARD CARDS  
+   DASHBOARD CARDS  (giữ nguyên)
 ══════════════════════════════════════════════════════════════════ */
 export function dashboardEnter(cardSelector = '.hp-card'): void {
   if (typeof window === 'undefined') return;
@@ -269,7 +363,7 @@ export function dashboardEnter(cardSelector = '.hp-card'): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   ROUTE TRANSITIONS  
+   ROUTE TRANSITIONS  (giữ nguyên)
 ══════════════════════════════════════════════════════════════════ */
 export function routeLeave(mainSelector = '.hp-main-content'): void {
   if (typeof window === 'undefined') return;
@@ -333,7 +427,7 @@ export function heartbeatPulse(selector = '.hp-logo'): void {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   COUNT UP  
+   COUNT UP  (giữ nguyên)
 ══════════════════════════════════════════════════════════════════ */
 export function countUp(
   el: HTMLElement,
@@ -365,7 +459,7 @@ export function countUp(
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   BADGE POP  
+   BADGE POP  (giữ nguyên)
 ══════════════════════════════════════════════════════════════════ */
 export function badgePop(selector = '.hp-badge'): void {
   if (typeof window === 'undefined') return;
